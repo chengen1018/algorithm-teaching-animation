@@ -1,0 +1,31 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Manim / generated media
+media/
+**/media/
+**/partial_movie_files/
+
+# Generated audio and local voiceover outputs
+audio/
+**/audio/
+*.wav
+*.mp3
+
+# Local environment and secrets
+.env
+.env.*
+tts_config.local.json
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+

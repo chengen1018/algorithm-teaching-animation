@@ -1,0 +1,1149 @@
+[
+  {
+    "seq": 1,
+    "beat_id": "beat-001",
+    "action": "set_note",
+    "text": "Quick Sort with rightmost pivots"
+  },
+  {
+    "seq": 2,
+    "beat_id": "beat-001",
+    "action": "create_array",
+    "id": "main",
+    "values": [
+      50,
+      90,
+      70,
+      20,
+      10,
+      30,
+      40
+    ]
+  },
+  {
+    "seq": 3,
+    "beat_id": "beat-002",
+    "action": "set_active_range",
+    "target_id": "main",
+    "start": 0,
+    "end": 6,
+    "label": "active range 0..6"
+  },
+  {
+    "seq": 4,
+    "beat_id": "beat-002",
+    "action": "set_note",
+    "text": "Partition 0..6; pivot = 40"
+  },
+  {
+    "seq": 5,
+    "beat_id": "beat-002",
+    "action": "create_pointer",
+    "id": "p_i",
+    "label": "i",
+    "target_id": "main",
+    "index": -1,
+    "position": "bottom"
+  },
+  {
+    "seq": 6,
+    "beat_id": "beat-002",
+    "action": "create_pointer",
+    "id": "p_j",
+    "label": "j",
+    "target_id": "main",
+    "index": 0,
+    "position": "top"
+  },
+  {
+    "seq": 7,
+    "beat_id": "beat-002",
+    "action": "create_pointer",
+    "id": "p_pivot",
+    "label": "pivot",
+    "target_id": "main",
+    "index": 6,
+    "position": "bottom"
+  },
+  {
+    "seq": 8,
+    "beat_id": "beat-002",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      6
+    ],
+    "color": "ORANGE"
+  },
+  {
+    "seq": 9,
+    "beat_id": "beat-003",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 0
+  },
+  {
+    "seq": 10,
+    "beat_id": "beat-003",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      0
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 11,
+    "beat_id": "beat-003",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      0
+    ]
+  },
+  {
+    "seq": 12,
+    "beat_id": "beat-003",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 1
+  },
+  {
+    "seq": 13,
+    "beat_id": "beat-003",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      1
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 14,
+    "beat_id": "beat-003",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      1
+    ]
+  },
+  {
+    "seq": 15,
+    "beat_id": "beat-003",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 2
+  },
+  {
+    "seq": 16,
+    "beat_id": "beat-003",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      2
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 17,
+    "beat_id": "beat-003",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      2
+    ]
+  },
+  {
+    "seq": 18,
+    "beat_id": "beat-004",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 3
+  },
+  {
+    "seq": 19,
+    "beat_id": "beat-004",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      3
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 20,
+    "beat_id": "beat-004",
+    "action": "move_pointer",
+    "id": "p_i",
+    "target_id": "main",
+    "index": 0
+  },
+  {
+    "seq": 21,
+    "beat_id": "beat-004",
+    "action": "swap",
+    "target_id": "main",
+    "i": 0,
+    "j": 3
+  },
+  {
+    "seq": 22,
+    "beat_id": "beat-004",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      3
+    ]
+  },
+  {
+    "seq": 23,
+    "beat_id": "beat-005",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 4
+  },
+  {
+    "seq": 24,
+    "beat_id": "beat-005",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      4
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 25,
+    "beat_id": "beat-005",
+    "action": "move_pointer",
+    "id": "p_i",
+    "target_id": "main",
+    "index": 1
+  },
+  {
+    "seq": 26,
+    "beat_id": "beat-005",
+    "action": "swap",
+    "target_id": "main",
+    "i": 1,
+    "j": 4
+  },
+  {
+    "seq": 27,
+    "beat_id": "beat-005",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      4
+    ]
+  },
+  {
+    "seq": 28,
+    "beat_id": "beat-005",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 5
+  },
+  {
+    "seq": 29,
+    "beat_id": "beat-005",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      5
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 30,
+    "beat_id": "beat-005",
+    "action": "move_pointer",
+    "id": "p_i",
+    "target_id": "main",
+    "index": 2
+  },
+  {
+    "seq": 31,
+    "beat_id": "beat-005",
+    "action": "swap",
+    "target_id": "main",
+    "i": 2,
+    "j": 5
+  },
+  {
+    "seq": 32,
+    "beat_id": "beat-005",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      5
+    ]
+  },
+  {
+    "seq": 33,
+    "beat_id": "beat-006",
+    "action": "set_note",
+    "text": "Move pivot into index 3"
+  },
+  {
+    "seq": 34,
+    "beat_id": "beat-006",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      3,
+      6
+    ],
+    "color": "ORANGE"
+  },
+  {
+    "seq": 35,
+    "beat_id": "beat-006",
+    "action": "swap",
+    "target_id": "main",
+    "i": 3,
+    "j": 6
+  },
+  {
+    "seq": 36,
+    "beat_id": "beat-006",
+    "action": "move_pointer",
+    "id": "p_pivot",
+    "target_id": "main",
+    "index": 3
+  },
+  {
+    "seq": 37,
+    "beat_id": "beat-006",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      6
+    ]
+  },
+  {
+    "seq": 38,
+    "beat_id": "beat-006",
+    "action": "mark_sorted",
+    "target_id": "main",
+    "indices": [
+      3
+    ]
+  },
+  {
+    "seq": 39,
+    "beat_id": "beat-006",
+    "action": "remove_pointer",
+    "id": "p_i"
+  },
+  {
+    "seq": 40,
+    "beat_id": "beat-006",
+    "action": "remove_pointer",
+    "id": "p_j"
+  },
+  {
+    "seq": 41,
+    "beat_id": "beat-006",
+    "action": "remove_pointer",
+    "id": "p_pivot"
+  },
+  {
+    "seq": 42,
+    "beat_id": "beat-006",
+    "action": "clear_active_range",
+    "target_id": "main"
+  },
+  {
+    "seq": 43,
+    "beat_id": "beat-007",
+    "action": "set_active_range",
+    "target_id": "main",
+    "start": 0,
+    "end": 2,
+    "label": "active range 0..2"
+  },
+  {
+    "seq": 44,
+    "beat_id": "beat-007",
+    "action": "set_note",
+    "text": "Partition 0..2; pivot = 30"
+  },
+  {
+    "seq": 45,
+    "beat_id": "beat-007",
+    "action": "create_pointer",
+    "id": "p_i",
+    "label": "i",
+    "target_id": "main",
+    "index": -1,
+    "position": "bottom"
+  },
+  {
+    "seq": 46,
+    "beat_id": "beat-007",
+    "action": "create_pointer",
+    "id": "p_j",
+    "label": "j",
+    "target_id": "main",
+    "index": 0,
+    "position": "top"
+  },
+  {
+    "seq": 47,
+    "beat_id": "beat-007",
+    "action": "create_pointer",
+    "id": "p_pivot",
+    "label": "pivot",
+    "target_id": "main",
+    "index": 2,
+    "position": "bottom"
+  },
+  {
+    "seq": 48,
+    "beat_id": "beat-007",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      2
+    ],
+    "color": "ORANGE"
+  },
+  {
+    "seq": 49,
+    "beat_id": "beat-007",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 0
+  },
+  {
+    "seq": 50,
+    "beat_id": "beat-007",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      0
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 51,
+    "beat_id": "beat-007",
+    "action": "move_pointer",
+    "id": "p_i",
+    "target_id": "main",
+    "index": 0
+  },
+  {
+    "seq": 52,
+    "beat_id": "beat-007",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      0
+    ]
+  },
+  {
+    "seq": 53,
+    "beat_id": "beat-007",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 1
+  },
+  {
+    "seq": 54,
+    "beat_id": "beat-007",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      1
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 55,
+    "beat_id": "beat-007",
+    "action": "move_pointer",
+    "id": "p_i",
+    "target_id": "main",
+    "index": 1
+  },
+  {
+    "seq": 56,
+    "beat_id": "beat-007",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      1
+    ]
+  },
+  {
+    "seq": 57,
+    "beat_id": "beat-007",
+    "action": "set_note",
+    "text": "Move pivot into index 2"
+  },
+  {
+    "seq": 58,
+    "beat_id": "beat-007",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      2,
+      2
+    ],
+    "color": "ORANGE"
+  },
+  {
+    "seq": 59,
+    "beat_id": "beat-007",
+    "action": "move_pointer",
+    "id": "p_pivot",
+    "target_id": "main",
+    "index": 2
+  },
+  {
+    "seq": 60,
+    "beat_id": "beat-007",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      2
+    ]
+  },
+  {
+    "seq": 61,
+    "beat_id": "beat-007",
+    "action": "mark_sorted",
+    "target_id": "main",
+    "indices": [
+      2
+    ]
+  },
+  {
+    "seq": 62,
+    "beat_id": "beat-007",
+    "action": "remove_pointer",
+    "id": "p_i"
+  },
+  {
+    "seq": 63,
+    "beat_id": "beat-007",
+    "action": "remove_pointer",
+    "id": "p_j"
+  },
+  {
+    "seq": 64,
+    "beat_id": "beat-007",
+    "action": "remove_pointer",
+    "id": "p_pivot"
+  },
+  {
+    "seq": 65,
+    "beat_id": "beat-007",
+    "action": "clear_active_range",
+    "target_id": "main"
+  },
+  {
+    "seq": 66,
+    "beat_id": "beat-008",
+    "action": "set_active_range",
+    "target_id": "main",
+    "start": 0,
+    "end": 1,
+    "label": "active range 0..1"
+  },
+  {
+    "seq": 67,
+    "beat_id": "beat-008",
+    "action": "set_note",
+    "text": "Partition 0..1; pivot = 10"
+  },
+  {
+    "seq": 68,
+    "beat_id": "beat-008",
+    "action": "create_pointer",
+    "id": "p_i",
+    "label": "i",
+    "target_id": "main",
+    "index": -1,
+    "position": "bottom"
+  },
+  {
+    "seq": 69,
+    "beat_id": "beat-008",
+    "action": "create_pointer",
+    "id": "p_j",
+    "label": "j",
+    "target_id": "main",
+    "index": 0,
+    "position": "top"
+  },
+  {
+    "seq": 70,
+    "beat_id": "beat-008",
+    "action": "create_pointer",
+    "id": "p_pivot",
+    "label": "pivot",
+    "target_id": "main",
+    "index": 1,
+    "position": "bottom"
+  },
+  {
+    "seq": 71,
+    "beat_id": "beat-008",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      1
+    ],
+    "color": "ORANGE"
+  },
+  {
+    "seq": 72,
+    "beat_id": "beat-008",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 0
+  },
+  {
+    "seq": 73,
+    "beat_id": "beat-008",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      0
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 74,
+    "beat_id": "beat-008",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      0
+    ]
+  },
+  {
+    "seq": 75,
+    "beat_id": "beat-009",
+    "action": "set_note",
+    "text": "Move pivot into index 0"
+  },
+  {
+    "seq": 76,
+    "beat_id": "beat-009",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      0,
+      1
+    ],
+    "color": "ORANGE"
+  },
+  {
+    "seq": 77,
+    "beat_id": "beat-009",
+    "action": "swap",
+    "target_id": "main",
+    "i": 0,
+    "j": 1
+  },
+  {
+    "seq": 78,
+    "beat_id": "beat-009",
+    "action": "move_pointer",
+    "id": "p_pivot",
+    "target_id": "main",
+    "index": 0
+  },
+  {
+    "seq": 79,
+    "beat_id": "beat-009",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      1
+    ]
+  },
+  {
+    "seq": 80,
+    "beat_id": "beat-009",
+    "action": "mark_sorted",
+    "target_id": "main",
+    "indices": [
+      0
+    ]
+  },
+  {
+    "seq": 81,
+    "beat_id": "beat-009",
+    "action": "remove_pointer",
+    "id": "p_i"
+  },
+  {
+    "seq": 82,
+    "beat_id": "beat-009",
+    "action": "remove_pointer",
+    "id": "p_j"
+  },
+  {
+    "seq": 83,
+    "beat_id": "beat-009",
+    "action": "remove_pointer",
+    "id": "p_pivot"
+  },
+  {
+    "seq": 84,
+    "beat_id": "beat-009",
+    "action": "clear_active_range",
+    "target_id": "main"
+  },
+  {
+    "seq": 85,
+    "beat_id": "beat-009",
+    "action": "set_active_range",
+    "target_id": "main",
+    "start": 1,
+    "end": 1,
+    "label": "base case 1..1"
+  },
+  {
+    "seq": 86,
+    "beat_id": "beat-009",
+    "action": "set_note",
+    "text": "Single value 20 is already fixed"
+  },
+  {
+    "seq": 87,
+    "beat_id": "beat-009",
+    "action": "mark_sorted",
+    "target_id": "main",
+    "indices": [
+      1
+    ]
+  },
+  {
+    "seq": 88,
+    "beat_id": "beat-009",
+    "action": "clear_active_range",
+    "target_id": "main"
+  },
+  {
+    "seq": 89,
+    "beat_id": "beat-010",
+    "action": "set_active_range",
+    "target_id": "main",
+    "start": 4,
+    "end": 6,
+    "label": "active range 4..6"
+  },
+  {
+    "seq": 90,
+    "beat_id": "beat-010",
+    "action": "set_note",
+    "text": "Partition 4..6; pivot = 50"
+  },
+  {
+    "seq": 91,
+    "beat_id": "beat-010",
+    "action": "create_pointer",
+    "id": "p_i",
+    "label": "i",
+    "target_id": "main",
+    "index": 3,
+    "position": "bottom"
+  },
+  {
+    "seq": 92,
+    "beat_id": "beat-010",
+    "action": "create_pointer",
+    "id": "p_j",
+    "label": "j",
+    "target_id": "main",
+    "index": 4,
+    "position": "top"
+  },
+  {
+    "seq": 93,
+    "beat_id": "beat-010",
+    "action": "create_pointer",
+    "id": "p_pivot",
+    "label": "pivot",
+    "target_id": "main",
+    "index": 6,
+    "position": "bottom"
+  },
+  {
+    "seq": 94,
+    "beat_id": "beat-010",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      6
+    ],
+    "color": "ORANGE"
+  },
+  {
+    "seq": 95,
+    "beat_id": "beat-010",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 4
+  },
+  {
+    "seq": 96,
+    "beat_id": "beat-010",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      4
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 97,
+    "beat_id": "beat-010",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      4
+    ]
+  },
+  {
+    "seq": 98,
+    "beat_id": "beat-010",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 5
+  },
+  {
+    "seq": 99,
+    "beat_id": "beat-010",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      5
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 100,
+    "beat_id": "beat-010",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      5
+    ]
+  },
+  {
+    "seq": 101,
+    "beat_id": "beat-011",
+    "action": "set_note",
+    "text": "Move pivot into index 4"
+  },
+  {
+    "seq": 102,
+    "beat_id": "beat-011",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      4,
+      6
+    ],
+    "color": "ORANGE"
+  },
+  {
+    "seq": 103,
+    "beat_id": "beat-011",
+    "action": "swap",
+    "target_id": "main",
+    "i": 4,
+    "j": 6
+  },
+  {
+    "seq": 104,
+    "beat_id": "beat-011",
+    "action": "move_pointer",
+    "id": "p_pivot",
+    "target_id": "main",
+    "index": 4
+  },
+  {
+    "seq": 105,
+    "beat_id": "beat-011",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      6
+    ]
+  },
+  {
+    "seq": 106,
+    "beat_id": "beat-011",
+    "action": "mark_sorted",
+    "target_id": "main",
+    "indices": [
+      4
+    ]
+  },
+  {
+    "seq": 107,
+    "beat_id": "beat-011",
+    "action": "remove_pointer",
+    "id": "p_i"
+  },
+  {
+    "seq": 108,
+    "beat_id": "beat-011",
+    "action": "remove_pointer",
+    "id": "p_j"
+  },
+  {
+    "seq": 109,
+    "beat_id": "beat-011",
+    "action": "remove_pointer",
+    "id": "p_pivot"
+  },
+  {
+    "seq": 110,
+    "beat_id": "beat-011",
+    "action": "clear_active_range",
+    "target_id": "main"
+  },
+  {
+    "seq": 111,
+    "beat_id": "beat-012",
+    "action": "set_active_range",
+    "target_id": "main",
+    "start": 5,
+    "end": 6,
+    "label": "active range 5..6"
+  },
+  {
+    "seq": 112,
+    "beat_id": "beat-012",
+    "action": "set_note",
+    "text": "Partition 5..6; pivot = 90"
+  },
+  {
+    "seq": 113,
+    "beat_id": "beat-012",
+    "action": "create_pointer",
+    "id": "p_i",
+    "label": "i",
+    "target_id": "main",
+    "index": 4,
+    "position": "bottom"
+  },
+  {
+    "seq": 114,
+    "beat_id": "beat-012",
+    "action": "create_pointer",
+    "id": "p_j",
+    "label": "j",
+    "target_id": "main",
+    "index": 5,
+    "position": "top"
+  },
+  {
+    "seq": 115,
+    "beat_id": "beat-012",
+    "action": "create_pointer",
+    "id": "p_pivot",
+    "label": "pivot",
+    "target_id": "main",
+    "index": 6,
+    "position": "bottom"
+  },
+  {
+    "seq": 116,
+    "beat_id": "beat-012",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      6
+    ],
+    "color": "ORANGE"
+  },
+  {
+    "seq": 117,
+    "beat_id": "beat-012",
+    "action": "move_pointer",
+    "id": "p_j",
+    "target_id": "main",
+    "index": 5
+  },
+  {
+    "seq": 118,
+    "beat_id": "beat-012",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      5
+    ],
+    "color": "YELLOW"
+  },
+  {
+    "seq": 119,
+    "beat_id": "beat-012",
+    "action": "move_pointer",
+    "id": "p_i",
+    "target_id": "main",
+    "index": 5
+  },
+  {
+    "seq": 120,
+    "beat_id": "beat-012",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      5
+    ]
+  },
+  {
+    "seq": 121,
+    "beat_id": "beat-012",
+    "action": "set_note",
+    "text": "Move pivot into index 6"
+  },
+  {
+    "seq": 122,
+    "beat_id": "beat-012",
+    "action": "highlight",
+    "target_id": "main",
+    "indices": [
+      6,
+      6
+    ],
+    "color": "ORANGE"
+  },
+  {
+    "seq": 123,
+    "beat_id": "beat-012",
+    "action": "move_pointer",
+    "id": "p_pivot",
+    "target_id": "main",
+    "index": 6
+  },
+  {
+    "seq": 124,
+    "beat_id": "beat-012",
+    "action": "unhighlight",
+    "target_id": "main",
+    "indices": [
+      6
+    ]
+  },
+  {
+    "seq": 125,
+    "beat_id": "beat-012",
+    "action": "mark_sorted",
+    "target_id": "main",
+    "indices": [
+      6
+    ]
+  },
+  {
+    "seq": 126,
+    "beat_id": "beat-012",
+    "action": "remove_pointer",
+    "id": "p_i"
+  },
+  {
+    "seq": 127,
+    "beat_id": "beat-012",
+    "action": "remove_pointer",
+    "id": "p_j"
+  },
+  {
+    "seq": 128,
+    "beat_id": "beat-012",
+    "action": "remove_pointer",
+    "id": "p_pivot"
+  },
+  {
+    "seq": 129,
+    "beat_id": "beat-012",
+    "action": "clear_active_range",
+    "target_id": "main"
+  },
+  {
+    "seq": 130,
+    "beat_id": "beat-012",
+    "action": "set_active_range",
+    "target_id": "main",
+    "start": 5,
+    "end": 5,
+    "label": "base case 5..5"
+  },
+  {
+    "seq": 131,
+    "beat_id": "beat-012",
+    "action": "set_note",
+    "text": "Single value 70 is already fixed"
+  },
+  {
+    "seq": 132,
+    "beat_id": "beat-012",
+    "action": "mark_sorted",
+    "target_id": "main",
+    "indices": [
+      5
+    ]
+  },
+  {
+    "seq": 133,
+    "beat_id": "beat-012",
+    "action": "clear_active_range",
+    "target_id": "main"
+  },
+  {
+    "seq": 134,
+    "beat_id": "beat-013",
+    "action": "set_note",
+    "text": "Sorted ascending: 10, 20, 30, 40, 50, 70, 90"
+  },
+  {
+    "seq": 135,
+    "beat_id": "beat-013",
+    "action": "set_active_range",
+    "target_id": "main",
+    "start": 0,
+    "end": 6,
+    "label": "final sorted array"
+  },
+  {
+    "seq": 136,
+    "beat_id": "beat-013",
+    "action": "mark_sorted",
+    "target_id": "main",
+    "indices": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ]
+  },
+  {
+    "seq": 137,
+    "beat_id": "beat-013",
+    "action": "clear_active_range",
+    "target_id": "main"
+  }
+]
