@@ -1,22 +1,20 @@
 # Algorithm Teaching Animation Skill
 
-Codex skill for turning algorithm explanations into deterministic, teachable animation workflows.
+這是一個 Codex skill，用來把演算法說明轉成 deterministic、可教學的動畫工作流。
 
-The skill guides Codex through planning, teaching-script design, deterministic trace generation, Manim scene generation, and optional beat-aligned voiceover assets.
+此 skill 會引導 Codex 完成規劃、教學腳本設計、deterministic trace 產生、Manim 場景生成，以及可選的 beat-aligned voiceover 素材。
 
-## Repository Layout
+## Repository Layout（儲存庫結構）
 
-- `skill-src/algorithm-teaching-animation-v2/` - installable skill package
-- `skill-src/algorithm-teaching-animation-v2/SKILL.md` - main skill instructions
-- `skill-src/algorithm-teaching-animation-v2/references/` - focused workflow references
-- `skill-src/algorithm-teaching-animation-v2/examples/` - example outputs for common algorithm types
-- `design-notes/` - design notes, review rubric, and change log
-- `quick-sort-animation/` - local quick sort sample workspace
-- `SKILL_INDEX.md` - local reading index for development
+- `skill-src/algorithm-teaching-animation-v2/` - 可安裝的 skill package
+- `skill-src/algorithm-teaching-animation-v2/SKILL.md` - 主要 skill 指令
+- `skill-src/algorithm-teaching-animation-v2/references/` - 聚焦於各工作階段的參考文件
+- `skill-src/algorithm-teaching-animation-v2/examples/` - 常見演算法類型的範例輸出
+- `SKILL_INDEX.md` - 開發用的本機閱讀索引
 
-## Install Locally
+## Install Locally（本機安裝）
 
-Copy or symlink the skill package into your Codex skills directory:
+將 skill package 複製或建立 symlink 到你的 Codex skills 目錄：
 
 ```powershell
 Copy-Item -Recurse `
@@ -24,11 +22,11 @@ Copy-Item -Recurse `
   -Destination "$env:USERPROFILE\.codex\skills\algorithm-teaching-animation-v2"
 ```
 
-Then restart Codex or reload skills.
+接著重新啟動 Codex，或重新載入 skills。
 
-## What The Skill Produces
+## What The Skill Produces（輸出內容）
 
-For a complete workflow, the skill expects these artifacts:
+對於完整工作流，此 skill 預期會產生以下 artifacts：
 
 - `plan.md`
 - `teaching_script.md`
@@ -39,5 +37,4 @@ For a complete workflow, the skill expects these artifacts:
 - `action_trace.json`
 - `generated_algo_scene.py`
 
-Rendered videos, Manim caches, generated audio, and Python bytecode are intentionally ignored by Git.
-
+Rendered videos、Manim caches、generated audio 與 Python bytecode 會刻意被 Git 忽略。

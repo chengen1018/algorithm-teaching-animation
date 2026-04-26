@@ -1,6 +1,6 @@
 # Algorithm Teaching Animation Skill Index
 
-This file is a local reading index for developing the v2 skill. It is not part of the runtime skill package.
+此檔案是開發 v2 skill 時使用的本機閱讀索引，不屬於 runtime skill package。
 
 ## V2 Skill Package
 
@@ -9,10 +9,10 @@ This file is a local reading index for developing the v2 skill. It is not part o
 - [examples](skill-src/algorithm-teaching-animation-v2/examples)
 - [agents](skill-src/algorithm-teaching-animation-v2/agents)
 
-## References
+## References（參考文件）
 
-- [Planning](skill-src/algorithm-teaching-animation-v2/references/planning.md)
-- [Teaching Script](skill-src/algorithm-teaching-animation-v2/references/teaching-script.md)
+- [Planning（規劃）](skill-src/algorithm-teaching-animation-v2/references/planning.md)
+- [Teaching Script（教學腳本）](skill-src/algorithm-teaching-animation-v2/references/teaching-script.md)
 - [Voiceover](skill-src/algorithm-teaching-animation-v2/references/voiceover.md)
 - [Subtitles](skill-src/algorithm-teaching-animation-v2/references/subtitles.md)
 - [Trace Schema](skill-src/algorithm-teaching-animation-v2/references/trace-schema.md)
@@ -22,24 +22,16 @@ This file is a local reading index for developing the v2 skill. It is not part o
 - [Rendering](skill-src/algorithm-teaching-animation-v2/references/rendering.md)
 - [Modes](skill-src/algorithm-teaching-animation-v2/references/modes.md)
 
-## Examples
+## Examples（範例）
 
-- [Binary Search](skill-src/algorithm-teaching-animation-v2/examples/binary-search)
-- [Bubble Sort](skill-src/algorithm-teaching-animation-v2/examples/bubble-sort)
+- [Binary Search（二分搜尋）](skill-src/algorithm-teaching-animation-v2/examples/binary-search)
+- [Bubble Sort（泡沫排序）](skill-src/algorithm-teaching-animation-v2/examples/bubble-sort)
 - [BFS](skill-src/algorithm-teaching-animation-v2/examples/bfs)
 - [DP](skill-src/algorithm-teaching-animation-v2/examples/dp)
 
-## Design Notes
+## Suggested Reading Flow（建議閱讀順序）
 
-- [V2 Ideas](design-notes/v2-ideas.md)
-- [V2 Change Log](design-notes/v2-change-log.md)
-- [Quality Rubric](design-notes/quality-rubric.md)
+1. 閱讀 `SKILL.md`，了解主要工作流與限制。
+2. 只開啟目前要修改階段所需的 reference file。
+3. 與最接近的 example 進行比較。
 
-## Suggested Reading Flow
-
-1. Read `SKILL.md` for the main workflow and constraints.
-2. Open only the reference file for the stage being revised.
-3. Compare against the closest example.
-4. Record rough ideas in `design-notes/v2-ideas.md`.
-5. Record committed changes in `design-notes/v2-change-log.md`.
-6. Use `design-notes/quality-rubric.md` when evaluating generated outputs.
