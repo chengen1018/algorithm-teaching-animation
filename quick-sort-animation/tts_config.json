@@ -1,8 +1,0 @@
-{
-  "provider": "Windows SAPI.SpVoice",
-  "voice": "Microsoft Zira Desktop - English (United States)",
-  "language": "en-US",
-  "output_format": "wav",
-  "contains_secrets": false
-}
-

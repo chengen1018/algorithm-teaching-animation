@@ -12,6 +12,9 @@ media/
 **/media/
 **/partial_movie_files/
 
+# Local sample workspaces
+quick-sort-animation/
+
 # Generated audio and local voiceover outputs
 audio/
 **/audio/
@@ -28,4 +31,3 @@ tts_config.local.json
 Thumbs.db
 .vscode/
 .idea/
-
