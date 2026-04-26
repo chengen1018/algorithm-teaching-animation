@@ -15,6 +15,9 @@ media/
 # Local sample workspaces
 quick-sort-animation/
 
+# Local design notes
+design-notes/
+
 # Generated audio and local voiceover outputs
 audio/
 **/audio/
