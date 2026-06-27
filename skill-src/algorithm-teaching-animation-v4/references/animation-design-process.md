@@ -39,7 +39,7 @@ The orchestrator must ask exactly one user-facing question at a time, wait for i
 
 The orchestrator must record every user answer faithfully and relay it without reinterpretation, weakening, silent replacement, or merging it with the recommendation. If an answer is ambiguous in a way that materially changes the design, quote or closely paraphrase the ambiguity and ask one focused follow-up question within the batch.
 
-Do not return to the designer for an update after each answer. After the complete planned batch, the orchestrator must return all recorded answers once so the designer performs one design update and one reassessment. Start another small batch only if those answers expose a new blocking core question. Do not ask questions whose answers can no longer affect the design.
+Do not return to the designer for an update after each answer. After the complete planned batch, the orchestrator must return all recorded answers once so the designer performs one design update and one reassessment. Start another small batch whenever any unresolved blocking core question remains, whether previously known or newly exposed. Do not ask questions whose answers can no longer affect the design.
 
 ## Low-Impact Questions That Must Not Block Design
 
