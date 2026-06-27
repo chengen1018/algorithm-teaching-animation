@@ -12,6 +12,8 @@ The user must explicitly approve the exact version of `animation_design.md` for 
 
 Approval applies only to the exact reviewed version. Any later edit creates another new version and requires review and explicit confirmation again.
 
+The orchestrator must record exact-version user approval externally in the workflow gate. It must not mutate `animation_design.md` to record approval, approval status, an approval reference, or review metadata.
+
 ## Required Sections
 
 ### Design Goal and Audience
@@ -157,9 +159,4 @@ The document fails review if it:
 - [ ] User decisions are incorporated faithfully — evidence: ...
 - [ ] Risks and best-effort notes are explicit — evidence: ...
 - [ ] Zero unresolved blocking core questions remain — evidence: ...
-
-## Confirmation
-- Reviewed version: ...
-- Review scope: full | delta
-- Explicit user approval: pending | approved with exact approval reference
 ```
