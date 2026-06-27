@@ -28,18 +28,18 @@ Every design choice must serve the stated audience and learning goal. Do not tur
 
 ## Core-Question Batch Protocol
 
-Identify unresolved core questions and organize them into small question batches. A batch must contain only closely related decisions needed for the next design step; do not present a long questionnaire.
+The designer must identify unresolved core questions and plan a small question batch. A batch must contain only closely related decisions needed for the next design step; do not present a long questionnaire.
 
-Within a batch, ask exactly one user-facing question at a time and wait for its answer before asking the next. Each question must include:
+The orchestrator must ask exactly one user-facing question at a time, wait for its answer, and record that answer before asking the next planned question. Each question must include:
 
 1. a concrete recommendation;
 2. the rationale for that recommendation;
 3. the meaningful tradeoff or consequence of accepting it;
 4. a concise set of answer choices when choices are useful.
 
-Relay the user's answer faithfully into the design record. Do not reinterpret, weaken, silently replace, or merge it with the recommendation. If an answer is ambiguous in a way that materially changes the design, quote or closely paraphrase the ambiguity and ask one focused follow-up question.
+The orchestrator must record every user answer faithfully and relay it without reinterpretation, weakening, silent replacement, or merging it with the recommendation. If an answer is ambiguous in a way that materially changes the design, quote or closely paraphrase the ambiguity and ask one focused follow-up question within the batch.
 
-After each answer, update the working design and reassess whether another core question remains. Do not ask questions whose answers can no longer affect the design.
+Do not return to the designer for an update after each answer. After the complete planned batch, the orchestrator must return all recorded answers once so the designer performs one design update and one reassessment. Start another small batch only if those answers expose a new blocking core question. Do not ask questions whose answers can no longer affect the design.
 
 ## Low-Impact Questions That Must Not Block Design
 
@@ -62,14 +62,17 @@ DESIGN_READY passes only when all of the following are true:
 - the high-level animation beats expose the important state transitions and causal relationships;
 - a recommended design and material alternatives include rationale and tradeoffs;
 - all material user decisions are incorporated faithfully;
-- unresolved items are either blocking core questions or explicitly documented best-effort risks;
+- zero unresolved blocking core questions remain;
+- only low-impact items remain unresolved, and each is documented as a risk with its chosen best-effort default;
 - the design document satisfies the required contract and self-check.
 
-Once every DESIGN_READY condition passes, the process must stop asking design questions and stop adding design work. It must present `animation_design.md` for explicit user confirmation. Continuing to elaborate, clarify, or expand after the gate passes is a process failure.
+Once every DESIGN_READY condition passes, the process must stop asking design questions and stop adding design work. It must send the exact DESIGN_READY version of `animation_design.md` to an independent animation design review. The independent reviewer must write `animation_design_review.md`; any result other than `PASS` rolls the design back to DESIGN_DEVELOPMENT.
+
+Only after `animation_design_review.md` records `PASS` may the process request explicit user approval of the exact reviewed version of `animation_design.md`. Continuing to elaborate, clarify, request approval before review passes, or expand the design after the gate passes is a process failure.
 
 ## User Edit Loop
 
-The user may edit `animation_design.md` directly. Any edit invalidates the prior review result and requires re-review before confirmation can be accepted.
+The user may edit `animation_design.md` directly. Every user edit creates a new version, invalidates the prior review result, and requires re-review before confirmation can be accepted. Edit impact determines whether the re-review is full or delta; no edit bypasses re-review.
 
 After an edit, identify what changed, preserve the user's wording and intent, run the appropriate review scope, update the DESIGN_READY self-check, and present the reviewed document again for explicit confirmation. Silence, inactivity, or editing the file alone does not count as approval.
 
@@ -95,8 +98,9 @@ The process fails if it:
 - relays a user answer inaccurately or silently substitutes another choice;
 - blocks on a low-impact preference;
 - leaves the mental model, visual presentation, teaching arc, or high-level beats undesigned;
-- declares DESIGN_READY while any gate condition is unmet;
+- declares DESIGN_READY while any gate condition is unmet or any unresolved blocking core question remains;
 - continues questioning or elaborating after every DESIGN_READY condition passes;
+- requests user approval before independent review records `PASS` in `animation_design_review.md`;
 - accepts silence, inactivity, or an unreviewed edit as approval;
 - uses delta review when the change requires full review;
 - continues downstream work after the design has rolled back.
