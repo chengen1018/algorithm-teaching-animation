@@ -1,175 +1,175 @@
-# Animation Design Stage Design
+# 動畫設計階段規格
 
-## Purpose
+## 目的
 
-Replace the current request-only first phase with a design-centered workflow that helps users turn incomplete algorithm-animation requests into reviewed, editable, high-quality animation designs before scripting or implementation begins.
+將目前只處理需求的第一階段，改造成以設計為核心的工作流程。這套流程要能協助使用者把尚未完整的演算法動畫需求，發展成經過審查、可直接編輯且品質良好的動畫設計，之後才開始撰寫腳本或進行實作。
 
-The workflow must not require users to design the animation by themselves. A specialized subagent proposes the teaching model, visual presentation, teaching arc, and recommended alternatives, while the user retains final authority through explicit approval gates.
+使用者不應被迫自行完成動畫設計。專門的 subagent 必須主動提出心智模型、視覺表達、教學弧線與替代方案；使用者則透過明確的核准關卡保有最終決定權。
 
-## Top-Level Workflow
+## 頂層工作流程
 
-Rename `REQUEST_CONTRACT` to `ANIMATION_DESIGN` while preserving the existing six-phase architecture:
+將 `REQUEST_CONTRACT` 改名為 `ANIMATION_DESIGN`，並保留現有的六階段架構：
 
 ```text
 ANIMATION_DESIGN -> SCRIPT -> VOICEOVER -> RENDER -> QA -> DELIVERY
 ```
 
-`ANIMATION_DESIGN` contains three mandatory subphases:
+`ANIMATION_DESIGN` 包含三個不可跳過的子階段：
 
 ```text
 INTAKE -> DESIGN_DEVELOPMENT -> CONTRACT
 ```
 
-No subphase may be skipped. A downstream discovery of an upstream gap must return to the subphase that owns the missing decision.
+不得跳過任何子階段。如果後續工作發現前面階段存在缺口，必須退回負責該決策的子階段處理。
 
-## Subphase 1: INTAKE
+## 子階段 1：INTAKE
 
-### Goal
+### 目標
 
-Preserve the user's request accurately and prepare sufficient source material for design work without prematurely choosing the animation design.
+準確保留使用者需求，並準備足以開始設計工作的來源資料，但不在此時過早決定動畫設計。
 
-### Owner
+### 負責角色
 
-The orchestrator owns this subphase.
+此子階段由協調者負責。
 
-### Responsibilities
+### 職責
 
-- Preserve the user's original wording for requirements, constraints, and prohibitions that affect semantics, teaching direction, visuals, delivery, or acceptance.
-- Record the algorithm, known variant, sample input or scenario, audience, intended use, visual constraints, narration expectations, and special requests.
-- Classify the request as first-class or best-effort support.
-- Record unresolved design questions without answering them silently.
-- Produce `intake_summary.md` and hand it to `animation-designer`.
+- 保留使用者對需求、限制與禁止事項的原始措辭，特別是會影響演算法語意、教學方向、視覺設計、交付內容或驗收標準的內容。
+- 記錄演算法、已知版本、範例輸入或情境、目標觀眾、使用目的、視覺限制、旁白需求與特殊要求。
+- 將需求分類為 first-class support 或 best-effort support。
+- 記錄尚未解決的設計問題，不得擅自回答。
+- 建立 `intake_summary.md`，並交給 `animation-designer`。
 
-### Gate
+### 關卡
 
-`INTAKE` passes when `intake_summary.md` contains the known request, preserved constraints, support classification, and unresolved design questions needed to begin design development.
+只有當 `intake_summary.md` 已包含目前已知的需求、保留的限制、支援類型及開始設計所需的未決問題時，`INTAKE` 才能通過。
 
-## Subphase 2: DESIGN_DEVELOPMENT
+## 子階段 2：DESIGN_DEVELOPMENT
 
-### Goal
+### 目標
 
-Develop the user's request into a concrete, coherent, implementable, and teachable algorithm-animation design.
+將使用者需求發展成具體、連貫、可實作且具有教學效果的演算法動畫設計。
 
-The primary work is designing how the animation teaches and presents the algorithm. Clarification is a supporting mechanism, not the purpose of this subphase.
+此子階段的核心工作是設計動畫如何教學及呈現演算法。需求釐清只是支援設計的手段，不是此子階段的主要目的。
 
 ### Animation Designer
 
-Create `agents/animation-designer.md`. The agent owns both core-question planning and animation design.
+新增 `agents/animation-designer.md`。這個 agent 同時負責核心問題規劃與動畫設計。
 
-Its responsibilities are:
+職責如下：
 
-1. Analyze the algorithm variant, audience, teaching goal, sample scenario, likely misconceptions, and risks in the initial request.
-2. Select and explain the primary mental model the viewer should retain.
-3. Design how algorithm state, data, pointers, boundaries, support structures, progress, and exclusions appear on screen.
-4. Define stable visual semantics, information hierarchy, and the main scene structure.
-5. Select or improve the sample input so it exposes the intended teaching points.
-6. Design the overall teaching arc and high-level animation beats.
-7. Define each beat's focus, state change, causal relationship, and teaching purpose.
-8. Evaluate the user's initial idea, identify quality risks, compare reasonable alternatives, and clearly recommend a better option when warranted.
-9. Plan only the high-impact questions that block a good design, with a recommendation and rationale for each.
-10. Produce and revise `animation_design.md`.
-11. Run the `DESIGN_READY` self-check before requesting independent review.
+1. 分析演算法版本、目標觀眾、教學目標、範例情境、觀眾可能產生的誤解，以及原始需求中的風險。
+2. 選擇並解釋觀眾看完後應保留的主要心智模型。
+3. 設計演算法狀態、資料、指標、邊界、輔助結構、處理進度與排除區域如何出現在畫面上。
+4. 定義穩定的視覺語意、資訊層級與主要畫面結構。
+5. 選擇或改善範例輸入，使其能呈現預定的教學重點。
+6. 設計整體教學弧線與高層次動畫 beats。
+7. 定義每個 beat 的主要焦點、狀態變化、因果關係與教學目的。
+8. 評估使用者原始構想、找出品質風險、比較合理替代方案，並在必要時明確推薦較好的方案。
+9. 只規劃會阻塞良好設計的高影響問題，並為每題提供推薦答案與理由。
+10. 建立並修改 `animation_design.md`。
+11. 在請求獨立審查前執行 `DESIGN_READY` 自我檢查。
 
-The user remains the final decision-maker. The agent may challenge an initial idea and recommend a different design, but may not override an explicit user decision.
+使用者保有最終決定權。Agent 可以挑戰原始構想並推薦不同方案，但不得推翻使用者的明確決定。
 
-### Core-Question Interaction
+### 核心問題互動方式
 
-Use a batched handoff to reduce token and delegation overhead:
+採用批次交接方式，降低 token 消耗與委派成本：
 
-1. `animation-designer` plans a small set of high-impact questions.
-2. Each question includes why it matters, a concrete recommendation, and its tradeoffs.
-3. The orchestrator asks the user one question at a time and records answers faithfully.
-4. The orchestrator must not replace the designer's recommendation or infer a design conclusion on its behalf.
-5. After the planned questions are answered, the orchestrator returns the answers to `animation-designer` as one batch.
-6. Start another question batch only if the answers expose a new blocking issue.
+1. `animation-designer` 一次規劃少量高影響問題。
+2. 每個問題都要包含重要性、具體建議與取捨。
+3. 協調者一次只向使用者詢問一題，並忠實記錄回答。
+4. 協調者不得取代設計師的推薦內容，也不得自行替設計師推導設計結論。
+5. 預定問題全部回答後，協調者再將答案整批交回 `animation-designer`。
+6. 只有當回答暴露新的阻塞問題時，才能開始下一批問題。
 
-Do not ask about ordinary colors, minor placement, routine transitions, easing, or local timing unless the user made one of those details semantically or contractually important.
+除非使用者明確賦予其語意或契約上的重要性，否則不得詢問一般配色、微小位置、普通轉場、easing 或局部時間調整。
 
-### Animation Design Artifact
+### 動畫設計產物
 
-Create `animation_design.md` as an editable user-facing artifact. It must contain:
+建立可由使用者直接編輯的 `animation_design.md`。內容必須包括：
 
-- design goal and audience
-- algorithm variant and semantics
-- primary mental model
-- likely viewer misconceptions to prevent
-- sample input and selection rationale
-- core visual metaphor and stable visual semantics
-- presentation of data, pointers, boundaries, progress, and support structures
-- scene structure and information hierarchy
-- overall teaching arc
-- high-level animation beats
-- focus, state change, causal relationship, and teaching purpose for each beat
-- recommended design, meaningful alternatives, tradeoffs, and rationale
-- incorporated user decisions
-- risks and best-effort notes
-- `DESIGN_READY` self-check result
+- 設計目標與目標觀眾
+- 演算法版本與語意
+- 主要心智模型
+- 預期避免的觀眾誤解
+- 範例輸入及選擇理由
+- 核心視覺比喻與穩定的視覺語意
+- 資料、指標、邊界、處理進度與輔助結構的呈現方式
+- 畫面結構與資訊層級
+- 整體教學弧線
+- 高層次動畫 beats
+- 每個 beat 的焦點、狀態變化、因果關係與教學目的
+- 推薦設計、重要替代方案、取捨與理由
+- 已納入的使用者決策
+- 風險與 best-effort 說明
+- `DESIGN_READY` 自我檢查結果
 
-The user may edit this file directly. A direct edit does not bypass independent review.
+使用者可以直接修改此檔案，但直接修改不得繞過獨立審查。
 
-### DESIGN_READY Gate
+### DESIGN_READY 關卡
 
-The design is ready for independent review only when all of the following are true:
+只有在以下條件全部成立時，設計才可送交獨立審查：
 
-- The algorithm variant, audience, and teaching goal are explicit.
-- The mental model, visual presentation, and teaching arc are complete.
-- The sample input supports the intended lesson.
-- High-level beats have clear focus and causal progression.
-- No unresolved issue would change algorithm semantics, teaching direction, core layout, beat structure, or delivery obligations.
-- Teaching coherence, visual feasibility, and semantic consistency pass self-check.
-- The design contains a clear recommendation and material tradeoffs.
-- Remaining risks are disclosed.
+- 演算法版本、目標觀眾與教學目標均已明確。
+- 心智模型、視覺表達與教學弧線均已完整。
+- 範例輸入足以支持預定教學內容。
+- 高層次 beats 具有明確焦點與因果進程。
+- 沒有會改變演算法語意、教學方向、核心版面、beat 結構或交付責任的未決問題。
+- 教學連貫性、視覺可行性與語意一致性均已通過自我檢查。
+- 設計已包含明確的推薦方案與重要取捨。
+- 剩餘風險均已揭露。
 
-Once these conditions are met, the designer must stop exploratory design and request review. It must not delay the gate to optimize low-impact presentation details.
+達成以上條件後，設計師必須停止探索並請求審查，不得為了最佳化低影響的呈現細節而延後關卡。
 
-### Independent Reviewer
+### 獨立 Reviewer
 
-Create `agents/animation-design-reviewer.md`. The reviewer must not have authored the design.
+新增 `agents/animation-design-reviewer.md`。Reviewer 不得參與受審設計的撰寫。
 
-The reviewer produces `animation_design_review.md` containing:
+Reviewer 必須建立 `animation_design_review.md`，內容包括：
 
-- review scope: full or delta
-- teaching-coherence result
-- visual-feasibility result
-- algorithm-semantic-consistency result
-- unresolved high-impact issues
-- required repairs
-- rollback target
-- final verdict: `PASS` or `FAIL`
+- 審查範圍：完整審查或差異審查
+- 教學連貫性結果
+- 視覺可行性結果
+- 演算法語意一致性結果
+- 尚未解決的高影響問題
+- 必須修正的項目
+- 回退目標
+- 最終結果：`PASS` 或 `FAIL`
 
-The initial review is always full. After a failure, ordinary localized repairs use delta review. A change to algorithm semantics, the primary mental model, core visual semantics, or the teaching arc requires a new full review. The same rule applies after the user edits `animation_design.md`.
+第一次審查一律採完整審查。審查失敗後，普通的局部修正採差異審查；若修改演算法語意、主要心智模型、核心視覺語意或教學弧線，則必須重新進行完整審查。使用者直接修改 `animation_design.md` 後，也適用相同規則。
 
-Only `PASS` permits the orchestrator to request explicit user approval of `animation_design.md`.
+只有 reviewer 結果為 `PASS` 時，協調者才能請求使用者明確核准 `animation_design.md`。
 
-### User Design Approval
+### 使用者核准設計
 
-The design passes only after both independent review `PASS` and explicit user approval. Silence and file edits alone do not count as approval.
+只有在獨立審查結果為 `PASS`，且使用者明確核准後，動畫設計才算通過。沉默或只修改檔案不算核准。
 
-## Subphase 3: CONTRACT
+## 子階段 3：CONTRACT
 
-### Goal
+### 目標
 
-Convert the approved animation design into the formal downstream contract without reopening or silently changing the design.
+將已核准的動畫設計轉成供後續階段使用的正式契約，不得重新開啟設計或悄悄改變設計。
 
-### Owner
+### 負責角色
 
-`animation-designer` converts the approved `animation_design.md` into `pre_build_brief.md`. A separate `brief-editor` is not used.
+由 `animation-designer` 將已核准的 `animation_design.md` 轉成 `pre_build_brief.md`，不再使用獨立的 `brief-editor`。
 
-### Rules
+### 規則
 
-- Preserve all approved core decisions and their sources.
-- Separate explicit user requests, user-approved decisions, and agent defaults.
-- Freeze algorithm semantics, visual semantics, teaching arc, delivery tier, narration obligations, and overlay policy for downstream phases.
-- Do not add unapproved core decisions.
-- If conversion exposes a missing core decision, return to `DESIGN_DEVELOPMENT`; update, review, and reapprove `animation_design.md` before trying again.
-- If the design is complete and only the contract wording or source labeling is wrong, repair it within `CONTRACT`.
+- 保留所有已核准的核心決策及其來源。
+- 明確區分使用者原始要求、使用者核准的決策與 Agent 預設值。
+- 為後續階段凍結演算法語意、視覺語意、教學弧線、交付層級、旁白責任與 overlay policy。
+- 不得新增未經核准的核心決策。
+- 如果轉換過程暴露缺少的核心決策，必須退回 `DESIGN_DEVELOPMENT`；更新、重新審查並再次核准 `animation_design.md` 後，才能重新嘗試。
+- 如果設計本身完整，問題只出在契約措辭或來源標示，則留在 `CONTRACT` 修正。
 
-The user must explicitly approve `pre_build_brief.md` separately from `animation_design.md`. Only then does `ANIMATION_DESIGN` pass.
+使用者必須分別明確核准 `animation_design.md` 與 `pre_build_brief.md`。只有正式契約取得核准後，`ANIMATION_DESIGN` 才能通過。
 
-## Artifact and Data Flow
+## 產物與資料流
 
 ```text
-user request
+使用者需求
     |
     v
 intake_summary.md
@@ -181,29 +181,29 @@ animation_design.md
 animation_design_review.md = PASS
     |
     v
-explicit user design approval
+使用者明確核准設計
     |
     v
 pre_build_brief.md
     |
     v
-explicit user contract approval
+使用者明確核准契約
     |
     v
 SCRIPT
 ```
 
-## Rollback Rules
+## 回退規則
 
-- Incorrectly captured source request: return to `INTAKE`.
-- Incomplete or failed design: return to `DESIGN_DEVELOPMENT`.
-- Incorrect contract wording or source labeling: remain in `CONTRACT`.
-- Contract conversion exposes a design gap: return to `DESIGN_DEVELOPMENT`.
-- A later phase exposes ambiguity in core semantics, mental model, visual semantics, or teaching arc: return to `DESIGN_DEVELOPMENT`; do not patch the gap in `SCRIPT` or `RENDER`.
+- 原始需求記錄錯誤：退回 `INTAKE`。
+- 設計不完整或審查失敗：退回 `DESIGN_DEVELOPMENT`。
+- 契約措辭或來源標示錯誤：留在 `CONTRACT`。
+- 契約轉換暴露設計缺口：退回 `DESIGN_DEVELOPMENT`。
+- 後續階段發現核心演算法語意、心智模型、視覺語意或教學弧線仍有歧義：退回 `DESIGN_DEVELOPMENT`，不得在 `SCRIPT` 或 `RENDER` 中直接修補。
 
-## Agent and Reference Structure
+## Agent 與 Reference 結構
 
-### Add
+### 新增
 
 - `agents/animation-designer.md`
 - `agents/animation-design-reviewer.md`
@@ -215,7 +215,7 @@ SCRIPT
 - `references/animation-design-search.md`
 - `references/animation-design-graph-traversal.md`
 
-### Reuse or Update
+### 沿用或修改
 
 - `references/intake-contract.md`
 - `references/high-impact-clarification.md`
@@ -223,34 +223,34 @@ SCRIPT
 - `references/default-visual-semantics.md`
 - `references/pre-build-brief.md`
 
-The agent files define role, workflow, inputs, outputs, routing, prohibitions, and rollback ownership. Detailed design knowledge belongs in references.
+Agent 檔案只定義角色、流程、輸入、輸出、reference 路由、禁止事項與回退責任。詳細設計知識應放在 references 中。
 
-Both designer and reviewer read the common references and only the type-specific reference relevant to the current request. If no type-specific reference exists, use the common design method, label the work `best-effort`, disclose the coverage risk, and apply stricter review.
+設計師與 reviewer 都必須閱讀通用 references，並且只讀取與目前演算法類型相關的專用 reference。若沒有對應的專用 reference，則使用通用設計方法、將工作標記為 `best-effort`、揭露知識覆蓋風險，並採用更嚴格的審查。
 
-### Remove
+### 移除
 
 - `agents/brief-editor.md`
 - `agents/clarification-planner.md`
 
-Their required responsibilities move into `animation-designer`.
+這兩個角色的必要職責將移入 `animation-designer`。
 
-## Verification
+## 驗證方式
 
-Implementation verification must confirm:
+實作後必須確認：
 
-- Phase names, artifact chains, gates, and rollback rules agree across `SKILL.md`, agent files, and references.
-- No references to removed roles remain.
-- New agents have explicit inputs, outputs, prohibitions, and rollback rules.
-- The `animation_design.md` schema covers every `DESIGN_READY` condition.
-- The reviewer checklist can produce an evidence-backed result for every gate condition.
-- The workflow cannot skip from `INTAKE` to `CONTRACT`.
-- `SCRIPT` cannot begin after reviewer `FAIL`, missing design approval, or missing contract approval.
-- Representative walkthroughs cover array sorting, binary search, BFS, and one best-effort algorithm.
-- The sorting walkthrough tests movement semantics and settled progress.
-- The search walkthrough tests interval semantics and the chosen mental model.
-- The BFS walkthrough tests queue visibility, visited timing, and layer expansion.
-- The best-effort walkthrough tests risk disclosure and stricter review.
+- `SKILL.md`、agent 檔案與 references 中的階段名稱、產物鏈、關卡及回退規則一致。
+- 所有已移除角色的引用都已清除。
+- 新 agent 均有明確的輸入、輸出、禁止事項與回退規則。
+- `animation_design.md` 結構涵蓋所有 `DESIGN_READY` 條件。
+- Reviewer checklist 能針對每個關卡條件產生有證據支持的結果。
+- 工作流程不能從 `INTAKE` 直接跳到 `CONTRACT`。
+- Reviewer 結果為 `FAIL`、設計尚未核准或契約尚未核准時，`SCRIPT` 均不得開始。
+- 代表性流程走讀涵蓋 array sorting、binary search、BFS 與一個 best-effort 演算法。
+- Sorting 走讀驗證移動語意與 settled progress。
+- Search 走讀驗證區間語意與選定的心智模型。
+- BFS 走讀驗證 queue visibility、visited timing 與 layer expansion。
+- Best-effort 走讀驗證風險揭露與加強審查。
 
-## Success Criteria
+## 成功標準
 
-The change succeeds when users can begin with an incomplete animation request, receive expert design assistance, directly edit a concrete design artifact, approve a reviewer-validated animation design, and then approve a faithful formal contract before downstream production begins.
+當使用者可以從不完整的動畫需求開始，取得專業設計協助、直接編輯具體的設計產物、核准通過獨立審查的動畫設計，並在後續製作開始前再次核准忠實轉換而成的正式契約，即代表此變更成功。
