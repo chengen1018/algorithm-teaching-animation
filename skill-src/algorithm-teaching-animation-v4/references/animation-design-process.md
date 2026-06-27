@@ -1,0 +1,102 @@
+# Animation Design Process
+
+## Purpose
+
+Define the contract for DESIGN_DEVELOPMENT. Its primary job is to design how the animation teaches and presents the algorithm. Clarification supports that work; it is not a substitute for producing the design.
+
+The process must produce an `animation_design.md` that is ready for explicit user confirmation and downstream review.
+
+## Inputs
+
+Use the approved task context, algorithm name and variant, sample input, audience and learning goals, animation requirements, relevant project contracts, and all user decisions already recorded.
+
+Treat missing information according to impact. Ask only when an unresolved answer could materially change algorithm semantics, the primary mental model, the core visual metaphor, the teaching arc, or the high-level animation beats. Resolve lower-impact details with a documented best-effort choice.
+
+## Design Responsibilities
+
+DESIGN_DEVELOPMENT must actually design, not merely collect preferences or restate inputs. It owns:
+
+- the primary mental model the viewer should build;
+- the visual presentation, including metaphor, visual semantics, structure presentation, scene organization, and information hierarchy;
+- the teaching arc from motivation and setup through state changes, insight, and conclusion;
+- the high-level animation beats that make algorithm state and causality visible;
+- a recommended design, relevant alternatives, and the tradeoffs that justify the recommendation;
+- prevention of likely viewer misconceptions;
+- faithful incorporation of confirmed user decisions and explicit notation of best-effort assumptions.
+
+Every design choice must serve the stated audience and learning goal. Do not turn low-level implementation details into design requirements unless they affect what the viewer learns or sees.
+
+## Core-Question Batch Protocol
+
+Identify unresolved core questions and organize them into small question batches. A batch must contain only closely related decisions needed for the next design step; do not present a long questionnaire.
+
+Within a batch, ask exactly one user-facing question at a time and wait for its answer before asking the next. Each question must include:
+
+1. a concrete recommendation;
+2. the rationale for that recommendation;
+3. the meaningful tradeoff or consequence of accepting it;
+4. a concise set of answer choices when choices are useful.
+
+Relay the user's answer faithfully into the design record. Do not reinterpret, weaken, silently replace, or merge it with the recommendation. If an answer is ambiguous in a way that materially changes the design, quote or closely paraphrase the ambiguity and ask one focused follow-up question.
+
+After each answer, update the working design and reassess whether another core question remains. Do not ask questions whose answers can no longer affect the design.
+
+## Low-Impact Questions That Must Not Block Design
+
+Low-impact questions must not block design progress or the DESIGN_READY gate. These include preferences whose alternatives preserve algorithm semantics, the primary mental model, the teaching arc, and the high-level beats, such as minor color, typography, spacing, timing, wording, or decorative choices unless accessibility or correctness makes them material.
+
+Choose a reasonable default, record it under risks or best-effort notes when useful, and continue. The user may revise these details during the edit loop.
+
+## DESIGN_READY Gate
+
+DESIGN_READY passes only when all of the following are true:
+
+- the design goal and audience are explicit;
+- the algorithm variant and operational semantics are unambiguous;
+- the primary mental model is explicit and technically faithful;
+- likely viewer misconceptions and their preventions are identified;
+- the sample input is suitable and its teaching rationale is stated;
+- the core visual metaphor and visual semantics are defined;
+- structure presentation, scene structure, and information hierarchy are defined;
+- the teaching arc is coherent;
+- the high-level animation beats expose the important state transitions and causal relationships;
+- a recommended design and material alternatives include rationale and tradeoffs;
+- all material user decisions are incorporated faithfully;
+- unresolved items are either blocking core questions or explicitly documented best-effort risks;
+- the design document satisfies the required contract and self-check.
+
+Once every DESIGN_READY condition passes, the process must stop asking design questions and stop adding design work. It must present `animation_design.md` for explicit user confirmation. Continuing to elaborate, clarify, or expand after the gate passes is a process failure.
+
+## User Edit Loop
+
+The user may edit `animation_design.md` directly. Any edit invalidates the prior review result and requires re-review before confirmation can be accepted.
+
+After an edit, identify what changed, preserve the user's wording and intent, run the appropriate review scope, update the DESIGN_READY self-check, and present the reviewed document again for explicit confirmation. Silence, inactivity, or editing the file alone does not count as approval.
+
+## Full Review Versus Delta Review
+
+Use full review for the initial design, after changes to algorithm semantics, primary mental model, core visual metaphor or semantics, teaching arc, scene structure, high-level beats, or whenever change impact is uncertain. Full review checks the entire document and every DESIGN_READY condition.
+
+Use delta review only for a clearly bounded edit whose effects can be traced completely. Delta review must inspect the changed text, all dependent sections, internal consistency, and the DESIGN_READY self-check. Escalate immediately to full review if the edit has cross-cutting effects or reveals an earlier inconsistency.
+
+## Rollback Rules
+
+If review finds a regression, contradiction, unsupported claim, lost user decision, or failed DESIGN_READY condition, roll the design state back to DESIGN_DEVELOPMENT. Do not silently restore old text over a user edit. Preserve the user's requested change in the decision record, explain the conflict, and resolve it through one focused core question only when the impact is material.
+
+If downstream work reveals that the confirmed design is technically invalid or materially incomplete, stop downstream production and return to DESIGN_DEVELOPMENT. Re-review and explicit reconfirmation are required before downstream work resumes.
+
+## Failure Conditions
+
+The process fails if it:
+
+- treats clarification as the primary deliverable instead of designing the teaching and presentation;
+- asks a large questionnaire, asks multiple user-facing questions at once, or mixes unrelated decisions in one batch;
+- omits the recommendation, rationale, or tradeoff from a core question;
+- relays a user answer inaccurately or silently substitutes another choice;
+- blocks on a low-impact preference;
+- leaves the mental model, visual presentation, teaching arc, or high-level beats undesigned;
+- declares DESIGN_READY while any gate condition is unmet;
+- continues questioning or elaborating after every DESIGN_READY condition passes;
+- accepts silence, inactivity, or an unreviewed edit as approval;
+- uses delta review when the change requires full review;
+- continues downstream work after the design has rolled back.
