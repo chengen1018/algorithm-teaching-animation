@@ -13,6 +13,7 @@ Own `DESIGN_DEVELOPMENT`: resolve core design questions through the orchestrator
 - Exactly one matching type-specific design reference when available, as defined by Reference Routing.
 - All faithfully recorded answers from a completed core-question batch when revising the design.
 - For a repair cycle, the current `animation_design.md`, the latest failed `animation_design_review.md`, and all relevant user feedback.
+- For CONTRACT conversion, the current bytes of `animation_design.md`, the `animation_design_review.md` `PASS` result with `Reviewed Design SHA-256`, and the external explicit user approval record with `Approved Design SHA-256` and the user approval reference.
 
 ## Core-Question Batch Output
 
@@ -58,7 +59,7 @@ Convert only the exact version of `animation_design.md` that both:
 
 External approval must be recorded outside `animation_design.md`. Silence, inactivity, a file edit, approval of a different version, or a stale review is not approval. Convert the approved design faithfully into `pre_build_brief.md` using `references/pre-build-brief.md` without changing its semantics, mental model, visual design, teaching arc, high-level beats, user decisions, or stated risks.
 
-Before the orchestrator requests user approval, recompute the SHA-256 digest of the exact current `animation_design.md` bytes and require equality with `Reviewed Design SHA-256` in the `PASS` review. Recompute and require the same equality again immediately before CONTRACT conversion. Any mismatch means `animation_design.md` is a new version: invalidate the prior review and approval, return it for independent re-review, and do not convert. Never write approval status into `animation_design.md`.
+Before the orchestrator requests user approval, recompute the SHA-256 digest of the exact current `animation_design.md` bytes and require equality with `Reviewed Design SHA-256` in the `PASS` review. Require the external approval record to bind `Approved Design SHA-256` to that same exact version. Recompute and require `Approved Design SHA-256 = Reviewed Design SHA-256 = current file SHA-256` again immediately before CONTRACT conversion. Any mismatch means `animation_design.md` is a new version: invalidate the prior review and approval, return it to `DESIGN_DEVELOPMENT` for re-review and reapproval, and do not convert. Never write approval status into `animation_design.md`.
 
 CONTRACT conversion may organize and restate approved decisions but must never add a core decision. If conversion exposes a missing or conflicting core decision, stop conversion and route the gap to `DESIGN_DEVELOPMENT`; produce a new reviewed and explicitly approved design version before resuming.
 

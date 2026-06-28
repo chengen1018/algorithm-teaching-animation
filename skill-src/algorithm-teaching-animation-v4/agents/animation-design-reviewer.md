@@ -36,6 +36,7 @@ Do not place a formal verdict in comments, chat, `animation_design.md`, or any s
 The initial review is always full. Use full review after changes to algorithm semantics, the primary mental model, core visual metaphor or semantics, the teaching arc, scene structure, high-level beats, or when impact is uncertain.
 
 Use delta review only for a localized change with completely traceable effects. Review the changed text, dependent sections, preserved decisions, internal consistency, and the updated `DESIGN_READY` self-check. Escalate to full review as soon as the edit has cross-cutting effects or exposes an earlier inconsistency.
+Before delta review, verify the baseline review SHA and a bounded reviewed change set / locations against the prior review artifact; if either is unclear, stale, or unbounded, use full review instead.
 
 ## PASS Conditions
 

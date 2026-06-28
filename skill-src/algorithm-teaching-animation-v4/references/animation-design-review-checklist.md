@@ -7,10 +7,12 @@
 - Read the exact `animation_design.md` bytes at review start and compute their SHA-256 digest. Immediately before finalizing the verdict, re-read the file, recompute the digest, and confirm that the bytes still match the version reviewed. Restart on the new bytes or return `FAIL` if they changed during review.
 - Read the intake and the design references routed for the algorithm category. Confirm that the reviewer did not author or repair the design.
 - Do not request external user approval during review. External approval may be requested only after this exact version receives `PASS`.
+- Use `references/animation-design-process.md` as the canonical source of `DESIGN_READY` gate conditions. Build the evidence matrix from every canonical gate condition there, whether or not the reviewed `animation_design.md` repeats it in its own self-check.
 
 ## Review Scope Selection
 
 Record `Review Scope: Full` or `Review Scope: Delta` and explain why that scope is valid. When impact is uncertain, use full review.
+If the scope is `Delta`, record the base reviewed SHA-256 and the bounded reviewed change set / locations before review continues; if either cannot be bounded, escalate to `Full`.
 
 ### Full Review
 
@@ -51,6 +53,8 @@ Write `animation_design_review.md` using all of these fields and sections:
 - Reviewed Design SHA-256: <64-character lowercase SHA-256 digest of the exact animation_design.md bytes reviewed>
 - Review Scope: Full | Delta
 - Scope Rationale: <why this scope is valid>
+- Base Reviewed SHA-256: <prior reviewed SHA-256 for Delta, or None for Full>
+- Reviewed Change Set / Locations: <bounded changed lines/sections for Delta, or None for Full>
 
 ## DESIGN_READY Evidence Matrix
 
@@ -82,11 +86,12 @@ PASS | FAIL
 
 Emit exactly one verdict: either `PASS` or `FAIL`. Do not emit a mixed, conditional, provisional, or second verdict. The result must state the review scope, evidence for teaching coherence, visual feasibility, and semantic consistency, unresolved issues, required repairs, and rollback target even when a field is `None`.
 
-The evidence matrix must contain exactly one row or item for every `DESIGN_READY` condition in the reviewed design. Each row must state the condition, result, and concrete evidence with a section or other precise location. A condition may be `N/A` only when the review explicitly justifies why it does not apply and explains how the governing requirement is still satisfied. Missing rows, missing evidence, unexplained `N/A`, or failed conditions forbid `PASS`.
+The evidence matrix must contain exactly one row or item for every canonical `DESIGN_READY` gate condition in `references/animation-design-process.md`. Each row must state the condition, result, and concrete evidence with a section or other precise location. A condition may be `N/A` only when the review explicitly justifies why it does not apply and explains how the governing requirement is still satisfied. Missing rows, missing evidence, unexplained `N/A`, or failed conditions forbid `PASS`.
+The evidence matrix must not be derived only from the reviewed design's local self-check; omit any canonical gate condition at your peril, because missing canonical conditions, missing evidence, or missing locations forbid `PASS`.
 
 ## PASS Conditions
 
-Return `PASS` only when the selected scope is valid; the recorded SHA-256 identifies the exact bytes reviewed; every `DESIGN_READY` condition has one evidence-matrix entry and either passes with concrete evidence and location or has explicit justified `N/A` handling; teaching coherence, visual feasibility, and algorithm semantic consistency pass; material user decisions are preserved; no high-impact gap remains; and best-effort coverage risks are disclosed and adequately strengthened. For `PASS`, unresolved issues and required repairs must be `None` and the rollback target must be `None`.
+Return `PASS` only when the selected scope is valid; the recorded SHA-256 identifies the exact bytes reviewed; for `Delta`, the base reviewed SHA-256 and bounded reviewed change set / locations are present and match the review scope, and for `Full` both are `None`; every canonical `DESIGN_READY` gate condition from `references/animation-design-process.md` has one evidence-matrix entry and either passes with concrete evidence and location or has explicit justified `N/A` handling; teaching coherence, visual feasibility, and algorithm semantic consistency pass; material user decisions are preserved; no high-impact gap remains; and best-effort coverage risks are disclosed and adequately strengthened. For `PASS`, unresolved issues and required repairs must be `None` and the rollback target must be `None`.
 
 ## FAIL and Rollback Rules
 
