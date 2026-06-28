@@ -4,7 +4,7 @@ Use this reference only for interval or candidate-region narrowing searches whos
 
 ## Applicability
 
-Apply the requirements below only when the algorithm maintains and narrows an explicit candidate interval or region. The interval convention, pointer, and excluded-region requirements must not be applied to linear, graph, substring, or other searches without candidate-region elimination. Those searches must use the common teaching guidance and a reference that matches their actual state, without inventing interval semantics.
+Apply the requirements below only when the algorithm maintains and narrows an explicit candidate interval or region. The interval convention, pointer, and excluded-region requirements must not be applied to linear, graph, substring, or other searches without candidate-region elimination. Those searches must use a matching specialized reference when one is available. When none is available, they must use the common teaching-design and process guidance, be marked best-effort, disclose the coverage risk, and receive strengthened review. They must not invent interval semantics.
 
 ## Required Design Decisions
 
