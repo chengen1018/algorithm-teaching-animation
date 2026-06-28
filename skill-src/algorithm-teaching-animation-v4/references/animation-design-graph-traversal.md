@@ -20,6 +20,14 @@ The design must assign distinct, persistent meanings to discovered and processed
 
 The design must choose whether the main teaching object is the frontier, the traversal tree, or a current path. Emphasis must support the algorithm and learning goal: breadth-first behavior needs frontier order, while depth-first reasoning may need stack or path continuity.
 
+### BFS layer expansion
+
+For BFS, the design must decide whether layer expansion is a teaching goal. When it is, the current layer and next layer must be visibly distinguished while layer membership remains separate from discovered and processed states; a node can be discovered into the next layer before it is processed. When layer expansion is not a teaching goal, do not add layer styling that competes with the queue or implies extra algorithmic state.
+
+### sample topology and traversal setup
+
+The design must make the graph's directedness, start node, and relevant topology explicit before traversal begins. The sample must expose only the structures needed by the teaching goal: branching for frontier growth, cycles or cross-edges for revisitation, duplicate-discovery pressure for visited timing, or neighbor-order effects for deterministic sequencing, as applicable. Do not require every sample to contain all of these structures.
+
 ### neighbor order
 
 The design must state the neighbor visitation order and make that order observable before it affects the queue, stack, or path. If several orders are valid, identify the chosen one as a deterministic teaching choice rather than an algorithmic guarantee.

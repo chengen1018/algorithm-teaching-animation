@@ -1,6 +1,10 @@
 # Animation Design: Search
 
-Use this reference for search animations whose teaching depends on a changing candidate interval or region. It adds search-specific state and choreography decisions without redefining the common design workflow or document structure.
+Use this reference only for interval or candidate-region narrowing searches whose teaching depends on eliminating part of a candidate region after each decision. It adds narrowing-search state and choreography decisions without redefining the common design workflow or document structure.
+
+## Applicability
+
+Apply the requirements below only when the algorithm maintains and narrows an explicit candidate interval or region. The interval convention, pointer, and excluded-region requirements must not be applied to linear, graph, substring, or other searches without candidate-region elimination. Those searches must use the common teaching guidance and a reference that matches their actual state, without inventing interval semantics.
 
 ## Required Design Decisions
 
