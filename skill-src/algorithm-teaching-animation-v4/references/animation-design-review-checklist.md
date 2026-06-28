@@ -4,6 +4,7 @@
 
 - Review only an `animation_design.md` version that the designer marked `DESIGN_READY` and handed off for independent review.
 - Identify the exact design version under review. A prior `animation_design_review.md` does not apply after any edit.
+- Read the exact `animation_design.md` bytes at review start and compute their SHA-256 digest. Immediately before finalizing the verdict, re-read the file, recompute the digest, and confirm that the bytes still match the version reviewed. Restart on the new bytes or return `FAIL` if they changed during review.
 - Read the intake and the design references routed for the algorithm category. Confirm that the reviewer did not author or repair the design.
 - Do not request external user approval during review. External approval may be requested only after this exact version receives `PASS`.
 
@@ -47,8 +48,15 @@ Write `animation_design_review.md` using all of these fields and sections:
 # Animation Design Review
 
 - Reviewed Design Version: <exact version identifier>
+- Reviewed Design SHA-256: <64-character lowercase SHA-256 digest of the exact animation_design.md bytes reviewed>
 - Review Scope: Full | Delta
 - Scope Rationale: <why this scope is valid>
+
+## DESIGN_READY Evidence Matrix
+
+| DESIGN_READY Condition | Result | Concrete Evidence and Location | N/A Justification |
+|---|---|---|---|
+| <one row for every DESIGN_READY condition> | PASS \| FAIL \| N/A | <specific evidence and section/location, or None only for justified N/A> | <required for N/A; otherwise None> |
 
 ## Teaching Coherence Evidence
 <specific evidence from animation_design.md>
@@ -74,9 +82,11 @@ PASS | FAIL
 
 Emit exactly one verdict: either `PASS` or `FAIL`. Do not emit a mixed, conditional, provisional, or second verdict. The result must state the review scope, evidence for teaching coherence, visual feasibility, and semantic consistency, unresolved issues, required repairs, and rollback target even when a field is `None`.
 
+The evidence matrix must contain exactly one row or item for every `DESIGN_READY` condition in the reviewed design. Each row must state the condition, result, and concrete evidence with a section or other precise location. A condition may be `N/A` only when the review explicitly justifies why it does not apply and explains how the governing requirement is still satisfied. Missing rows, missing evidence, unexplained `N/A`, or failed conditions forbid `PASS`.
+
 ## PASS Conditions
 
-Return `PASS` only when the selected scope is valid; every applicable `DESIGN_READY` condition is supported by cited evidence; teaching coherence, visual feasibility, and algorithm semantic consistency pass; material user decisions are preserved; no high-impact gap remains; and best-effort coverage risks are disclosed and adequately strengthened. For `PASS`, unresolved issues and required repairs must be `None` and the rollback target must be `None`.
+Return `PASS` only when the selected scope is valid; the recorded SHA-256 identifies the exact bytes reviewed; every `DESIGN_READY` condition has one evidence-matrix entry and either passes with concrete evidence and location or has explicit justified `N/A` handling; teaching coherence, visual feasibility, and algorithm semantic consistency pass; material user decisions are preserved; no high-impact gap remains; and best-effort coverage risks are disclosed and adequately strengthened. For `PASS`, unresolved issues and required repairs must be `None` and the rollback target must be `None`.
 
 ## FAIL and Rollback Rules
 

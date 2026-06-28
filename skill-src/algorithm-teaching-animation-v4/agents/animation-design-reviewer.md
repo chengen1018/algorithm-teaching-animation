@@ -19,13 +19,15 @@ The reviewer must not have authored, co-authored, revised, or repaired the `anim
 
 ## Reference Routing
 
-Use the same category route as the design: exactly one of `references/animation-design-array-sorting.md`, `references/animation-design-graph-traversal.md`, or `references/animation-design-search.md` when it matches. Do not add a second type reference.
+Use the same category route as the design: exactly one of `references/animation-design-array-sorting.md`, `references/animation-design-graph-traversal.md`, or `references/animation-design-search.md` when it matches. Route `references/animation-design-search.md` only for interval or candidate-region narrowing searches that eliminate a candidate interval or region. Linear search, graph search, substring search, and other non-elimination searches require a matching specialized reference when available; otherwise use the unsupported-category route. Do not invent interval semantics or add a second type reference.
 
 For an unsupported category, use the intake, common design references, `references/visual-language.md`, and `references/default-visual-semantics.md`; verify that the design is marked best-effort and its coverage risk is explicit; then apply the strengthened review required by `references/animation-design-review-checklist.md`. Undisclosed coverage risk or a high-impact semantic gap requires `FAIL`.
 
 ## Required Output
 
-Write `animation_design_review.md` as the only formal verdict artifact. Follow the checklist's required result schema, identify the exact reviewed version and review scope, provide evidence for all three review dimensions, list unresolved issues and required repairs, name the rollback target, and emit exactly one verdict: `PASS` or `FAIL`.
+Write `animation_design_review.md` as the only formal verdict artifact. Follow the checklist's required result schema, identify the exact reviewed version and review scope, record the SHA-256 digest of the exact `animation_design.md` bytes reviewed, provide evidence for all three review dimensions and every `DESIGN_READY` condition, list unresolved issues and required repairs, name the rollback target, and emit exactly one verdict: `PASS` or `FAIL`.
+
+At review start, read the exact `animation_design.md` file and compute its SHA-256 digest. Immediately before finalizing the verdict, re-read the exact file, recompute the digest, and confirm that its bytes match the version actually reviewed. If they do not, restart review on the new bytes or return `FAIL` because the version changed during review. Record the digest for the exact bytes to which the verdict applies alongside the verdict.
 
 Do not place a formal verdict in comments, chat, `animation_design.md`, or any second artifact. Do not request external approval; a `PASS` only permits the orchestrator to request explicit approval of the exact reviewed version.
 
@@ -37,7 +39,7 @@ Use delta review only for a localized change with completely traceable effects. 
 
 ## PASS Conditions
 
-Return `PASS` only when the chosen scope is valid and every condition in `references/animation-design-review-checklist.md` passes with specific evidence. There must be no unresolved high-impact gap, contradiction, lost user decision, semantic inconsistency, infeasible core visual commitment, or undisclosed best-effort coverage risk.
+Return `PASS` only when the chosen scope is valid and every condition in `references/animation-design-review-checklist.md` passes with specific evidence. The `DESIGN_READY` evidence matrix must contain one item for every condition; `PASS` is forbidden when any condition is missing, lacks concrete evidence and location, fails, or is marked not applicable without explicit justified handling. There must be no unresolved high-impact gap, contradiction, lost user decision, semantic inconsistency, infeasible core visual commitment, or undisclosed best-effort coverage risk.
 
 ## Fail Conditions
 

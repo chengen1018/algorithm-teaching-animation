@@ -12,6 +12,7 @@ Own `DESIGN_DEVELOPMENT`: resolve core design questions through the orchestrator
 - `references/visual-language.md` and `references/default-visual-semantics.md`.
 - Exactly one matching type-specific design reference when available, as defined by Reference Routing.
 - All faithfully recorded answers from a completed core-question batch when revising the design.
+- For a repair cycle, the current `animation_design.md`, the latest failed `animation_design_review.md`, and all relevant user feedback.
 
 ## Core-Question Batch Output
 
@@ -44,9 +45,9 @@ When a matching type reference exists, read exactly one:
 
 - array sorting: `references/animation-design-array-sorting.md`;
 - graph traversal: `references/animation-design-graph-traversal.md`;
-- search, including binary search and two-pointer search: `references/animation-design-search.md`.
+- interval or candidate-region narrowing search, including binary search and two-pointer search only when the algorithm eliminates a candidate interval or region: `references/animation-design-search.md`.
 
-Do not combine type references for caution or analogy. For an unsupported category, read no type-specific reference: use the common guidance, mark the design best-effort, disclose the specific coverage risk in `animation_design.md`, and request strengthened independent review under `references/animation-design-review-checklist.md`. If category matching is ambiguous, treat it as unsupported rather than silently selecting multiple references.
+Do not route linear search, graph search, substring search, or any other non-elimination search to `references/animation-design-search.md`, and do not invent interval semantics to force that route. Use a matching specialized reference when one is available. Otherwise, read no type-specific reference: use the common guidance, mark the design best-effort, disclose the specific coverage risk in `animation_design.md`, and request strengthened independent review under `references/animation-design-review-checklist.md`. Do not combine type references for caution or analogy. If category matching is ambiguous, treat it as unsupported rather than silently selecting multiple references.
 
 ## CONTRACT Conversion Responsibilities
 
@@ -57,6 +58,8 @@ Convert only the exact version of `animation_design.md` that both:
 
 External approval must be recorded outside `animation_design.md`. Silence, inactivity, a file edit, approval of a different version, or a stale review is not approval. Convert the approved design faithfully into `pre_build_brief.md` using `references/pre-build-brief.md` without changing its semantics, mental model, visual design, teaching arc, high-level beats, user decisions, or stated risks.
 
+Before the orchestrator requests user approval, recompute the SHA-256 digest of the exact current `animation_design.md` bytes and require equality with `Reviewed Design SHA-256` in the `PASS` review. Recompute and require the same equality again immediately before CONTRACT conversion. Any mismatch means `animation_design.md` is a new version: invalidate the prior review and approval, return it for independent re-review, and do not convert. Never write approval status into `animation_design.md`.
+
 CONTRACT conversion may organize and restate approved decisions but must never add a core decision. If conversion exposes a missing or conflicting core decision, stop conversion and route the gap to `DESIGN_DEVELOPMENT`; produce a new reviewed and explicitly approved design version before resuming.
 
 ## Rules
@@ -66,6 +69,7 @@ CONTRACT conversion may organize and restate approved decisions but must never a
 - Never request external user approval before `animation_design_review.md` records `PASS` for the exact design version.
 - Never self-review, issue the formal verdict, or edit `animation_design_review.md`.
 - Any edit to `animation_design.md` invalidates the prior review and requires re-review before approval can be accepted.
+- In a repair cycle, repair every named finding from the latest failed review, incorporate relevant user feedback without losing confirmed decisions, then re-run the complete `DESIGN_READY` self-check before requesting re-review.
 - Stop downstream conversion when review fails or a core design gap appears.
 
 ## Fail Conditions
