@@ -35,17 +35,29 @@ Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md 
 
 Any mismatch means the design is a new or stale version. Do not convert it. Return to `DESIGN_DEVELOPMENT`, obtain the required independent re-review, receive `PASS`, and obtain explicit external user reapproval for the new exact SHA-256.
 
+`Source Design SHA-256` is not required before conversion.
+
 ## CONTRACT Conversion Boundary
 
 `pre_build_brief.md` must faithfully convert the approved design's semantics, mental model, visual system, scene structure, teaching arc, high-level beats, user decisions, delivery obligations, and risks. CONTRACT may organize, condense, and source-label those approved decisions, but it must not add, repair, or silently settle a core design choice.
+
+During faithful conversion, record `Source Design SHA-256` in the external CONTRACT lineage record as the exact current `Approved Design SHA-256` used to produce `pre_build_brief.md`. Keep lineage and approval records external; do not mutate `animation_design.md` or `pre_build_brief.md` to store them.
 
 If conversion exposes a missing, conflicting, or materially ambiguous core decision, stop and route the gap to `DESIGN_DEVELOPMENT`. The repaired `animation_design.md` must complete its full required review and approval path before conversion resumes: update and `DESIGN_READY` self-check, appropriate full or delta independent review, `animation_design_review.md = PASS`, exact-version external user approval, and SHA-256 convergence.
 
 A wording, formatting, or source-label issue that does not change approved meaning stays in CONTRACT and may be corrected in `pre_build_brief.md` without reopening design.
 
+Any edit to `animation_design.md` invalidates the derived `pre_build_brief.md`, its `Source Design SHA-256` lineage, and its approval. Return to `DESIGN_DEVELOPMENT`, rerun the impact-appropriate review and exact-version design approval, then regenerate the brief with new external lineage and obtain separate brief approval.
+
 ## Separate Brief Approval Gate
 
-Approval of `animation_design.md` does not approve `pre_build_brief.md`. After conversion, the orchestrator must ask for separate explicit user approval of the exact `pre_build_brief.md` before downstream work starts. Record that approval externally with:
+Approval of `animation_design.md` does not approve `pre_build_brief.md`. After conversion and before requesting brief approval, recompute the current design SHA-256 and require:
+
+```text
+Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
+```
+
+Only then may the orchestrator ask for separate explicit user approval of the exact `pre_build_brief.md` before downstream work starts. Record that approval externally with:
 
 - `Approved Brief SHA-256`, computed from the exact approved `pre_build_brief.md` bytes; and
 - an explicit user approval reference that identifies the approval event.
@@ -54,9 +66,10 @@ Do not write approval status, `Approved Brief SHA-256`, or the approval referenc
 
 Every edit to `pre_build_brief.md` creates a new version and invalidates prior approval, even when the edit appears editorial. Re-review the changed brief for faithful CONTRACT conversion and obtain explicit user reapproval of its new exact SHA-256. If an edit exposes or introduces a core design change, route to `DESIGN_DEVELOPMENT` and complete design review, exact-version design approval, reconversion, and brief approval again.
 
-Immediately before SCRIPT or any downstream phase starts, recompute the current `pre_build_brief.md` SHA-256 and require:
+At the `ANIMATION_DESIGN` exit gate and immediately before SCRIPT or any downstream phase starts, recompute the current design and `pre_build_brief.md` SHA-256 values and require:
 
 ```text
+Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
 Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 ```
 
@@ -215,6 +228,8 @@ The brief fails when:
 
 - a known high-impact issue is missing
 - the required design, review, approval record, or exact SHA-256 convergence is unavailable
+- `Source Design SHA-256` is required before conversion rather than being created during conversion
+- the external CONTRACT lineage record lacks `Source Design SHA-256` or it does not equal the exact approved design SHA-256 used to produce the brief
 - semantics are vague enough to support multiple conflicting scenes
 - delivery obligations are unstated
 - narration language obligations are unstated or hidden inside implied defaults
@@ -224,6 +239,7 @@ The brief fails when:
 - the brief lacks separate explicit user approval
 - the external approval record lacks `Approved Brief SHA-256` or an explicit user approval reference
 - the current brief SHA-256 does not equal `Approved Brief SHA-256` immediately before SCRIPT or downstream work
+- the design hashes do not satisfy `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` before brief approval, at `ANIMATION_DESIGN` exit, or immediately before SCRIPT
 - approval status or approval metadata is written into `pre_build_brief.md`
 
 ## Recommended Template

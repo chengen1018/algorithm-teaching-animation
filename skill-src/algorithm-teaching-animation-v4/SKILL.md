@@ -110,22 +110,22 @@ Continue with another small batch while any blocking question could materially c
 Then dispatch the independent `animation-design-reviewer`, who creates the sole formal review artifact, `animation_design_review.md`. The review must build a complete evidence matrix against the `DESIGN_READY` conditions specified in `references/animation-design-process.md` and use either `Full` or fully traceable `Delta` routing according to change impact. The initial review, and any change to algorithm semantics, the primary mental model, the core visual metaphor or semantics, teaching arc, scene structure, high-level beats, or a change whose impact is unclear, requires `Full` review.
 
 The reviewer must compute SHA-256 over the exact bytes of the actual `animation_design.md` under review both when review begins and immediately before review ends, and record `Reviewed Design SHA-256` in a `PASS` result. Only after `animation_design_review.md = PASS` may the orchestrator request the user's explicit approval of that exact reviewed version. The approval record must be stored outside `animation_design.md` and preserve `Approved Design SHA-256` plus an explicit reference to the user's approval.
-The user may directly edit `animation_design.md`. Every direct edit creates a new version, invalidates prior review and approval, and triggers `Full` or `Delta` re-review according to change impact. Any existing `pre_build_brief.md` and its approval are also invalidated. Every new version must return to `DESIGN_DEVELOPMENT`, undergo the impact-appropriate full or delta review, receive `PASS`, receive the user's renewed explicit approval, and then have `pre_build_brief.md` regenerated and separately reapproved. Silence, no response, the edit itself, or approval of another version does not count as approval.
+The user may directly edit `animation_design.md`. Every direct edit creates a new version, invalidates prior review and approval, and triggers `Full` or `Delta` re-review according to change impact. Any existing `pre_build_brief.md`, its `Source Design SHA-256` lineage, and its approval are also invalidated. Every new version must return to `DESIGN_DEVELOPMENT`, undergo the impact-appropriate full or delta review, receive `PASS`, receive the user's renewed explicit approval, and then have `pre_build_brief.md` regenerated with new external lineage and separately reapproved. Silence, no response, the edit itself, or approval of another version does not count as approval.
 
 ### Subphase 3: CONTRACT
 Dispatch `animation-designer` to convert the design faithfully into `pre_build_brief.md` only when the exact current `animation_design.md` version has received `PASS` from independent review, the user has explicitly approved the same version, and all of these values converge exactly:
 
 ```text
-Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
+Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
 ```
 
-The external `CONTRACT` gate record must preserve `Source Design SHA-256`, identifying the exact design version from which the current `pre_build_brief.md` was produced.
+`Source Design SHA-256` is not required before conversion. During faithful conversion, record it in the external `CONTRACT` lineage record as the exact current `Approved Design SHA-256` used to produce `pre_build_brief.md`; do not write lineage or approval metadata into `animation_design.md` or `pre_build_brief.md`.
 The conversion may organize, condense, and label the sources of approved decisions, but it must not add, repair, or silently decide any core semantics, mental model, core visual semantics, scene structure, teaching arc, or high-level beat.
-After conversion, the orchestrator must separately request the user's explicit approval of the exact `pre_build_brief.md` version. Design approval cannot substitute for brief approval. The external approval record must preserve `Approved Brief SHA-256` and an explicit reference to the user's approval; do not write approval status or metadata into the brief.
+After conversion and before requesting brief approval, recompute the current design SHA-256 and require `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`. Then the orchestrator must separately request the user's explicit approval of the exact `pre_build_brief.md` version. Design approval cannot substitute for brief approval. The external approval record must preserve `Approved Brief SHA-256` and an explicit reference to the user's approval; do not write approval status or metadata into the brief.
 Every edit to `pre_build_brief.md` invalidates prior approval. Recheck faithful conversion and obtain explicit approval of the new version. Immediately before starting `SCRIPT`, recompute SHA-256 for the current design and brief and require:
 
 ```text
-Source Design SHA-256 = current Approved Design SHA-256 = current animation_design.md SHA-256
+Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
 Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 ```
 
@@ -153,7 +153,7 @@ Informal reviewer comments, verbal opinions in chat, or the orchestrator's own c
 
 ### Rollback Rules
 If intake captured source material inaccurately, omitted original user wording, or assigned an incorrect source label, return to `INTAKE`, repair `intake_summary.md`, and feed the corrected source back through the design process.
-If there is any gap in core algorithm semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, high-level beats, or another core design decision, or if `animation_design.md` changes in any way, return to `DESIGN_DEVELOPMENT`. After repair, repeat `DESIGN_READY`, the appropriate full or delta independent review, file-backed `PASS`, SHA-256 convergence, and exact-version user reapproval. The existing `pre_build_brief.md` and its approval are invalid; regenerate and separately reapprove the brief.
+If there is any gap in core algorithm semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, high-level beats, or another core design decision, or if `animation_design.md` changes in any way, return to `DESIGN_DEVELOPMENT`. After repair, repeat `DESIGN_READY`, the appropriate full or delta independent review, file-backed `PASS`, SHA-256 convergence, and exact-version user reapproval. The existing `pre_build_brief.md`, its `Source Design SHA-256` lineage, and its approval are invalid; regenerate the brief with new external lineage and separately reapprove it.
 If the problem is limited to brief wording, formatting, source labels, or faithful conversion without changing the meaning of the approved design, stay in or return to `CONTRACT`. Recheck faithful conversion, update `Source Design SHA-256`, and obtain approval for the new SHA-256 of `pre_build_brief.md`.
 If `CONTRACT` reveals a missing, conflicting, or materially ambiguous core decision, stop conversion and return to `DESIGN_DEVELOPMENT`. Do not perform design work in the brief.
 
@@ -164,7 +164,7 @@ Organize the approved `pre_build_brief.md` into teachable animation beats and co
 
 ### Do Not Start Until
 An approved `pre_build_brief.md` exists.
-Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = current Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`, with an external record of explicit approval for that exact `pre_build_brief.md` version.
+Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`, with an external record of explicit approval for that exact `pre_build_brief.md` version.
 
 ### Do
 Dispatch the `script-writer` subagent to create the teaching script.

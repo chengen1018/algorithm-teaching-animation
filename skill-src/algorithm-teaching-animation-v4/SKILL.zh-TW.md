@@ -110,22 +110,22 @@ qa_result.md
 接著派遣獨立的 `animation-design-reviewer`，由其建立唯一的正式審查產物 `animation_design_review.md`。審查必須以 `references/animation-design-process.md` 規範中的 `DESIGN_READY` 條件建立完整證據矩陣，並依變更影響採用 `Full` 或可完整追蹤的 `Delta` 路由；初次審查，以及演算法語意、主要心智模型、核心視覺隱喻或語意、教學弧線、場景結構、高階節拍或影響不明的變更，必須使用 `Full`。
 
 審查者在審查開始與結束前都必須對實際受審的 `animation_design.md` 位元組內容計算 SHA-256，並在 `PASS` 結果中記錄 `Reviewed Design SHA-256`。只有 `animation_design_review.md = PASS` 後，協調者才能請求使用者明確核准該精確受審版本；核准記錄必須在 `animation_design.md` 外部保存 `Approved Design SHA-256` 與明確的使用者核准參照。
-使用者可以直接編輯 `animation_design.md`；每次這種直接編輯都會建立新版本並使先前的審查與核准失效，且依變更影響套用 Full 或 Delta 重新審查規則。先前的 `pre_build_brief.md` 與其核准也會失效。任何新版本都必須退回 `DESIGN_DEVELOPMENT`，依影響重新進行完整或差異審查、取得 `PASS`，由使用者重新明確核准，再重新產生並另行核准 `pre_build_brief.md`；沉默、未回覆、編輯檔案本身或核准其他版本都不算核准。
+使用者可以直接編輯 `animation_design.md`；每次這種直接編輯都會建立新版本並使先前的審查與核准失效，且依變更影響套用 Full 或 Delta 重新審查規則。先前的 `pre_build_brief.md`、其 `Source Design SHA-256` 血緣記錄與其核准也會失效。任何新版本都必須退回 `DESIGN_DEVELOPMENT`，依影響重新進行完整或差異審查、取得 `PASS`，由使用者重新明確核准，再重新產生 `pre_build_brief.md`、建立新的外部血緣記錄並另行核准；沉默、未回覆、編輯檔案本身或核准其他版本都不算核准。
 
 ### 子階段 3：CONTRACT
 只有在目前 `animation_design.md` 的精確版本已由獨立審查取得 `PASS`、使用者已明確核准相同版本，且下列值完全收斂時，才能派遣 `animation-designer` 忠實轉換為 `pre_build_brief.md`：
 
 ```text
-Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
+Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
 ```
 
-`CONTRACT` 的外部關卡記錄必須保存 `Source Design SHA-256`，用來識別產生目前 `pre_build_brief.md` 的精確設計版本。
+`Source Design SHA-256` 在轉換前尚非必要。忠實轉換期間，將它記錄於外部 `CONTRACT` 血緣記錄，其值必須是用來產生 `pre_build_brief.md` 的精確目前 `Approved Design SHA-256`；不得將血緣或核准中繼資料寫入 `animation_design.md` 或 `pre_build_brief.md`。
 轉換可以整理、濃縮與標示已核准決定的來源，但不得新增、修補或默默決定任何核心語意、心智模型、核心視覺語意、場景結構、教學弧線或高階節拍。
-完成轉換後，協調者必須另外請求使用者明確核准 `pre_build_brief.md` 的精確版本。設計核准不能取代 `pre_build_brief.md` 的核准；外部核准記錄必須保存 `Approved Brief SHA-256` 與明確的使用者核准參照，不得將核准狀態或中繼資料寫入 brief。
+完成轉換後、請求 brief 核准前，重新計算目前設計的 SHA-256，並要求 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`。接著協調者必須另外請求使用者明確核准 `pre_build_brief.md` 的精確版本。設計核准不能取代 `pre_build_brief.md` 的核准；外部核准記錄必須保存 `Approved Brief SHA-256` 與明確的使用者核准參照，不得將核准狀態或中繼資料寫入 brief。
 每次編輯 `pre_build_brief.md` 都使先前核准失效，必須重新檢查忠實轉換並取得新版本的明確核准。緊接在開始 `SCRIPT` 前，重新計算目前設計與 brief 的 SHA-256，並要求：
 
 ```text
-Source Design SHA-256 = current Approved Design SHA-256 = current animation_design.md SHA-256
+Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
 Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 ```
 
@@ -153,7 +153,7 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 
 ### 回退規則
 若來源擷取不準確、遺漏使用者原始措辭，或來源標籤錯誤發生在 intake，退回 `INTAKE` 修正 `intake_summary.md`，再將修正後的來源重新送入設計流程。
-若發現演算法核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高階節拍或其他核心設計缺口，或 `animation_design.md` 有任何變更，退回 `DESIGN_DEVELOPMENT`。修正後必須重新完成 `DESIGN_READY`、適當的完整或差異獨立審查、檔案化 `PASS`、SHA-256 收斂，以及精確版本的使用者重新核准；既有的 `pre_build_brief.md` 與其核准失效，必須重新產生並另行核准。
+若發現演算法核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高階節拍或其他核心設計缺口，或 `animation_design.md` 有任何變更，退回 `DESIGN_DEVELOPMENT`。修正後必須重新完成 `DESIGN_READY`、適當的完整或差異獨立審查、檔案化 `PASS`、SHA-256 收斂，以及精確版本的使用者重新核准；既有的 `pre_build_brief.md`、其 `Source Design SHA-256` 血緣記錄與其核准失效，必須重新產生 brief、建立新的外部血緣記錄並另行核准。
 若問題只涉及 brief 的文字、格式、來源標籤或忠實轉換，且不改變已核准設計的意思，留在或退回 `CONTRACT`，修正後重新檢查忠實轉換、更新 `Source Design SHA-256`，並取得新 SHA-256 的 `pre_build_brief.md` 核准。
 若 `CONTRACT` 暴露缺漏、衝突或實質模糊的核心決定，停止轉換並退回 `DESIGN_DEVELOPMENT`；不得在 brief 中補做設計。
 
@@ -164,7 +164,7 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 
 ### 不得開始直到
 已核准的 `pre_build_brief.md` 存在。
-緊接在開始本階段前，已重新計算目前設計與 brief 的 SHA-256，且 `Source Design SHA-256 = current Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`；另有該精確版本的外部 `pre_build_brief.md` 明確核准記錄。
+緊接在開始本階段前，已重新計算目前設計與 brief 的 SHA-256，且 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`；另有該精確版本的外部 `pre_build_brief.md` 明確核准記錄。
 
 ### 執行事項
 派遣 `script-writer` subagent 建立教學腳本。
