@@ -45,7 +45,24 @@ A wording, formatting, or source-label issue that does not change approved meani
 
 ## Separate Brief Approval Gate
 
-Approval of `animation_design.md` does not approve `pre_build_brief.md`. After conversion, the orchestrator must ask for separate explicit user approval of the exact `pre_build_brief.md` before downstream work starts. The brief passes the gate only when one of these happens:
+Approval of `animation_design.md` does not approve `pre_build_brief.md`. After conversion, the orchestrator must ask for separate explicit user approval of the exact `pre_build_brief.md` before downstream work starts. Record that approval externally with:
+
+- `Approved Brief SHA-256`, computed from the exact approved `pre_build_brief.md` bytes; and
+- an explicit user approval reference that identifies the approval event.
+
+Do not write approval status, `Approved Brief SHA-256`, or the approval reference into `pre_build_brief.md`.
+
+Every edit to `pre_build_brief.md` creates a new version and invalidates prior approval, even when the edit appears editorial. Re-review the changed brief for faithful CONTRACT conversion and obtain explicit user reapproval of its new exact SHA-256. If an edit exposes or introduces a core design change, route to `DESIGN_DEVELOPMENT` and complete design review, exact-version design approval, reconversion, and brief approval again.
+
+Immediately before SCRIPT or any downstream phase starts, recompute the current `pre_build_brief.md` SHA-256 and require:
+
+```text
+Approved Brief SHA-256 = current pre_build_brief.md SHA-256
+```
+
+A mismatch stays in or returns to CONTRACT for brief re-review and exact-version reapproval. If the mismatch reflects a core design change, return to `DESIGN_DEVELOPMENT` for the full required review and reapproval path before CONTRACT conversion resumes.
+
+The brief passes the gate only when one of these happens and the external exact-version approval record is complete:
 
 - the user gives explicit approval
 - the user requests targeted edits and then approves proceeding
@@ -205,6 +222,9 @@ The brief fails when:
 - the beat outline cannot be reconciled with the frozen semantics
 - conversion adds or repairs a core design decision
 - the brief lacks separate explicit user approval
+- the external approval record lacks `Approved Brief SHA-256` or an explicit user approval reference
+- the current brief SHA-256 does not equal `Approved Brief SHA-256` immediately before SCRIPT or downstream work
+- approval status or approval metadata is written into `pre_build_brief.md`
 
 ## Recommended Template
 

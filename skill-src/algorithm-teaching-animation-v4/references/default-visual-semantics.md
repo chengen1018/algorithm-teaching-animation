@@ -10,6 +10,7 @@ This file owns only low-risk fallback decisions for ordinary presentation after 
 - Do not use these defaults to replace missing core design decisions.
 - Do not use this file to override the approved `animation_design.md`, the approved `pre_build_brief.md`, or `visual-language.md`.
 - Do not use this file to overrule clarity concerns covered by `visual-language.md`; escalate a core gap to `DESIGN_DEVELOPMENT`.
+- These defaults are the lowest authority and never resolve a conflict between an approved design or brief and `visual-language.md`. Follow the visual-language rollback route instead of picking precedence or repairing the contract locally.
 
 ## Scope
 
@@ -92,7 +93,7 @@ If the project does not define a custom palette, keep this role vocabulary stabl
 - keep the settled prefix or suffix visibly marked
 - keep non-active values visible so local actions still read as part of the whole array
 
-### Binary Search and Two-Pointer Search
+### Binary Search and Interval or Candidate-Region Narrowing Two-Pointer Search
 
 - show the active interval as one readable region
 - keep active boundary pointers visible for the full beat in which they matter

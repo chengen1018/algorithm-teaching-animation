@@ -54,7 +54,7 @@ Keep `Candidate teaching framing` lightweight:
 Treat these as first-class support:
 
 - array sorting
-- binary search or two-pointer style searching
+- binary search and interval or candidate-region narrowing two-pointer searches only
 - basic graph traversal such as BFS or DFS
 
 ### Best-Effort Support
@@ -67,6 +67,8 @@ Treat categories such as these as best-effort unless the skill adds stronger loc
 - specialized graph algorithms
 
 Record best-effort status and its rationale in `intake_summary.md`; it must remain visible in later design risks and brief notes.
+
+Broad two-pointer requests and non-elimination searches are not first-class merely because they use pointers or contain the word "search." Use a matching specialized design reference when one is available. Otherwise route them through the common design guidance, classify them as best-effort, disclose the specific coverage risk, and require the strengthened independent review defined by `animation-design-review-checklist.md`.
 
 ## Candidate Teaching Framing
 

@@ -70,7 +70,9 @@ Check at least:
 - settled-progress expression
 - whether a temporary holding position is part of the lesson
 
-### Binary Search and Two-Pointer Search
+### Binary Search and Interval or Candidate-Region Narrowing Two-Pointer Search
+
+Use this first-class inventory only for binary search and two-pointer searches that eliminate an interval or candidate region.
 
 Check at least:
 
@@ -78,6 +80,8 @@ Check at least:
 - pointer meaning
 - stopping rule or success criterion
 - whether the lesson emphasizes elimination logic, pointer choreography, or both
+
+Broad or non-elimination two-pointer and search requests do not use this inventory automatically. Use a matching specialized reference when available; otherwise use the common design guidance, mark the request best-effort, disclose its coverage risk, and require strengthened independent review.
 
 ### BFS and DFS
 

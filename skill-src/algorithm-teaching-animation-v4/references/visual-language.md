@@ -9,7 +9,9 @@ Use these viewer-facing rules to keep algorithm state, control, and progress leg
 This file supplies higher-level viewer-facing principles for judging whether those design choices are clear, coherent, and semantically stable.
 
 - Use this file to decide whether a default presentation choice is clear enough for the viewer.
-- If a low-risk default from `default-visual-semantics.md` conflicts with clarity, semantic stability, or the brief, this file and the brief win.
+- If an approved design or brief conflicts with these clarity or semantic-stability principles, treat the conflict as an upstream contract defect. Downstream agents must not choose precedence or repair the conflict locally.
+- Route to CONTRACT when `pre_build_brief.md` mistranslated the approved `animation_design.md`. Route to `DESIGN_DEVELOPMENT` when the approved design itself contains the conflict, then require independent review, exact-version external reapproval, CONTRACT reconversion, and separate brief approval before downstream work resumes.
+- `default-visual-semantics.md` is lowest authority and must never resolve a conflict among the approved design, approved brief, and visual-language principles.
 - Do not use this file to introduce, repair, or silently complete core semantics that were never fixed upstream.
 - A downstream visual-language check that finds missing core semantics, scene structure, persistent support structures, information hierarchy, or cause/effect must route the gap to `DESIGN_DEVELOPMENT`; it must not fix the gap locally.
 
@@ -102,7 +104,7 @@ Whether a support structure exists or persists is a core design decision. This r
 - make progress boundaries easy to read
 - keep the whole row visible so local actions still feel global
 
-### Binary Search and Two-Pointer Search
+### Binary Search and Interval or Candidate-Region Narrowing Two-Pointer Search
 
 - keep the active interval visually coherent
 - distinguish boundary pointers from the active probe
