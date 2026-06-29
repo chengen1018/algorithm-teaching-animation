@@ -69,8 +69,9 @@ qa_result.md
 ## 全程適用的規則
 以下規則適用於整個工作流程：
 
-- `SKILL.zh-TW.md` 是目前中文流程的主要契約。
-- `references/*.md` 補充各階段的執行細節；`agents/*.md` 規範各角色的工作方式。兩者均不得覆蓋或改變 `SKILL.md`。
+- 本文件 `SKILL.zh-TW.md` 是目前中文流程的本主契約。
+- `references/*.md` 補充各階段的執行細節；`agents/*.md` 規範各角色的工作方式。兩者均不得覆蓋或改變本主契約。
+- Task 6 完成同步後，`SKILL.zh-TW.md` 與 `SKILL.md` 必須維持語意同步；在同步完成前，不宣稱尚未同步的 `SKILL.md` 是目前中文流程的權威契約。
 - 即使支援檔案漏讀、工作已委派、渲染成功或已有非正式審查意見，也不得略過 `SKILL.zh-TW.md` 規定的階段、產物或正式關卡。
 - 除非使用者明確要求，否則不得新增契約以外的畫面解說、程式碼面板或註解層。
 - 所有審查與 QA 都必須以各階段指定的正式關卡檔案為準。
@@ -89,7 +90,7 @@ qa_result.md
 
 ### 行動前須閱讀
 `INTAKE` 前，協調者閱讀 `references/intake-contract.md`。
-`DESIGN_DEVELOPMENT` 前，`animation-designer` 依其角色契約閱讀共用設計參考、視覺參考，以及符合演算法類型時唯一一份相符的類型參考；協調者依需要閱讀 `references/high-impact-clarification.md`。
+`DESIGN_DEVELOPMENT` 前，`animation-designer` 依其角色契約閱讀 `references/high-impact-clarification.md`、共用設計參考、視覺參考，以及符合演算法類型時唯一一份相符的類型參考。
 設計審查前，`animation-design-reviewer` 閱讀 `references/animation-design-review-checklist.md`，並使用與設計者相同的參考路由。
 `CONTRACT` 前，`animation-designer` 閱讀 `references/pre-build-brief.md`。
 不要只因為「可能會用到」就提前閱讀後續階段的參考資料。
@@ -102,27 +103,29 @@ qa_result.md
 ### 子階段 2：DESIGN_DEVELOPMENT
 派遣 `animation-designer` 規劃小批、彼此密切相關的核心問題，並實際設計演算法動畫。設計至少涵蓋演算法版本與操作語意、教學目標、要預防的觀眾誤解、主要心智模型及其界線、範例與教學理由、核心視覺隱喻與穩定視覺語意、資料結構呈現、場景結構、資訊層級、教學弧線、高階動畫節拍，以及明確的建議、理由、實質替代方案與取捨。
 
-協調者一次只向使用者提出一個問題，忠實記錄每個回答，不得以設計者的建議取代使用者決定。完成整批問題後，將完整回答一次交回 `animation-designer`，不得每取得一個回答就要求設計者更新。
+協調者只負責一次向使用者提出一個問題、忠實記錄並轉交回答，不負責設計問題清單或動畫設計。不得以設計者的建議取代使用者決定。完成整批問題後，將完整回答一次交回 `animation-designer`，不得每取得一個回答就要求設計者更新。
 只要仍有會實質改變演算法語意、主要心智模型、核心視覺語意、教學弧線、場景結構或高階節拍的阻塞問題，就繼續下一個小批次。低影響細節不得阻塞設計；採用合理的 best-effort 預設值並記錄風險後繼續。
 
-`animation-designer` 依 `references/animation-design-document.md` 建立 `animation_design.md`，完成所有 canonical `DESIGN_READY` 條件的自我檢查，且只有在全部通過、沒有阻塞核心問題時才能交出 `DESIGN_READY`。
-接著派遣獨立的 `animation-design-reviewer`，由其建立唯一的正式審查產物 `animation_design_review.md`。審查必須以 `references/animation-design-process.md` 的 canonical `DESIGN_READY` 條件建立完整 evidence matrix，並依變更影響採用 `Full` 或可完整追蹤的 `Delta` 路由；初次審查，以及演算法語意、主要心智模型、核心視覺隱喻或語意、教學弧線、場景結構、高階節拍或影響不明的變更，必須使用 `Full`。
+`animation-designer` 依 `references/animation-design-document.md` 建立 `animation_design.md`，完成規範中的 `DESIGN_READY` 條件自我檢查，且只有在全部通過、沒有阻塞核心問題時才能交出 `DESIGN_READY`。
+接著派遣獨立的 `animation-design-reviewer`，由其建立唯一的正式審查產物 `animation_design_review.md`。審查必須以 `references/animation-design-process.md` 規範中的 `DESIGN_READY` 條件建立完整證據矩陣，並依變更影響採用 `Full` 或可完整追蹤的 `Delta` 路由；初次審查，以及演算法語意、主要心智模型、核心視覺隱喻或語意、教學弧線、場景結構、高階節拍或影響不明的變更，必須使用 `Full`。
 
-審查者在審查開始與結束前都必須對實際受審的 `animation_design.md` bytes 計算 SHA-256，並在 `PASS` 結果中記錄 `Reviewed Design SHA-256`。只有 `animation_design_review.md = PASS` 後，協調者才能請求使用者明確核准該精確受審版本；核准記錄必須在 `animation_design.md` 外部保存 `Approved Design SHA-256` 與明確的使用者核准參照。
-每次編輯 `animation_design.md` 都會建立新版本並使先前的審查與核准失效。任何新版本都必須依影響重新進行完整或差異審查、取得 `PASS`，並由使用者重新明確核准；沉默、未回覆、編輯檔案本身或核准其他版本都不算核准。
+審查者在審查開始與結束前都必須對實際受審的 `animation_design.md` 位元組內容計算 SHA-256，並在 `PASS` 結果中記錄 `Reviewed Design SHA-256`。只有 `animation_design_review.md = PASS` 後，協調者才能請求使用者明確核准該精確受審版本；核准記錄必須在 `animation_design.md` 外部保存 `Approved Design SHA-256` 與明確的使用者核准參照。
+每次編輯 `animation_design.md` 都會建立新版本並使先前的審查與核准、衍生的 `pre_build_brief.md` 與其核准失效。任何新版本都必須退回 `DESIGN_DEVELOPMENT`，依影響重新進行完整或差異審查、取得 `PASS`，由使用者重新明確核准，再重新產生並另行核准 `pre_build_brief.md`；沉默、未回覆、編輯檔案本身或核准其他版本都不算核准。
 
 ### 子階段 3：CONTRACT
 只有在目前 `animation_design.md` 的精確版本已由獨立審查取得 `PASS`、使用者已明確核准相同版本，且下列值完全收斂時，才能派遣 `animation-designer` 忠實轉換為 `pre_build_brief.md`：
 
 ```text
-Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
+Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
 ```
 
+`CONTRACT` 的外部關卡記錄必須保存 `Source Design SHA-256`，用來識別產生目前 `pre_build_brief.md` 的精確設計版本。
 轉換可以整理、濃縮與標示已核准決定的來源，但不得新增、修補或默默決定任何核心語意、心智模型、核心視覺語意、場景結構、教學弧線或高階節拍。
-完成轉換後，協調者必須另外請求使用者明確核准 `pre_build_brief.md` 的精確版本。設計核准不能取代 brief 核准；外部核准記錄必須保存 `Approved Brief SHA-256` 與明確的使用者核准參照，不得將核准狀態或 metadata 寫入 brief。
-每次編輯 `pre_build_brief.md` 都使先前 brief 核准失效，必須重新檢查忠實轉換並取得新版本的明確核准。緊接在開始 `SCRIPT` 前，重新計算目前 brief 的 SHA-256，並要求：
+完成轉換後，協調者必須另外請求使用者明確核准 `pre_build_brief.md` 的精確版本。設計核准不能取代 `pre_build_brief.md` 的核准；外部核准記錄必須保存 `Approved Brief SHA-256` 與明確的使用者核准參照，不得將核准狀態或中繼資料寫入 brief。
+每次編輯 `pre_build_brief.md` 都使先前核准失效，必須重新檢查忠實轉換並取得新版本的明確核准。緊接在開始 `SCRIPT` 前，重新計算目前設計與 brief 的 SHA-256，並要求：
 
 ```text
+Source Design SHA-256 = current Approved Design SHA-256 = current animation_design.md SHA-256
 Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 ```
 
@@ -140,7 +143,7 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 - `intake_summary.md` 存在，且使用者來源已準確保留。
 - `animation_design.md` 存在並已交出 `DESIGN_READY`。
 - `animation_design_review.md = PASS`，且由獨立的 `animation-design-reviewer` 產出。
-- `Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`。
+- `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`。
 - 已取得使用者對該精確受審設計版本的明確外部核准。
 - `pre_build_brief.md` 存在，且是該核准設計的忠實轉換。
 - `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
@@ -150,8 +153,8 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 
 ### 回退規則
 若來源擷取不準確、遺漏使用者原始措辭，或來源標籤錯誤發生在 intake，退回 `INTAKE` 修正 `intake_summary.md`，再將修正後的來源重新送入設計流程。
-若發現演算法核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高階節拍或其他核心設計缺口，退回 `DESIGN_DEVELOPMENT`。修正後必須重新完成 `DESIGN_READY`、適當的完整或差異獨立審查、檔案化 `PASS`、SHA-256 收斂，以及精確版本的使用者重新核准。
-若問題只涉及 brief 的文字、格式、來源標籤或忠實轉換，且不改變已核准設計的意思，留在或退回 `CONTRACT`，修正後重新檢查忠實轉換並取得新 SHA-256 的獨立 brief 核准。
+若發現演算法核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高階節拍或其他核心設計缺口，或 `animation_design.md` 有任何變更，退回 `DESIGN_DEVELOPMENT`。修正後必須重新完成 `DESIGN_READY`、適當的完整或差異獨立審查、檔案化 `PASS`、SHA-256 收斂，以及精確版本的使用者重新核准；既有的 `pre_build_brief.md` 與其核准失效，必須重新產生並另行核准。
+若問題只涉及 brief 的文字、格式、來源標籤或忠實轉換，且不改變已核准設計的意思，留在或退回 `CONTRACT`，修正後重新檢查忠實轉換、更新 `Source Design SHA-256`，並取得新 SHA-256 的 `pre_build_brief.md` 核准。
 若 `CONTRACT` 暴露缺漏、衝突或實質模糊的核心決定，停止轉換並退回 `DESIGN_DEVELOPMENT`；不得在 brief 中補做設計。
 
 ## 階段 2：SCRIPT
@@ -161,7 +164,7 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 
 ### 不得開始直到
 已核准的 `pre_build_brief.md` 存在。
-緊接在開始本階段前，已重新計算目前 brief 的 SHA-256，且 `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`；另有該精確版本的明確外部 brief 核准記錄。
+緊接在開始本階段前，已重新計算目前設計與 brief 的 SHA-256，且 `Source Design SHA-256 = current Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`；另有該精確版本的外部 `pre_build_brief.md` 明確核准記錄。
 
 ### 執行事項
 派遣 `script-writer` subagent 建立教學腳本。
@@ -183,7 +186,7 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 ### 發生問題時退回
 若問題只在腳本的內容順序、表達或對 brief 的遵循，退回 `SCRIPT`。
 若腳本暴露 brief 的文字、來源標籤或忠實轉換錯誤，退回 `CONTRACT`，修正並重新取得精確版本的 brief 核准。
-若腳本暴露核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高階節拍或其他核心設計缺口，退回 `DESIGN_DEVELOPMENT`，完成重新設計、獨立審查、設計重新核准、`CONTRACT` 轉換及獨立 brief 核准後再繼續。不得在 `SCRIPT` 直接修補核心設計。
+若腳本暴露核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高階節拍或其他核心設計缺口，退回 `DESIGN_DEVELOPMENT`，完成重新設計、獨立審查、設計重新核准、`CONTRACT` 轉換並另行核准 `pre_build_brief.md` 後再繼續。不得在 `SCRIPT` 直接修補核心設計。
 
 ## 階段 3：VOICEOVER
 
@@ -223,7 +226,7 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 若需修正旁白用詞或節奏，退回 `VOICEOVER`。
 若動畫節拍結構不符，退回 `SCRIPT`。
 若已核准設計已明確定義交付層級或旁白義務，但 brief 的文字、來源標籤或忠實轉換有誤，退回 `CONTRACT`，修正並重新取得精確版本的 brief 核准。
-若交付層級、核心意思或教學設計本身未決、衝突或不完整，退回 `DESIGN_DEVELOPMENT`，完成重新設計、獨立審查、設計重新核准、`CONTRACT` 轉換及獨立 brief 核准後再繼續。
+若交付層級、核心意思或教學設計本身未決、衝突或不完整，退回 `DESIGN_DEVELOPMENT`，完成重新設計、獨立審查、設計重新核准、`CONTRACT` 轉換並另行核准 `pre_build_brief.md` 後再繼續。
 
 ## 階段 4：RENDER
 
@@ -282,7 +285,7 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 如果已核准的 `pre_build_brief.md` 與腳本已經寫得很清楚，但場景在樣式、間距、時間、版面或實作內容上未遵守它們，退回 `RENDER`。
 如果動畫節拍不符，或腳本不夠完整，導致場景實作者必須自行猜測結構、順序或強調重點，退回 `SCRIPT`。
 如果已核准設計清楚，但 brief 的文字、來源標籤或忠實轉換不完整，退回 `CONTRACT`，修正並重新取得精確版本的 brief 核准。
-如果仍有未解決的核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線或其他核心設計缺口，退回 `DESIGN_DEVELOPMENT`，完成重新設計、獨立審查、設計重新核准、`CONTRACT` 轉換及獨立 brief 核准後再繼續。不得在 `RENDER` 直接修補核心設計。
+如果仍有未解決的核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線或其他核心設計缺口，退回 `DESIGN_DEVELOPMENT`，完成重新設計、獨立審查、設計重新核准、`CONTRACT` 轉換並另行核准 `pre_build_brief.md` 後再繼續。不得在 `RENDER` 直接修補核心設計。
 
 ## 階段 5：QA
 
@@ -393,7 +396,7 @@ QA 必須檢查內容意思、視覺清晰度、時間安排、版面、交付�
 - `intake_summary.md` 存在，且準確保留使用者來源與來源標籤。
 - `animation_design.md` 存在並通過 `DESIGN_READY`。
 - `animation_design_review.md = PASS`，且由獨立的 `animation-design-reviewer` 產出。
-- `Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`。
+- `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`。
 - 已取得使用者對該精確受審設計版本的明確外部核准。
 - `pre_build_brief.md` 存在，且忠實轉換已核准的設計。
 - `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
