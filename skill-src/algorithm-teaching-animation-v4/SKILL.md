@@ -1,6 +1,6 @@
 ---
 name: algorithm-teaching-animation-v3
-description: Use when a user asks to turn an algorithm name, sample input, or execution process into a complete Manim animation that requires design, implementation, rendering, and delivery verification.
+description: Use when an algorithm request must become a complete Manim teaching animation through design, review, rendering, and QA; not for pure-text algorithm explanations, general non-algorithm animations, or requests limited to local edits of an existing scene.
 ---
 
 # Algorithm Teaching Animation v3
