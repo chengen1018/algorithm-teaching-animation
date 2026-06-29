@@ -73,7 +73,7 @@ Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = curr
 Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 ```
 
-A mismatch stays in or returns to CONTRACT for brief re-review and exact-version reapproval. If the mismatch reflects a core design change, return to `DESIGN_DEVELOPMENT` for the full required review and reapproval path before CONTRACT conversion resumes.
+A mismatch in `pre_build_brief.md` alone stays in or returns to CONTRACT for brief re-review and exact-version reapproval, but only when the design chain still satisfies `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`. Any mismatch or edit in the design chain itself, whether core or non-core, routes to `DESIGN_DEVELOPMENT` for the required Full or Delta re-review, explicit design reapproval, brief regeneration, and brief reapproval before CONTRACT conversion resumes.
 
 The brief passes the gate only when one of these happens and the external exact-version approval record is complete:
 
