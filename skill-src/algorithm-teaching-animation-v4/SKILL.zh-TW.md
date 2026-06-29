@@ -103,14 +103,14 @@ qa_result.md
 ### 子階段 2：DESIGN_DEVELOPMENT
 派遣 `animation-designer` 規劃小批、彼此密切相關的核心問題，並實際設計演算法動畫。設計至少涵蓋演算法版本與操作語意、教學目標、要預防的觀眾誤解、主要心智模型及其界線、範例與教學理由、核心視覺隱喻與穩定視覺語意、資料結構呈現、場景結構、資訊層級、教學弧線、高階動畫節拍，以及明確的建議、理由、實質替代方案與取捨。
 
-協調者只負責一次向使用者提出一個問題、忠實記錄並轉交回答，不負責設計問題清單或動畫設計。不得以設計者的建議取代使用者決定。完成整批問題後，將完整回答一次交回 `animation-designer`，不得每取得一個回答就要求設計者更新。
+協調者每次只向使用者提出一個問題、忠實記錄並轉交回答，不負責設計問題清單或動畫設計。不得以設計者的建議取代使用者決定。完成整批問題後，將完整回答一次交回 `animation-designer`，不得每取得一個回答就要求設計者更新。
 只要仍有會實質改變演算法語意、主要心智模型、核心視覺語意、教學弧線、場景結構或高階節拍的阻塞問題，就繼續下一個小批次。低影響細節不得阻塞設計；採用合理的 best-effort 預設值並記錄風險後繼續。
 
 `animation-designer` 依 `references/animation-design-document.md` 建立 `animation_design.md`，完成規範中的 `DESIGN_READY` 條件自我檢查，且只有在全部通過、沒有阻塞核心問題時才能交出 `DESIGN_READY`。
 接著派遣獨立的 `animation-design-reviewer`，由其建立唯一的正式審查產物 `animation_design_review.md`。審查必須以 `references/animation-design-process.md` 規範中的 `DESIGN_READY` 條件建立完整證據矩陣，並依變更影響採用 `Full` 或可完整追蹤的 `Delta` 路由；初次審查，以及演算法語意、主要心智模型、核心視覺隱喻或語意、教學弧線、場景結構、高階節拍或影響不明的變更，必須使用 `Full`。
 
 審查者在審查開始與結束前都必須對實際受審的 `animation_design.md` 位元組內容計算 SHA-256，並在 `PASS` 結果中記錄 `Reviewed Design SHA-256`。只有 `animation_design_review.md = PASS` 後，協調者才能請求使用者明確核准該精確受審版本；核准記錄必須在 `animation_design.md` 外部保存 `Approved Design SHA-256` 與明確的使用者核准參照。
-每次編輯 `animation_design.md` 都會建立新版本並使先前的審查與核准、衍生的 `pre_build_brief.md` 與其核准失效。任何新版本都必須退回 `DESIGN_DEVELOPMENT`，依影響重新進行完整或差異審查、取得 `PASS`，由使用者重新明確核准，再重新產生並另行核准 `pre_build_brief.md`；沉默、未回覆、編輯檔案本身或核准其他版本都不算核准。
+使用者可以直接編輯 `animation_design.md`；每次這種直接編輯都會建立新版本並使先前的審查與核准失效，且依變更影響套用 Full 或 Delta 重新審查規則。先前的 `pre_build_brief.md` 與其核准也會失效。任何新版本都必須退回 `DESIGN_DEVELOPMENT`，依影響重新進行完整或差異審查、取得 `PASS`，由使用者重新明確核准，再重新產生並另行核准 `pre_build_brief.md`；沉默、未回覆、編輯檔案本身或核准其他版本都不算核准。
 
 ### 子階段 3：CONTRACT
 只有在目前 `animation_design.md` 的精確版本已由獨立審查取得 `PASS`、使用者已明確核准相同版本，且下列值完全收斂時，才能派遣 `animation-designer` 忠實轉換為 `pre_build_brief.md`：
