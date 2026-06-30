@@ -56,6 +56,7 @@ DESIGN_READY passes only when all of the following are true:
 - the primary mental model is explicit and technically faithful;
 - likely viewer misconceptions and their preventions are identified;
 - the sample input is suitable and its teaching rationale is stated;
+- every applicable required design decision and teaching risk in the routed type-specific reference is addressed; when no matching type reference exists, the design instead records best-effort classification, the specific coverage risk, and the strengthened-review requirement;
 - the core visual metaphor and visual semantics are defined;
 - structure presentation, scene structure, and information hierarchy are defined;
 - the teaching arc is coherent;

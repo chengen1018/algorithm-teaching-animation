@@ -119,4 +119,4 @@ Only pass when all of these are true:
 - Passing a scene that is semantically correct but visually unreadable.
 - Treating missing audio in a narrated tier as a minor note.
 - Fixing a contract gap by improvising new semantics inside QA notes.
-- Calling a debug-quality preview "final" because the algorithm logic is correct.
+- Calling a debug-quality render "final" because the algorithm logic is correct.

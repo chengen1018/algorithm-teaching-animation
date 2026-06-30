@@ -30,7 +30,7 @@ Review against:
 - approved `teaching_script.md`
 - `generated_algo_scene.py`
 - `render_preflight.md`
-- rendered preview or render evidence
+- rendered output or render evidence
 
 Before judging visual quality, verify that `render_preflight.md` and latest-render evidence exist, match each other, and were regenerated after the latest MP4. Missing, stale, incomplete, or mismatched preflight or latest-render evidence is a blocked or invalid review handoff and an evidence/process defect routed to `RENDER`, not a `layout` finding. Do not proceed or return `PASS` until `RENDER` regenerates matching evidence and preflight for the latest MP4. Classify actual visual layout findings as `layout`.
 
