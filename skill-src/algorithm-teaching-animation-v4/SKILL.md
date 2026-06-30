@@ -266,8 +266,10 @@ Create `render_preflight.md` using evidence verifiably derived from the latest M
 Any rerender invalidates all prior latest-render evidence, `render_preflight.md`, and `scene_review_result.md`. Regenerate the evidence and preflight and obtain a new `PASS` from an independent `scene-reviewer` for that same latest MP4/version before `QA`.
 Prepare scene-review handoff context, including code-to-render mapping, preflight evidence, and affected-frame information.
 After `render_preflight.md` exists, dispatch `scene-reviewer` for independent review.
-After a failed scene review, the next review defaults to the changed delta only.
+Delta review is allowed only for bounded local `RENDER` changes with valid affected-frame evidence.
+Affected-frame evidence is valid only while it remains applicable to the bounded change under review.
 Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
+Treat broadened affected-frame scope or uncertain impact as invalidating affected-frame evidence and require full independent scene review.
 
 ### Required Outputs
 Create:
