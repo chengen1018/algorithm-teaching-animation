@@ -34,7 +34,10 @@ Implement `generated_algo_scene.py` from the confirmed brief, the approved scrip
 ## Review Handoff Rules
 
 - First scene-review handoff gets a full review.
-- After a failed scene review, the next handoff should be a delta handoff unless the repair changed algorithm semantics, beat order, delivery tier, or the approved contract.
+- Delta review is allowed only for bounded local `RENDER` changes with valid affected-frame evidence.
+- Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
+- Treat broadened affected-frame scope or uncertain impact as invalidating affected-frame evidence and require full independent scene review.
+- Any rerender invalidates prior latest-render evidence and `render_preflight.md`; regenerate both, then select delta or full independent scene review using the rules above.
 - Delta handoffs must name the previous blocking findings, describe the repair for each, and provide updated affected-frame evidence.
 - If two consecutive failures are caused by the same Manim visual-state class, stop local patching and rewrite the phase ownership or visibility plan inside `RENDER` before requesting review again.
 - If a third scene-review failure occurs after that rewrite, escalate the repair route instead of continuing patch-and-review loops.

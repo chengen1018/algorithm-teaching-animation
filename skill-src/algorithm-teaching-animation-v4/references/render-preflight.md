@@ -45,6 +45,8 @@ After each rerender:
 - record the MP4 path, size, and last-write time
 - do not reuse frame evidence older than the MP4
 
+After regenerating the latest evidence and `render_preflight.md`, select delta or full independent scene review using the scope rules below.
+
 If any frame evidence is older than the MP4, scene review must reject the handoff before judging visual quality.
 
 ## First-Pass Correctness Checks
@@ -62,7 +64,11 @@ Use `N/A` only when the algorithm or approved script truly lacks that class of b
 
 ## Loop Control
 
-After a failed scene review, the next handoff should be a delta handoff unless the repair changed algorithm semantics, beat order, delivery tier, or the approved contract.
+Delta review is allowed only for bounded local `RENDER` changes with valid affected-frame evidence.
+
+Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
+
+Treat broadened affected-frame scope or uncertain impact as invalidating affected-frame evidence and require full independent scene review.
 
 A delta handoff must include:
 
