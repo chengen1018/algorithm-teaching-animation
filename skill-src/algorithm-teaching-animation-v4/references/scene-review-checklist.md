@@ -115,7 +115,7 @@ Default handling:
 
 ## Delta Review
 
-Use delta review after a failed scene review when the repair stayed inside `RENDER` and did not change semantics, beat order, delivery tier, or the approved contract.
+Delta review is allowed only for bounded local `RENDER` changes with valid affected-frame evidence.
 
 A delta review checks only:
 
@@ -125,6 +125,8 @@ A delta review checks only:
 - evidence freshness
 
 Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
+
+Treat broadened affected-frame scope or uncertain impact as invalidating affected-frame evidence and require full independent scene review.
 
 If two consecutive failures share the same Manim visual-state class, require the scene writer to rewrite phase ownership or visibility planning before another review. If a third failure occurs after that rewrite, route according to the failed artifact's repair target instead of continuing local patch loops.
 
