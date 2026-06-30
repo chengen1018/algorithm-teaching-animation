@@ -117,6 +117,8 @@ Default handling:
 
 Delta review is allowed only for bounded local `RENDER` changes with valid affected-frame evidence.
 
+The first independent scene-review handoff for a scene/render is always `Full`.
+
 A delta review checks only:
 
 - previous blocking findings

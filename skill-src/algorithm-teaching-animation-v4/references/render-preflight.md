@@ -47,6 +47,8 @@ After each rerender:
 
 After regenerating the latest evidence and `render_preflight.md`, select delta or full independent scene review using the scope rules below.
 
+The first independent scene-review handoff for a scene/render is always `Full`.
+
 If any frame evidence is older than the MP4, scene review must reject the handoff before judging visual quality.
 
 ## First-Pass Correctness Checks
