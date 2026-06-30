@@ -32,7 +32,7 @@ Review against:
 - `render_preflight.md`
 - rendered preview or render evidence
 
-Before judging visual quality, verify that `render_preflight.md` exists and that its frame evidence was regenerated after the latest MP4. Reject stale or incomplete evidence as a `layout` failure routed to `RENDER`.
+Before judging visual quality, verify that `render_preflight.md` and latest-render evidence exist, match each other, and were regenerated after the latest MP4. Missing, stale, incomplete, or mismatched preflight or latest-render evidence is a blocked or invalid review handoff and an evidence/process defect routed to `RENDER`, not a `layout` finding. Do not proceed or return `PASS` until `RENDER` regenerates matching evidence and preflight for the latest MP4. Classify actual visual layout findings as `layout`.
 
 ## Review Questions
 
@@ -124,7 +124,7 @@ A delta review checks only:
 - new visual regressions caused by the repair
 - evidence freshness
 
-Return to full review only when the repair changed the approved semantics, script beat order, delivery tier, or scene-wide structure in a way that invalidates earlier review evidence.
+Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
 
 If two consecutive failures share the same Manim visual-state class, require the scene writer to rewrite phase ownership or visibility planning before another review. If a third failure occurs after that rewrite, route according to the failed artifact's repair target instead of continuing local patch loops.
 

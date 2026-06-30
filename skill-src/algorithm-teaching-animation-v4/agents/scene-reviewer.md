@@ -25,7 +25,8 @@ Review `generated_algo_scene.py` and its rendered output for fidelity to the con
 - Keep styling, spacing, and layout failures separate from semantic failures.
 - Fail scenes that are visually unclear or layout-unsafe even when semantics are otherwise correct.
 - Keep review output compact: report blocking findings, evidence checked, and repair target; do not restate the full animation unless needed to justify a finding.
-- On a delta review, check the previous blocking findings, the changed frames, adjacent-phase regressions, and evidence freshness. Do not repeat a full review unless the repair changed semantics, beat order, delivery tier, or the approved contract.
+- On a delta review, check the previous blocking findings, the changed frames, adjacent-phase regressions, and evidence freshness.
+- Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
 
 ## Fail conditions
 

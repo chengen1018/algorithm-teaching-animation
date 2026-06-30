@@ -172,6 +172,7 @@ Require `script-writer` to read the approved `pre_build_brief.md` and `reference
 Then have `script-writer` produce a reviewable teaching script from the approved brief.
 The script must make viewer goals, beat order, teaching focus, and content progression explicit without adding meaning absent from the contract.
 After `teaching_script.md` exists, dispatch the independent `script-reviewer` subagent to review it against the approved `pre_build_brief.md`.
+Require `script-reviewer` to read the approved `pre_build_brief.md`, `teaching_script.md`, and `references/script-review-checklist.md` before reviewing.
 The script reviewer must not have written the script.
 
 ### Required Outputs
@@ -262,10 +263,11 @@ Dispatch `scene-writer` to implement the Manim scene from the approved contract 
 Unless the user explicitly requests otherwise, the scene must not add meaning, explanatory overlays, code panels, or annotation layers absent from the contract.
 Produce the latest render and corresponding evidence.
 Create `render_preflight.md` using evidence verifiably derived from the latest MP4.
+Any rerender invalidates all prior latest-render evidence, `render_preflight.md`, and `scene_review_result.md`. Regenerate the evidence and preflight and obtain a new `PASS` from an independent `scene-reviewer` for that same latest MP4/version before `QA`.
 Prepare scene-review handoff context, including code-to-render mapping, preflight evidence, and affected-frame information.
 After `render_preflight.md` exists, dispatch `scene-reviewer` for independent review.
 After a failed scene review, the next review defaults to the changed delta only.
-If the repair changes semantics, beat order, delivery tier, or the approved contract, a full review is required.
+Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
 
 ### Required Outputs
 Create:

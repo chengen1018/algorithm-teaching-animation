@@ -172,6 +172,7 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 接著由 `script-writer` 根據已核准的 `pre_build_brief.md` 撰寫可供審查的教學腳本。
 腳本必須清楚說明觀眾應學到什麼、各節拍的順序、教學重點與內容如何逐步推進，而且不得加入契約中沒有的新意思。
 完成 `teaching_script.md` 後，派遣獨立的 `script-reviewer` subagent，依已核准的 `pre_build_brief.md` 審查腳本。
+要求 `script-reviewer` 在審查前閱讀已核准的 `pre_build_brief.md`、`teaching_script.md` 與 `references/script-review-checklist.md`。
 腳本審查者不得撰寫該腳本。
 
 ### 必要輸出
@@ -262,10 +263,11 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 除非使用者明確要求，場景不得加入契約中沒有的新意思、額外的畫面解說、程式碼面板或註解層。
 產生最新的渲染結果與對應證據。
 使用可確認來自最新 MP4 的證據建立 `render_preflight.md`。
+每次重新渲染都會使先前所有最新渲染證據、`render_preflight.md` 與 `scene_review_result.md` 失效。進入 `QA` 前，必須為同一個最新 MP4／版本重新產生證據與預檢，並由獨立的 `scene-reviewer` 重新產出 `PASS`。
 準備場景審查所需的交接資訊，包括程式碼與渲染畫面的對應說明、預檢證據，以及受影響的影格資訊。
 在 `render_preflight.md` 存在後，派遣 `scene-reviewer` 進行獨立審查。
 場景審查失敗後，下一次預設只審查修改差異。
-若修正改變語意、節拍順序、交付層級或已核准的契約，則必須重新進行完整審查。
+若修正變更已核准語意、腳本節拍順序、交付層級、已核准契約、全場景結構、全場景版面、渲染對應關係，或以其他方式使受影響影格的證據失效，則退回完整審查。
 
 ### 必要輸出
 建立：

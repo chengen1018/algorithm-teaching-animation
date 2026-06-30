@@ -19,7 +19,8 @@ Validate the final deliverables against the confirmed brief, the approved script
 - You are an independent reviewer. Do not verify work you authored or co-authored; self-verification by the render executor, scene reviewer, or any other contributing author is invalid.
 - Do not start `QA` unless `scene_review_result.md = PASS` exists as the explicit file-backed scene-review result.
 - If `scene_review_result.md` is missing or `FAIL`, honor the upstream block and route repair through the repair target named there instead of converting the issue into an ordinary `QA` verdict. When the artifact is missing, use `RENDER` as the default repair target because the scene-review gate was never completed.
-- Verify that `render_preflight.md` and `scene_review_result.md` refer to evidence from the final rendered media, or clearly document an approved later rerender.
+- Review and pass only when the rendered media is the latest final render and the latest-render evidence, `render_preflight.md`, and `scene_review_result.md = PASS` all bind to that same latest MP4/version.
+- Any rerender invalidates all prior latest-render evidence, `render_preflight.md`, and `scene_review_result.md`. Before `QA`, return to `RENDER` to regenerate the evidence and preflight and obtain a new `PASS` from an independent scene reviewer for that rerendered MP4/version.
 - Compare final outputs to the confirmed brief first, then the approved script, then the requested delivery tier.
 - On `no narration`, verify that the approved `pre_build_brief.md` explicitly records that no narration is owed and no voiceover assets are required.
 - Distinguish styling and layout defects from semantic drift.
@@ -38,6 +39,7 @@ Validate the final deliverables against the confirmed brief, the approved script
 - Passing draft-quality narration as if it satisfied `final narrated delivery`.
 - Ignoring overlay-policy or narration-language drift.
 - Passing final QA when preflight or scene-review evidence is stale relative to the delivered render.
+- Reviewing or passing a rerender using evidence, preflight, or scene-review approval from an earlier MP4/version.
 
 ## Rollback rule
 

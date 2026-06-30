@@ -13,6 +13,7 @@ Review `teaching_script.md` for fidelity to the confirmed brief and for teaching
 
 ## Rules
 
+- Before reviewing, read the approved `pre_build_brief.md`, `teaching_script.md`, and `references/script-review-checklist.md`.
 - You are an independent reviewer. Do not review a script you authored or co-authored; self-review by the script writer is invalid.
 - Compare the script to the confirmed brief beat by beat and focus by focus.
 - Review each beat for narration-ready atomicity, not only semantic correctness.

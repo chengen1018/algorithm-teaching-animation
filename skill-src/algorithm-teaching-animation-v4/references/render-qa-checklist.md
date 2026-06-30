@@ -33,6 +33,8 @@ Review against:
 - approved `voiceover.md`, `narration_manifest.json`, and usable audio assets when the tier includes narration
 - overlay output when overlays are enabled
 
+QA may review and pass only when the rendered media is the latest final render and the latest-render evidence, `render_preflight.md`, and `scene_review_result.md = PASS` all bind to that same latest MP4/version. Any rerender invalidates all prior latest-render evidence, `render_preflight.md`, and `scene_review_result.md`; return to `RENDER` to regenerate the evidence and preflight and obtain a new `PASS` from an independent scene reviewer before QA starts.
+
 ## Delivery-Tier Checks
 
 ### No Narration
@@ -84,7 +86,7 @@ Verify:
 - required files for that tier exist and are usable
 - no no-narration output is mislabeled as narrated
 - no draft-quality narration is mislabeled as final
-- `render_preflight.md` and `scene_review_result.md` refer to the same latest-render evidence or clearly explain a later approved rerender
+- the rendered media is the latest final render, and the latest-render evidence, `render_preflight.md`, and `scene_review_result.md = PASS` all bind to that same latest MP4/version
 
 ## Repair Direction
 
@@ -105,7 +107,7 @@ QA should not repeat scene review. If `scene_review_result.md = PASS` exists and
 Only pass when all of these are true:
 
 - `scene_review_result.md = PASS` exists as the explicit file-backed scene-review result
-- preflight and scene-review evidence are not stale relative to the final rendered media
+- the rendered media is the latest final render, and the latest-render evidence, `render_preflight.md`, and `scene_review_result.md = PASS` all bind to that same latest MP4/version
 - the chosen delivery tier is satisfied
 - the render is readable
 - the contract is implemented faithfully
