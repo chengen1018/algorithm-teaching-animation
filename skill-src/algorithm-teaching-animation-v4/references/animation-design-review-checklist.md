@@ -93,6 +93,8 @@ The evidence matrix must not be derived only from the reviewed design's local se
 
 Return `PASS` only when the selected scope is valid; the recorded SHA-256 identifies the exact bytes reviewed; for `Delta`, the base reviewed SHA-256 and bounded reviewed change set / locations are present and match the review scope, and for `Full` both are `None`; every canonical `DESIGN_READY` gate condition from `references/animation-design-process.md` has one evidence-matrix entry and either passes with concrete evidence and location or has explicit justified `N/A` handling; teaching coherence, visual feasibility, and algorithm semantic consistency pass; material user decisions are preserved; no high-impact gap remains; and best-effort coverage risks are disclosed and adequately strengthened. For `PASS`, unresolved issues and required repairs must be `None` and the rollback target must be `None`.
 
+`animation_design_review.md = PASS` authorizes only a request for explicit user approval of that exact reviewed version. Conversion to `pre_build_brief.md` is forbidden until the same version has that approval; any design edit invalidates the review and returns the design to `DESIGN_DEVELOPMENT`.
+
 ## FAIL and Rollback Rules
 
 Return `FAIL` for any missing evidence, contradiction, regression, unsupported claim, lost user decision, invalid review scope, failed `DESIGN_READY` condition, undisclosed best-effort risk, or unresolved high-impact gap. Name concrete required repairs and set the rollback target to `DESIGN_DEVELOPMENT`.

@@ -8,7 +8,7 @@ Own `DESIGN_DEVELOPMENT`: resolve core design questions through the orchestrator
 
 - The recorded intake, including exact user requirements, constraints, algorithm variant, sample input, audience, learning goals, and prior decisions.
 - `references/intake-contract.md`.
-- The common design references: `references/animation-design-process.md`, `references/animation-design-document.md`, and `references/teaching-design.md`.
+- The common design references: `references/high-impact-clarification.md`, `references/animation-design-process.md`, `references/animation-design-document.md`, and `references/teaching-design.md`.
 - `references/visual-language.md` and `references/default-visual-semantics.md`.
 - Exactly one matching type-specific design reference when available, as defined by Reference Routing.
 - All faithfully recorded answers from a completed core-question batch when revising the design.
@@ -40,7 +40,7 @@ The orchestrator asks exactly one user-facing question at a time, records each a
 
 ## Reference Routing
 
-Always read the intake, all common design references, `references/visual-language.md`, and `references/default-visual-semantics.md`.
+Always read the intake, `references/high-impact-clarification.md`, all other common design references, `references/visual-language.md`, and `references/default-visual-semantics.md`.
 
 When a matching type reference exists, read exactly one:
 

@@ -207,6 +207,7 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 交付層級已確認，不再變更。
 `teaching_script.md` 已存在。
 `script_review_result.md = PASS`。
+緊接在開始本階段前，重新計算目前設計與 brief 的 SHA-256，並確認 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
 如果需要旁白，不得使用尚未審查或未通過審查的腳本。
 
 ### 執行事項
@@ -253,7 +254,7 @@ Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 
 ### 不得開始直到
 `teaching_script.md` 存在且 `script_review_result.md = PASS`。
-目前 `pre_build_brief.md` 仍等於已另外核准的精確版本，且 `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
+緊接在開始本階段前，重新計算目前設計與 brief 的 SHA-256，並確認 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
 若為 `no narration`，已核准的 `pre_build_brief.md` 明確說明不需旁白，也不需要任何配音檔案。
 若交付層級需要旁白，必要的旁白文件與可直接使用的音訊都已存在。
 只有在已取得使用 subagent 的明確授權後，才能開始此階段。
@@ -317,7 +318,7 @@ QA 不只確認影片能否播放，也要確認成品符合契約並具備交�
 
 ### 不得開始直到
 `scene_review_result.md = PASS` 已存在，並且是正式的檔案審查結果。
-目前 `pre_build_brief.md` 仍等於已另外核准的精確版本，且 `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
+緊接在開始本階段前，重新計算目前設計與 brief 的 SHA-256，並確認 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
 QA 必須由未參與受審成品製作的獨立審查者執行。
 若 `scene_review_result.md` 缺失或不是 `PASS`，QA 不得開始，也不得產出 `qa_result.md`。
 
@@ -359,7 +360,7 @@ QA 必須檢查內容意思、視覺清晰度、時間安排、版面、交付�
 
 ### 不得開始直到
 `qa_result.md = PASS`。
-目前 `pre_build_brief.md` 仍等於已另外核准的精確版本，且 `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
+緊接在開始本階段前，重新計算目前設計與 brief 的 SHA-256，並確認 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
 
 ### 執行事項
 只回報實際存在的產物，以及有正式檔案佐證的關卡狀態。

@@ -109,7 +109,7 @@ Continue with another small batch while any blocking question could materially c
 `animation-designer` creates `animation_design.md` according to `references/animation-design-document.md`, performs the specified `DESIGN_READY` self-check, and may emit `DESIGN_READY` only when every condition passes and no blocking core question remains.
 Then dispatch the independent `animation-design-reviewer`, who creates the sole formal review artifact, `animation_design_review.md`. The review must build a complete evidence matrix against the `DESIGN_READY` conditions specified in `references/animation-design-process.md` and use either `Full` or fully traceable `Delta` routing according to change impact. The initial review, and any change to algorithm semantics, the primary mental model, the core visual metaphor or semantics, teaching arc, scene structure, high-level beats, or a change whose impact is unclear, requires `Full` review.
 
-The reviewer must compute SHA-256 over the exact bytes of the actual `animation_design.md` under review both when review begins and immediately before review ends, and record `Reviewed Design SHA-256` in a `PASS` result. Only after `animation_design_review.md = PASS` may the orchestrator request the user's explicit approval of that exact reviewed version. The approval record must be stored outside `animation_design.md` and preserve `Approved Design SHA-256` plus an explicit reference to the user's approval.
+The reviewer must compute SHA-256 over the exact bytes of the actual `animation_design.md` under review both when review begins and immediately before review ends, and record `Reviewed Design SHA-256` in a `PASS` result. Only after `animation_design_review.md = PASS` may the orchestrator request explicit user approval of that exact reviewed version. The approval record must be stored outside `animation_design.md` and preserve `Approved Design SHA-256` plus an explicit reference to the user's approval.
 The user may directly edit `animation_design.md`. Every direct edit creates a new version, invalidates prior review and approval, and triggers `Full` or `Delta` re-review according to change impact. Any existing `pre_build_brief.md`, its `Source Design SHA-256` lineage, and its approval are also invalidated. Every new version must return to `DESIGN_DEVELOPMENT`, undergo the impact-appropriate full or delta review, receive `PASS`, receive the user's renewed explicit approval, and then have `pre_build_brief.md` regenerated with new external lineage and separately reapproved. Silence, no response, the edit itself, or approval of another version does not count as approval.
 
 ### Subphase 3: CONTRACT
@@ -207,6 +207,7 @@ If voiceover content appears inconsistent with the reviewed script, the orchestr
 The delivery tier is confirmed and no longer changing.
 `teaching_script.md` exists.
 `script_review_result.md = PASS`.
+Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
 If narration is required, do not use an unreviewed or failed script.
 
 ### Do
@@ -253,7 +254,7 @@ The orchestrator reads `references/scene-review-checklist.md` or `script_review_
 
 ### Do Not Start Until
 `teaching_script.md` exists and `script_review_result.md = PASS`.
-The current `pre_build_brief.md` still equals the separately approved exact version, and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
+Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
 For `no narration`, the approved `pre_build_brief.md` explicitly states that narration and voiceover files are not required.
 For a delivery tier requiring narration, all required voiceover documents and usable audio exist.
 This phase may begin only after explicit authorization to use subagents has been obtained.
@@ -317,7 +318,7 @@ The orchestrator reads `scene_review_result.md` and `references/scene-review-che
 
 ### Do Not Start Until
 `scene_review_result.md = PASS` exists as a formal file-backed review result.
-The current `pre_build_brief.md` still equals the separately approved exact version, and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
+Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
 QA must be performed by an independent reviewer who did not contribute to the output under review.
 If `scene_review_result.md` is missing or is not `PASS`, QA must not begin and `qa_result.md` must not be produced.
 
@@ -359,7 +360,7 @@ Read `references/render-qa-checklist.md` only when delivery evidence is insuffic
 
 ### Do Not Start Until
 `qa_result.md = PASS`.
-The current `pre_build_brief.md` still equals the separately approved exact version, and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
+Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
 
 ### Do
 Report only artifacts that actually exist and gate status backed by formal files.

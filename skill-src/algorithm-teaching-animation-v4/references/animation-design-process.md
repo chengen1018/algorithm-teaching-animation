@@ -69,7 +69,7 @@ DESIGN_READY passes only when all of the following are true:
 
 Once every DESIGN_READY condition passes, the process must stop asking design questions and stop adding design work. It must send the exact DESIGN_READY version of `animation_design.md` to an independent animation design review. The independent reviewer must write `animation_design_review.md`; any result other than `PASS` rolls the design back to DESIGN_DEVELOPMENT.
 
-Only after `animation_design_review.md` records `PASS` may the process request explicit user approval of the exact reviewed version of `animation_design.md`. Continuing to elaborate, clarify, request approval before review passes, or expand the design after the gate passes is a process failure.
+Only after `animation_design_review.md = PASS` may the process request explicit user approval of the exact reviewed version of `animation_design.md`. After that approval binds the same exact version, the design may proceed to faithful conversion into `pre_build_brief.md`; neither review nor approval alone authorizes conversion. Continuing to elaborate, clarify, request approval before review passes, convert before exact-version approval, or expand the design after the gate passes is a process failure.
 
 ## User Edit Loop
 
