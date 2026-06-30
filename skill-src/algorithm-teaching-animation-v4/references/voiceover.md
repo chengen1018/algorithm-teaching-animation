@@ -106,7 +106,8 @@ If the approved design is clear but the brief has wrong wording or source labels
 
 - the visual focus should be established before the narration begins
 - the beat should remain coherent until the narration ends
-- if narration is too long, repair the script or split the beat upstream
+- verbose wording, compression, spoken pacing, and narration-local timing defects stay in `VOICEOVER`
+- if the approved beat itself contains too many distinct teaching actions or decisions to support one coherent narration segment, return to `SCRIPT` and restructure the beat upstream
 - do not pad the scene with dead time to hide weak voiceover drafting
 
 ## Provider Contract
