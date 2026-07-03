@@ -1,124 +1,92 @@
-# Intake Contract
+# INTAKE
 
-Use this reference to normalize a minimal request into the formal `intake_summary.md` artifact without freezing later design choices.
+## 目的
 
-INTAKE records and classifies the request. It does not perform complete animation design. Core visual semantics, scene structure, persistent support structures, information hierarchy, teaching progression, and high-level beats belong to `animation-designer` in `DESIGN_DEVELOPMENT`.
+`INTAKE` 負責向使用者取得製作演算法教學動畫所需的基本需求，並建立 `intake_summary.md`。
 
-## Minimum Expected Input
+只處理需求，不做動畫設計。
 
-Start intake as soon as you have:
+## 必須確認的需求
 
-- algorithm name
-- sample input or target scenario
-- special animation preference, if any
+下列資料缺少任何一項，都必須詢問使用者。確認並記錄完整後，才能完成 `INTAKE`。
 
-Useful optional inputs:
+1. **演算法或問題**
+   - 要製作哪一個演算法或問題的動畫。
 
-- audience notes
-- desired delivery tier
-- pseudocode or implementation code
-- known semantic preferences
-- explicit overlay requests
+2. **範例輸入或目標情境**
+   - 動畫要使用的具體輸入、案例或操作情境。
+   - 使用者沒有偏好時，請幫使用者設計適合作為動畫演示的範例輸入或目標情境。
 
-## Intake Summary Schema
+3. **教學目標**
+   - 使用者希望觀眾看完後理解什麼。
 
-Produce `intake_summary.md` in this shape:
+4. **語言**
+   - 配音固定包含在人聲解說動畫中，不詢問是否需要配音。
+   - 詢問配音使用中文或英文。
+   - 詢問畫面文字使用中文或英文。
+   - 配音語言與畫面文字語言必須分別確認，不得假設兩者相同。
+
+使用者已經明確提供的資料直接記錄，不要重複詢問。只詢問缺少或含糊的必要資料。
+
+## 明確矛盾
+
+若使用者提供的需求互相矛盾，必須詢問使用者要採用哪一個版本。不得由 agent 自行選擇。取得答案後，只記錄使用者最後確認的需求，不保留矛盾或詢問過程。
+
+## 額外需求
+
+必要資料以外，若使用者主動提出的內容都照實記錄，例如：
+
+- 動畫偏好、內容重點或呈現要求
+- 限制、禁止事項
+- code、pseudocode 或其他參考資料
+- 先前已做出的決定
+
+有就記錄，沒有就不要詢問。不得為了補齊額外需求而增加問題。
+
+## `intake_summary.md` 格式
 
 ```md
 # Intake Summary
 
-- Algorithm:
-- Sample input / scenario:
-- Explicit user requests (source: user):
-- Constraints and prohibitions (source: user):
-- Support classification: first-class / best-effort
-- Classification rationale:
-- Candidate teaching framing:
-- Suggested delivery tier:
-- Likely high-impact gaps:
+## 演算法或問題
+...
+
+## 範例輸入或目標情境
+...
+
+## 教學目標
+...
+
+## 配音語言
+中文 | 英文
+
+## 畫面文字語言
+中文 | 英文
+
+## 額外需求
+... | None
 ```
 
-Preserve source wording for requirements, constraints, prohibitions, and prior decisions that could affect semantics, teaching, delivery, or acceptance. Label direct user statements as user-sourced; label derived classification, candidate framing, and suggestions as agent analysis. Do not rewrite an agent inference as a user requirement.
+只寫使用者已確認的需求。不得加入 agent 的建議、推論或預設值。
 
-Keep `Candidate teaching framing` lightweight:
+## 完成條件
 
-- a `primary framing`
-- an optional `secondary framing`
-- a short note about why that framing matches the user goal
-- the semantic or teaching-focus areas most likely to matter in clarification
+只有在下列條件全部成立時，`INTAKE` 才能完成：
 
-## Classification Rules
+- 4項必要需求都有明確答案。
+- 不存在尚未解除的需求矛盾。
+- 使用者主動提出的額外需求都已記錄。
+- `intake_summary.md` 不包含 agent 的建議、推論或動畫設計。
 
-### First-Class Support
+完成後，將 `intake_summary.md` 交給 `animation-designer` 進入 `DESIGN_DEVELOPMENT`。
 
-Treat these as first-class support:
+## 不屬於 INTAKE
 
-- array sorting
-- binary search and interval or candidate-region narrowing two-pointer searches only
-- basic graph traversal such as BFS or DFS
+不要在此階段決定或詢問：
 
-### Best-Effort Support
-
-Treat categories such as these as best-effort unless the skill adds stronger local guidance:
-
-- dynamic programming table construction
-- tree transformations
-- greedy or interval algorithms
-- specialized graph algorithms
-
-Record best-effort status and its rationale in `intake_summary.md`; it must remain visible in later design risks and brief notes.
-
-Broad two-pointer requests and non-elimination searches are not first-class merely because they use pointers or contain the word "search." Use a matching specialized design reference when one is available. Otherwise route them through the common design guidance, classify them as best-effort, disclose the specific coverage risk, and require the strengthened independent review defined by `animation-design-review-checklist.md`.
-
-## Candidate Teaching Framing
-
-Intake may suggest a likely framing, but candidate framing is non-binding and must not lock semantics, teaching focus, scene structure, or visual choices.
-
-Common framings:
-
-- algorithm walkthrough
-- pointer and boundary explainer
-- graph traversal explainer
-- state-construction explainer
-- comparison or intuition explainer
-
-If multiple framings are plausible, carry the ambiguity forward instead of collapsing it early. Route any unresolved choice that could affect the core design to `animation-designer` in `DESIGN_DEVELOPMENT`.
-
-## Intake Rules
-
-- Preserve user wording for special requests.
-- Preserve source labels and distinguish user wording from agent classification or suggestions.
-- Do not spend intake budget on low-value styling questions.
-- Do not require code when the algorithm and scenario are already clear.
-- Do not silently infer final semantics from code unless the user wants code-faithful behavior.
-- Do not let one flashy request distort the main teaching target.
-- Do not settle unresolved design choices or produce a complete animation design during INTAKE.
-
-## When to Use Code or Pseudocode
-
-Use code or pseudocode to:
-
-- confirm control flow
-- resolve implementation-specific branches after code fidelity is made relevant
-- disambiguate edge cases that affect the lesson
-
-Do not use code or pseudocode to:
-
-- bypass clarification
-- override an explicit teaching preference
-- force a concept-first request into a code-first explanation
-
-## Escalation Examples
-
-- If the sample input is missing and the algorithm depends on visible ordering or structure shape, flag the missing scenario for clarification.
-- If the user's concept goal and supplied code imply different semantics, preserve both signals and escalate the conflict instead of choosing one.
-- If two teaching framings would lead to different beat emphasis, record both as non-binding candidates and route the choice to `DESIGN_DEVELOPMENT`.
-
-## Common Failures
-
-- Refusing to start because the user did not provide code.
-- Treating a concrete sample scenario as optional when the lesson depends on it.
-- Converting a candidate teaching framing into a settled semantic decision.
-- Losing explicit user requests while summarizing the intake.
-- Omitting support classification or hiding that a category is best-effort.
-- Designing core visual semantics, scene structure, or high-level beats during INTAKE.
+- teaching framing
+- 主要心智模型
+- 核心視覺語意
+- 場景結構與資訊層級
+- 教學弧線與高層動畫節拍
+- 其他未由使用者主動提出的設計細節

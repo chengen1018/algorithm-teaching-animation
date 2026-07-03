@@ -1,14 +1,14 @@
 # Render Preflight
 
-This document defines the compact self-check that must happen before independent scene review.
+本文件定義在獨立 scene review 前必須執行的精簡自檢。
 
-Preflight is not a substitute for review. It prevents obvious render-layer defects from reaching review as the first visual debugging pass.
+Preflight 不是 review 的替代品。它的作用是避免明顯的 render-layer 缺陷在正式 review 時才第一次被當成視覺除錯。
 
-## Required Output
+## 必要輸出
 
-Write `render_preflight.md` before requesting scene review.
+在請求 scene review 前，先撰寫 `render_preflight.md`。
 
-Use this compact format:
+請使用以下精簡格式：
 
 ```markdown
 # Render Preflight
@@ -32,53 +32,53 @@ Use this compact format:
 | No explanatory text is captured mid-transition or visually corrupted | PASS/FAIL/N/A | `<frame or timestamp>` |
 ```
 
-Each evidence cell must be one short reference, not a paragraph.
+每個 evidence 欄位都只能是一個簡短參照，不要寫成段落。
 
-## Evidence Freshness
+## 證據新鮮度
 
-Every rerender invalidates previous extracted review frames.
+每次 rerender 都會使先前抽出的 review frames 失效。
 
-After each rerender:
+在每次 rerender 之後：
 
-- regenerate all review frames from the latest MP4
-- update `render_preflight.md`
-- record the MP4 path, size, and last-write time
-- do not reuse frame evidence older than the MP4
+- 從最新 MP4 重新產生所有 review frames
+- 更新 `render_preflight.md`
+- 記錄 MP4 路徑、大小與最後寫入時間
+- 不要重用比 MP4 還舊的 frame evidence
 
-After regenerating the latest evidence and `render_preflight.md`, select delta or full independent scene review using the scope rules below.
+在重新產生最新證據與 `render_preflight.md` 之後，再依照下列範圍規則選擇 delta 或 full 的獨立 scene review。
 
-The first independent scene-review handoff for a scene/render is always `Full`.
+某個 scene/render 的第一次獨立 scene-review 交接一律是 `Full`。
 
-If any frame evidence is older than the MP4, scene review must reject the handoff before judging visual quality.
+若任何 frame evidence 比 MP4 還舊，scene review 在判斷視覺品質前就必須拒絕交接。
 
-## First-Pass Correctness Checks
+## 首輪正確性檢查
 
-The scene writer must inspect representative settled frames before review:
+在送審前，scene writer 必須檢查具代表性的穩定影格：
 
-- opening or intro frame
-- at least one ordinary update or mismatch frame when applicable
-- at least one match, success, or acceptance frame when applicable
-- completed primary structure frame
-- traceback, path, reconstruction, or finalization frame when applicable
-- final result frame
+- opening 或 intro 畫面
+- 至少一個一般 update 或 mismatch 畫面（若適用）
+- 至少一個 match、success 或 acceptance 畫面（若適用）
+- completed primary structure 畫面
+- traceback、path、reconstruction 或 finalization 畫面（若適用）
+- 最終結果畫面
 
-Use `N/A` only when the algorithm or approved script truly lacks that class of beat.
+只有當演算法或已核准 script 確實沒有該類 beat 時，才能使用 `N/A`。
 
-## Loop Control
+## 迴圈控制
 
-Delta review is allowed only for bounded local `RENDER` changes with valid affected-frame evidence.
+只有在局部 `RENDER` 變更且具有效受影響影格證據時，才允許 delta review。
 
-Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
+若修復改變了已核准語意、script beat order、delivery tier、已核准契約、全場景結構、全場景版面、render mapping，或使受影響影格證據失效，就必須回到 full review。
 
-Treat broadened affected-frame scope or uncertain impact as invalidating affected-frame evidence and require full independent scene review.
+若受影響影格範圍擴大或影響不確定，就視為受影響影格證據失效，必須進行完整獨立 scene review。
 
-A delta handoff must include:
+一份 delta 交接必須包含：
 
-- previous blocking finding ids
-- what changed for each finding
-- updated evidence references for affected frames
-- one adjacent-phase regression check for each changed helper or visibility rule
+- 先前的 blocking finding ids
+- 每個 finding 的變更內容
+- 受影響影格的更新後證據參照
+- 每個被改動 helper 或 visibility rule 的一項相鄰 phase regression 檢查
 
-If two consecutive failures are caused by the same class of Manim visual-state defect, stop local patching and rewrite the scene's phase ownership or visibility plan inside `RENDER` before requesting review again.
+若連續兩次失敗都由同一類 Manim visual-state 缺陷造成，必須停止局部修補，改在 `RENDER` 中重寫場景的 phase ownership 或 visibility plan，再重新請求 review。
 
-If a third scene-review failure occurs after that rewrite, escalate as an architecture issue instead of continuing patch-and-review loops. Route to `RENDER` or `SCRIPT` for defects owned there. Route to `DESIGN_DEVELOPMENT` when the approved design itself lacks or conflicts on algorithm semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, high-level beats, the delivery decision, or a newly surfaced high-impact fork; require design repair, review, and reapproval, then brief regeneration and reapproval. Route to `CONTRACT` when the approved design is clear but the brief has wrong wording or source labels, or otherwise failed faithful conversion; repair and reapprove the brief without redesign.
+若重寫之後出現第三次 scene-review 失敗，則應將問題升級為架構層級，而不是繼續 patch-and-review 迴圈。若缺陷由 `RENDER` 或 `SCRIPT` 持有，就送回對應階段。若已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上有缺漏或衝突，則送回 `DESIGN_DEVELOPMENT`；要求設計修復、重新審查與重新核准，再重新產生並重新核准 brief。若已核准設計清楚，但 brief 有錯誤文字或來源標籤，或是不忠實轉換，則送回 `CONTRACT`，修復並重新核准 brief，無需重新設計。

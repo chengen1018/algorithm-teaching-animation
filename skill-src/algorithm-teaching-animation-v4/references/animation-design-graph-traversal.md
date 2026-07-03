@@ -1,51 +1,51 @@
-# Animation Design: Graph Traversal
+# 動畫設計：Graph Traversal
 
-Use this reference for graph traversal animations after applying the common teaching design guidance. It governs traversal-specific state and support structures without replacing the process or `animation_design.md` contract.
+在套用通用教學設計指引後，對 graph traversal 動畫使用這份參考。它規範 traversal 專有的狀態與支援結構，但不會取代流程或 `animation_design.md` 契約。
 
-## Required Design Decisions
+## 必要設計決策
 
-### queue or stack visibility
+### queue 或 stack visibility
 
-The design must show the queue or stack whenever its order determines future traversal behavior. Display the active end or ends, preserve item order, and synchronize each enqueue, dequeue, push, or pop with the graph event that caused it.
+當 queue 或 stack 的順序會決定未來 traversal 行為時，設計必須顯示它。要顯示 active 端點、保留項目順序，並讓每次 enqueue、dequeue、push 或 pop 與造成它的 graph 事件同步。
 
 ### visited timing
 
-The design must define exactly when a node becomes visited, such as on discovery or on removal for processing. The visual state change must occur at that moment, because different timing changes whether duplicate frontier entries are possible.
+設計必須精確定義節點何時變成 visited，例如在 discovery 時，或在取出進行 processing 時。視覺狀態變化必須發生在那個精確時刻，因為不同時機會改變 duplicate frontier entries 是否可能出現。
 
-### discovery versus processing
+### discovery 與 processing
 
-The design must assign distinct, persistent meanings to discovered and processed states. Show the transition between them and connect it to the support structure, so viewers do not infer that finding a node means all of its neighbors have already been handled.
+設計必須為 discovered 與 processed 狀態賦予不同且持續的含義。要顯示兩者之間的轉換，並讓它與 support structure 連動，避免觀眾誤以為找到一個節點就表示它所有鄰居都已處理完。
 
-### frontier or path emphasis
+### frontier 或 path emphasis
 
-The design must choose whether the main teaching object is the frontier, the traversal tree, or a current path. Emphasis must support the algorithm and learning goal: breadth-first behavior needs frontier order, while depth-first reasoning may need stack or path continuity.
+設計必須選定主要教學對象是 frontier、traversal tree，還是 current path。強調方式必須符合演算法與學習目標：breadth-first 行為需要 frontier 順序，而 depth-first 推理則可能需要 stack 或 path 的連續性。
 
 ### BFS layer expansion
 
-For BFS, the design must decide whether layer expansion is a teaching goal. When it is, the current layer and next layer must be visibly distinguished while layer membership remains separate from discovered and processed states; a node can be discovered into the next layer before it is processed. When layer expansion is not a teaching goal, do not add layer styling that competes with the queue or implies extra algorithmic state.
+對 BFS，設計必須決定 layer expansion 是否屬於教學目標。若是，則 current layer 與 next layer 必須有明顯區別，同時 layer membership 仍須與 discovered / processed 狀態分開；一個節點可以在進入 next layer 時就被 discovered，但尚未 processed。若 layer expansion 不是教學目標，就不要加入會與 queue 競爭注意力，或暗示額外演算法狀態的 layer styling。
 
-### sample topology and traversal setup
+### sample topology 與 traversal setup
 
-The design must make the graph's directedness, start node, and relevant topology explicit before traversal begins. The sample must expose only the structures needed by the teaching goal: branching for frontier growth, cycles or cross-edges for revisitation, duplicate-discovery pressure for visited timing, or neighbor-order effects for deterministic sequencing, as applicable. Do not require every sample to contain all of these structures.
+在 traversal 開始前，設計必須明確 graph 的 directedness、起始節點與相關 topology。Sample 只需暴露與教學目標有關的結構：例如 frontier growth 所需的 branching、用於 revisitation 的 cycles 或 cross-edges、會讓 visited timing 變重要的 duplicate-discovery 壓力，或決定 sequencing 的 neighbor-order 影響。不要要求每個 sample 一定包含所有這些結構。
 
 ### neighbor order
 
-The design must state the neighbor visitation order and make that order observable before it affects the queue, stack, or path. If several orders are valid, identify the chosen one as a deterministic teaching choice rather than an algorithmic guarantee.
+設計必須說明 neighbor visitation order，並在它影響 queue、stack 或 path 之前，就讓這個順序可見。若有多種順序都合法，則應將選定順序標示為 deterministic teaching choice，而非演算法保證。
 
 ### stable graph layout
 
-The design must fix node positions before traversal begins and keep them stable. Use highlights, edges, and support-structure updates to show state change; spatial movement must not imply that graph topology is changing.
+設計必須在 traversal 開始前固定 node positions，並保持穩定。應透過 highlights、edges 與 support-structure updates 顯示狀態變化；空間移動不應讓人誤以為 graph topology 本身在改變。
 
-## Teaching Risks
+## 教學風險
 
-### conflating discovered and processed states
+### 混淆 discovered 與 processed 狀態
 
-Do not reuse one visual state for both events when the distinction affects understanding. A viewer must be able to pause and tell whether a node is merely scheduled or has had its neighbors examined.
+當這個區分會影響理解時，不可用同一個視覺狀態表示兩者。觀眾必須能在暫停時判斷某節點只是已排入處理，還是已經檢查過其鄰居。
 
-### moving graph nodes after introduction
+### 引入後又移動 graph nodes
 
-Do not rearrange nodes to make later steps convenient. Movement forces viewers to rebuild the graph's spatial map and can falsely suggest changed adjacency; solve crowding before traversal starts.
+不要為了後面方便而重新排 nodes。節點移動會迫使觀眾重建 graph 的空間地圖，且可能錯誤暗示 adjacency 改變；擁擠問題應在 traversal 開始前解決。
 
-### hiding a teaching-critical support structure
+### 隱藏教學關鍵的支援結構
 
-Do not omit the queue, stack, or equivalent frontier representation when it explains traversal order. If space requires simplification, reduce decorative graph detail before hiding the structure that causes the next node choice.
+若 queue、stack 或等價的 frontier 表示法能解釋 traversal order，就不要省略它。若空間不足，應先減少裝飾性的 graph 細節，而不是隱藏那個決定下一個節點選擇的結構。

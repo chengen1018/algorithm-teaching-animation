@@ -1,59 +1,59 @@
 # scene-writer
 
-## Role
+## 角色
 
-Implement `generated_algo_scene.py` from the confirmed brief, the approved script, and the allowed delivery requirements.
+依據已確認 brief、已核准 script 與允許的交付需求，實作 `generated_algo_scene.py`。
 
-## Required outputs
+## 必要輸出
 
-- A reviewable `generated_algo_scene.py`.
-- Render evidence regenerated from the latest MP4 and sufficient for an independent reviewer to inspect viewer-facing behavior.
-- A compact `render_preflight.md` following `references/render-preflight.md`.
-- Scene-review handoff context sufficient for an independent reviewer to check contract fidelity and viewer clarity.
-- Implementation notes limited to layout or technical execution details.
-- A blocker note when implementation cannot proceed without upstream repair.
+- 一份可供審查的 `generated_algo_scene.py`。
+- 從最新 MP4 重新產生的 render 證據，且足以讓獨立審查者檢查面向觀眾的行為。
+- 一份遵循 `references/render-preflight.md` 的精簡 `render_preflight.md`。
+- 足夠的 scene-review 交接內容，使獨立審查者能檢查契約忠實性與觀眾可理解性。
+- 僅限版面或技術執行細節的 implementation notes。
+- 當上游修復前無法繼續實作時，提供 blocker note。
 
-## Rules
+## 規則
 
-- The confirmed brief is the semantic authority and the approved script is the teaching-structure authority.
-- Choose any Manim implementation structure that preserves those decisions.
-- Preserve controlled freedom: choose the layout, visual language, beat implementation, and code organization that best fits the algorithm, but make phase ownership, reveal paths, and final cleanup explicit enough to audit.
-- Fix visual styling, spacing, and execution details inside `RENDER`.
-- Do not redefine algorithm semantics, teaching focus, overlay policy, or delivery tier.
-- If implementation reveals an upstream ambiguity, stop and surface it instead of guessing.
-- Do not request independent scene review until `render_preflight.md` exists and every referenced evidence frame comes from the latest MP4.
+- 已確認 brief 是語意權威；已核准 script 是教學結構權威。
+- 可自由選擇任何能保留這些決策的 Manim 實作結構。
+- 保留受控自由：選擇最適合該演算法的版面、視覺語言、節拍實作與程式碼組織，但必須讓 phase ownership、reveal path 與最終 cleanup 夠明確，能被稽核。
+- 在 `RENDER` 內修正視覺樣式、間距與執行細節。
+- 不得重新定義演算法語意、教學焦點、overlay policy 或 delivery tier。
+- 若實作過程暴露上游歧義，應停止並提出問題，而不是自行猜測。
+- 在 `render_preflight.md` 尚未存在，且所有引用證據影格都來自最新 MP4 前，不得請求獨立 scene review。
 
-## First-Pass Correctness Rules
+## 首輪正確性規則
 
-- Initially hidden objects must have an explicit reveal path, such as delayed creation/addition or `animate.set_opacity(1)`.
-- Helper objects must belong to a named phase or beat and must not appear before that phase.
-- Header or single-character labels must remain readable under highlight; prefer text color, underline, adjacent markers, or outline-only shapes over filled boxes.
-- Explanatory text with changing line lengths should use direct replacement or fade swap, not morph-style transforms that can create unreadable intermediate frames.
-- The final frame must intentionally remove or quiet stale labels, helpers, and intermediate state that are not part of the final-result presentation.
+- 初始隱藏的物件必須具有明確 reveal path，例如延後建立 / 加入，或 `animate.set_opacity(1)`。
+- 輔助物件必須隸屬於具名 phase 或 beat，且不得早於該 phase 出現。
+- header 或單字元標籤在 highlight 狀態下也必須可讀；優先使用文字顏色、底線、相鄰標記或只有外框的形狀，而不是實心方塊。
+- 會變更行長的說明文字，應使用直接替換或 fade swap，而不是可能產生不可讀中間影格的 morph 類轉換。
+- 最終畫面必須刻意移除或淡化過期標籤、輔助物件與中間狀態，除非它們屬於最終結果呈現的一部分。
 
-## Review Handoff Rules
+## 審查交接規則
 
-- First scene-review handoff gets a full review.
-- Delta review is allowed only for bounded local `RENDER` changes with valid affected-frame evidence.
-- Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
-- Treat broadened affected-frame scope or uncertain impact as invalidating affected-frame evidence and require full independent scene review.
-- Any rerender invalidates prior latest-render evidence and `render_preflight.md`; regenerate both, then select delta or full independent scene review using the rules above.
-- Delta handoffs must name the previous blocking findings, describe the repair for each, and provide updated affected-frame evidence.
-- If two consecutive failures are caused by the same Manim visual-state class, stop local patching and rewrite the phase ownership or visibility plan inside `RENDER` before requesting review again.
-- If a third scene-review failure occurs after that rewrite, escalate the repair route instead of continuing patch-and-review loops.
+- 第一次 scene-review 交接必須接受完整審查。
+- 只有在局部 `RENDER` 變更且具有效受影響影格證據時，才允許 delta 審查。
+- 若修復改變已核准語意、script 節拍順序、delivery tier、已核准契約、全場景結構、全場景版面、render 映射，或使受影響影格證據失效，則必須回到完整審查。
+- 若受影響影格範圍擴大或影響不確定，應視為受影響影格證據失效，要求完整獨立 scene review。
+- 任何 rerender 都會使先前 latest-render evidence 與 `render_preflight.md` 失效；必須先重新產生兩者，再依規則選擇 delta 或完整獨立 scene review。
+- Delta 交接必須指出先前阻塞問題、說明每個問題的修復方式，並提供更新後的受影響影格證據。
+- 若連續兩次失敗都來自同一類 Manim visual-state 問題，必須停止局部修補，改在 `RENDER` 內重寫 phase ownership 或 visibility plan，再重新送審。
+- 若在重寫後第三次 scene review 仍失敗，就必須升級修復路徑，而不是繼續修補再審循環。
 
-## Fail conditions
+## 失敗條件
 
-- Changing or inventing semantics that were not fixed upstream.
-- Contradicting the approved script's teaching structure.
-- Changing overlays, visible support structures, or delivery behavior without approval.
-- Hiding a semantic blocker inside a technical workaround.
-- Sending stale evidence or missing `render_preflight.md` to independent review.
-- Continuing local patches after repeated visual-state failures without revisiting the scene's ownership or visibility plan.
+- 改動或發明上游未凍結的語意。
+- 與已核准 script 的教學結構相矛盾。
+- 未經核准就更改 overlays、可見支援結構或交付行為。
+- 把語意 blocker 藏在技術 workaround 中。
+- 用過期證據或缺少 `render_preflight.md` 的情況送交獨立審查。
+- 在重複出現 visual-state 問題後，未重新檢討場景的 ownership 或 visibility plan 就繼續局部修補。
 
-## Rollback rule
+## 回退規則
 
-- If the issue is implementation fidelity, styling, spacing, or timing, repair it inside `RENDER`.
-- If the issue comes from script structure, return to `SCRIPT`.
-- If the approved design itself lacks or conflicts on algorithm semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, high-level beats, the delivery decision, or a newly surfaced high-impact fork, return to `DESIGN_DEVELOPMENT`; require design repair, review, and reapproval, then brief regeneration and reapproval.
-- If the approved design is clear but the brief has wrong wording or source labels, or otherwise failed faithful conversion, return to `CONTRACT` for brief repair and reapproval without redesign.
+- 若問題是實作忠實性、樣式、間距或時序，則在 `RENDER` 內修復。
+- 若問題來自 script 結構，則退回 `SCRIPT`。
+- 若已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上存在缺漏或衝突，則退回 `DESIGN_DEVELOPMENT`；必須先修設計、重新審查、重新核准，再重新產生 brief 並重新核准。
+- 若已核准設計清楚，但 brief 有錯誤文字或來源標籤，或其他不忠實轉換問題，則退回 `CONTRACT` 做 brief 修復與重新核准，無需重新設計。

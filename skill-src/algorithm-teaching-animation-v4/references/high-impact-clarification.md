@@ -1,115 +1,115 @@
-# High-Impact Clarification
+# 高影響澄清
 
-Use this reference as the high-impact question inventory for `animation-designer` during `DESIGN_DEVELOPMENT`. The inventory helps the designer find blocking core choices; clarification supports design and is not a substitute for producing `animation_design.md`.
+將這份參考當成 `animation-designer` 在 `DESIGN_DEVELOPMENT` 階段使用的高影響問題清單。這份清單幫助設計師找出會阻塞的核心選擇；澄清是為了支援設計，不可取代 `animation_design.md` 的產出。
 
-## Batch Protocol
+## 批次協定
 
-The designer plans a small internal batch of closely related blocking questions needed for the next design step. For every question, provide:
+設計師應先在內部規劃一小批、彼此緊密相關、對下一步設計必要的阻塞性問題。每個問題都要提供：
 
-- a concrete recommendation;
-- the rationale for that recommendation;
-- the meaningful tradeoff or consequence;
-- concise answer choices when useful.
+- 具體建議；
+- 該建議的理由；
+- 重要取捨或後果；
+- 在適合時提供簡潔選項。
 
-The orchestrator asks exactly one user-facing question at a time, waits for the answer, and records it faithfully before asking the next planned question. It must not reinterpret, weaken, merge, or silently replace the user's answer with the recommendation.
+orchestrator 每次只向使用者提出一個面向使用者的問題，等待答案，忠實記錄後再問下一題。不得重述、弱化、合併，或悄悄以建議取代使用者答案。
 
-After all questions in the planned batch have been answered, the orchestrator returns one consolidated batch of faithfully recorded answers to `animation-designer`. Do not return to the designer after each answer. The designer updates the design once and reassesses all remaining core gaps. Another small batch occurs whenever that reassessment finds any unresolved blocker, including a newly exposed blocker.
+等整批規劃好的問題都回答完後，orchestrator 應一次把忠實記錄的整批答案回傳給 `animation-designer`。不要在每個答案之後就回到 designer。designer 只更新一次設計，並重新評估所有剩餘核心缺口。只要重新評估後仍有任何未解決阻塞，不論是原本已知或新暴露出來的，就應再規劃另一小批問題。
 
-## What Counts as High Impact
+## 何謂高影響
 
-A gap is high impact when the answer would change any of:
+若答案會改變以下任一項，該缺口就屬於高影響：
 
-- animation semantics
-- teaching focus
-- delivery content
+- 動畫語意
+- 教學焦點
+- 交付內容
 
-If the answer changes only ordinary styling or color, minor placement, a routine transition, easing, or local timing, it is not high impact unless the specific choice is explicitly important to accessibility, correctness, acceptance, or the teaching goal.
+若答案只影響一般樣式或顏色、小幅位置調整、例行 transition、easing，或局部 timing，則不算高影響；除非該選項被明確指出對 accessibility、正確性、驗收或教學目標很重要。
 
-## Decision Classes
+## 決策類別
 
-### Semantic Forks
+### 語意分歧
 
-Use this class when multiple reasonable interpretations exist and the choice changes what the viewer learns.
+當存在多個合理詮釋，且選擇會改變觀眾學到什麼時，使用這個類別。
 
-Examples:
+範例：
 
-- insertion sort movement model
-- binary search interval convention
-- whether graph traversal marks nodes on discovery or on processing
+- insertion sort 的移動模型
+- binary search 的區間慣例
+- graph traversal 在 discovery 時標記節點，還是在 processing 時標記
 
-### Teaching-Focus Forks
+### 教學焦點分歧
 
-Use this class when different emphases would change beat structure or visual attention.
+當不同強調方向會改變節拍結構或視覺注意力時，使用這個類別。
 
-Examples:
+範例：
 
-- binary search as interval reasoning versus branch-control reasoning
-- BFS as queue behavior versus layer expansion
-- sorting as movement intuition versus boundary progress
+- 將 binary search 視為區間推理，或視為分支控制推理
+- 將 BFS 視為 queue 行為，或視為 layer 擴展
+- 將 sorting 視為移動直覺，或視為邊界進展
 
-### Delivery-Affecting Forks
+### 影響交付的分歧
 
-Use this class when the answer changes deliverable shape or layout obligations.
+當答案會改變交付形態或版面義務時，使用這個類別。
 
-Examples:
+範例：
 
-- no narration versus final narrated delivery
-- whether overlays are enabled
-- whether a support structure must remain visibly present
+- no narration 與 final narrated delivery
+- overlays 是否啟用
+- 某個支援結構是否必須持續可見
 
-## First-Class Support Inventories
+## First-Class Support 問題清單
 
-Use these compact inventories when the intake category is first-class support.
+當 intake 類別屬於 first-class support 時，使用以下精簡清單。
 
 ### Array Sorting
 
-Check at least:
+至少檢查：
 
 - active comparison unit
-- meaningful movement-semantics fork
-- settled-progress expression
-- whether a temporary holding position is part of the lesson
+- 是否存在重要的 movement-semantics 分歧
+- settled-progress 表達方式
+- temporary holding position 是否屬於課程內容的一部分
 
-### Binary Search and Interval or Candidate-Region Narrowing Two-Pointer Search
+### Binary Search 與區間 / 候選區域收縮型 Two-Pointer Search
 
-Use this first-class inventory only for binary search and two-pointer searches that eliminate an interval or candidate region.
+這份 first-class 清單只適用於 binary search，以及會淘汰候選區間或區域的 two-pointer searches。
 
-Check at least:
+至少檢查：
 
 - interval convention
 - pointer meaning
-- stopping rule or success criterion
-- whether the lesson emphasizes elimination logic, pointer choreography, or both
+- stopping rule 或 success criterion
+- 課程是否強調 elimination logic、pointer choreography，或兩者皆重視
 
-Broad or non-elimination two-pointer and search requests do not use this inventory automatically. Use a matching specialized reference when available; otherwise use the common design guidance, mark the request best-effort, disclose its coverage risk, and require strengthened independent review.
+廣義或非淘汰型的 two-pointer / search 類需求，不能自動使用這份清單。若有相符專用參考，應用它；否則使用通用設計指引，將需求標記為 best-effort，揭露覆蓋風險，並要求強化獨立審查。
 
-### BFS and DFS
+### BFS 與 DFS
 
-Check at least:
+至少檢查：
 
 - support-structure visibility
 - visited timing
-- discovery versus processing emphasis
-- frontier or stack/path emphasis
-- neighbor-order expectations when the sample input makes order visible
+- discovery 與 processing 的強調差異
+- frontier 或 stack/path 的強調
+- 當 sample input 讓順序可見時，neighbor-order 預期為何
 
-## What Not to Ask
+## 不該問的問題
 
-Do not spend clarification budget on:
+不要把澄清預算花在：
 
-- ordinary color preferences
-- minor pointer or label placement
-- routine transitions
+- 一般顏色偏好
+- 小幅 pointer 或 label 位置
+- 例行 transitions
 - easing
-- local timing or pacing polish
-- normal camera restraint choices
-- subtitle requests unless the user actually wants overlays
+- 局部 timing 或 pacing 微調
+- 一般鏡頭克制選擇
+- 除非使用者真的要 overlays，否則不要問字幕需求
 
-These low-impact details belong to best-effort defaults and must not block `DESIGN_READY`. Ask one only when the intake or current design makes its impact explicit.
+這些低影響細節應交給 best-effort 預設值處理，不能阻塞 `DESIGN_READY`。只有當 intake 或目前設計明確指出它們具有高影響時，才可提問。
 
-## Designer Inventory Result
+## Designer Inventory 結果
 
-The designer may organize its internal inventory in this shape before planning the next small batch:
+在規劃下一小批問題前，designer 可以先用以下格式整理內部清單：
 
 ```md
 # High-Impact Inventory
@@ -131,31 +131,31 @@ The designer may organize its internal inventory in this shape before planning t
 - Why it is low risk:
 ```
 
-## Proposed Default Rules
+## 預設值提案規則
 
-When proposing a default, phrase it as an explicit decision the user can approve or edit.
+提出預設值時，應把它寫成使用者可以核准或修改的明確決策。
 
-Good pattern:
+好的寫法：
 
-- "If you do not have a preference, I will treat the active search interval as closed and keep eliminated regions dimmed."
+- 「如果你沒有偏好，我會把 active search interval 視為 closed，並讓被淘汰區域保持 dimmed。」
 
-Bad pattern:
+不好的寫法：
 
-- silently writing the interval rule into the brief
-- asking a vague question with no explanation of why the choice matters
+- 默默把 interval rule 寫進 brief
+- 問一個含糊問題，卻不解釋為什麼這個選擇重要
 
-## Escalation Examples
+## 升級處理範例
 
-- If intake suggested two plausible teaching framings and each would change beat emphasis, ask that teaching-focus fork directly instead of choosing one.
-- If the user does not care about a high-impact semantic fork, offer a concrete default for approval rather than hiding it in the brief.
-- If a delivery-tier change would also change overlays, narration, or support-structure visibility, freeze those decisions together.
-- If reassessment after a completed batch exposes a new semantic, teaching, or delivery blocker, plan another small batch rather than guessing or declaring `DESIGN_READY`.
+- 若 intake 提出兩種合理教學 framing，且它們都會改變節拍重心，就應直接詢問該 teaching-focus fork，而不是自行決定。
+- 若使用者對某個高影響語意分歧沒有偏好，應提出一個具體預設值供其核准，而不是把它藏進 brief。
+- 若 delivery-tier 的改動也會影響 overlays、narration 或 support-structure visibility，就應一起凍結這些決策。
+- 若在完成一批問題後的重新評估中暴露出新的語意、教學或交付 blocker，就應再規劃一小批問題，而不是猜測或直接宣告 `DESIGN_READY`。
 
-## Common Failures
+## 常見失敗
 
-- Asking low-value questions while missing the semantic fork that actually matters.
-- Treating a delivery decision as optional when it changes layout or outputs.
-- Writing "follow standard semantics" when multiple standards exist.
-- Smuggling unresolved ambiguity into broad wording such as "show the normal process."
-- Asking a batch as one multi-part user-facing question or returning answers to the designer one at a time.
-- Omitting the recommendation, rationale, or tradeoff from a question.
+- 問了很多低價值問題，卻漏掉真正重要的語意分歧。
+- 明明交付決策會改變版面或輸出，卻把它當作可選項。
+- 寫出「follow standard semantics」，但其實存在多種標準。
+- 把未解決的歧義偷偷塞進「show the normal process」這類模糊文字裡。
+- 把整批問題當成一個多段式使用者提問，或把答案一題一題送回 designer。
+- 問題中缺少建議、理由或取捨說明。

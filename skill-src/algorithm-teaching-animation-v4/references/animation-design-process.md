@@ -1,107 +1,107 @@
-# Animation Design Process
+# 動畫設計流程
 
-## Purpose
+## 目的
 
-Define the contract for DESIGN_DEVELOPMENT. Its primary job is to design how the animation teaches and presents the algorithm. Clarification supports that work; it is not a substitute for producing the design.
+定義 `DESIGN_DEVELOPMENT` 的契約。它的主要工作是設計動畫要如何教學與呈現演算法。澄清只是支援這份工作，不是產出設計的替代品。
 
-The process must produce an `animation_design.md` that is ready for explicit user confirmation and downstream review.
+這個流程必須產出一份已準備好可供使用者明確確認與下游審查的 `animation_design.md`。
 
-## Inputs
+## 輸入
 
-Use the approved task context, algorithm name and variant, sample input, audience and learning goals, animation requirements, relevant project contracts, and all user decisions already recorded.
+使用已核准的任務脈絡、演算法名稱與變體、範例輸入、受眾與學習目標、動畫需求、相關專案契約，以及所有已記錄的使用者決策。
 
-Treat missing information according to impact. Ask only when an unresolved answer could materially change algorithm semantics, the primary mental model, the core visual metaphor, the teaching arc, or the high-level animation beats. Resolve lower-impact details with a documented best-effort choice.
+對缺少資訊要依影響程度處理。只有在未解決的答案會實質改變演算法語意、主要心智模型、核心視覺隱喻、教學弧線或高層動畫節拍時才提問。較低影響的細節應以有紀錄的 best-effort 選擇解決。
 
-## Design Responsibilities
+## 設計職責
 
-DESIGN_DEVELOPMENT must actually design, not merely collect preferences or restate inputs. It owns:
+`DESIGN_DEVELOPMENT` 必須真的完成設計，而不只是蒐集偏好或重述輸入。它負責：
 
-- the primary mental model the viewer should build;
-- the visual presentation, including metaphor, visual semantics, structure presentation, scene organization, and information hierarchy;
-- the teaching arc from motivation and setup through state changes, insight, and conclusion;
-- the high-level animation beats that make algorithm state and causality visible;
-- a recommended design, relevant alternatives, and the tradeoffs that justify the recommendation;
-- prevention of likely viewer misconceptions;
-- faithful incorporation of confirmed user decisions and explicit notation of best-effort assumptions.
+- 觀眾應建立的主要心智模型；
+- 視覺呈現，包括隱喻、視覺語意、結構呈現、場景組織與資訊層級；
+- 從動機與鋪陳，到狀態變化、洞見與結論的教學弧線；
+- 使演算法狀態與因果關係變得可見的高層動畫節拍；
+- 推薦設計、重要替代方案，以及支撐推薦的取捨；
+- 預防觀眾可能產生的誤解；
+- 忠實納入已確認的使用者決策，並明確標示 best-effort 假設。
 
-Every design choice must serve the stated audience and learning goal. Do not turn low-level implementation details into design requirements unless they affect what the viewer learns or sees.
+每個設計選擇都必須服務於已陳述的受眾與學習目標。除非低層實作細節會影響觀眾看到或學到的內容，否則不要把它們變成設計要求。
 
-## Core-Question Batch Protocol
+## 核心問題批次協定
 
-The designer must identify unresolved core questions and plan a small question batch. A batch must contain only closely related decisions needed for the next design step; do not present a long questionnaire.
+designer 必須找出尚未解決的核心問題，並規劃一小批問題。每批只能包含對下一步設計必要、且彼此緊密相關的決策；不要丟出一長串問卷。
 
-The orchestrator must ask exactly one user-facing question at a time, wait for its answer, and record that answer before asking the next planned question. Each question must include:
+orchestrator 每次只可向使用者提出一個問題，等待其回答並記錄後，再問下一題。每個問題都必須包含：
 
-1. a concrete recommendation;
-2. the rationale for that recommendation;
-3. the meaningful tradeoff or consequence of accepting it;
-4. a concise set of answer choices when choices are useful.
+1. 一個具體建議；
+2. 該建議的理由；
+3. 接受它會有什麼重要取捨或後果；
+4. 在適合時提供簡潔選項。
 
-The orchestrator must record every user answer faithfully and relay it without reinterpretation, weakening, silent replacement, or merging it with the recommendation. If an answer is ambiguous in a way that materially changes the design, quote or closely paraphrase the ambiguity and ask one focused follow-up question within the batch.
+orchestrator 必須忠實記錄每個使用者答案，並在轉交時不得重新詮釋、弱化、悄悄替換或與建議混合。若答案的歧義會實質改變設計，應引用或緊密轉述這個歧義，並在同一批內再追問一個聚焦問題。
 
-Do not return to the designer for an update after each answer. After the complete planned batch, the orchestrator must return all recorded answers once so the designer performs one design update and one reassessment. Start another small batch whenever any unresolved blocking core question remains, whether previously known or newly exposed. Do not ask questions whose answers can no longer affect the design.
+不要在每個答案後就回到 designer 更新。等整批規劃好的問題都回答完後，orchestrator 只回傳一次全部答案，讓 designer 做一次設計更新與一次重新評估。只要仍有任何未解決的阻塞性核心問題，不論原先已知或新暴露，都應再開始下一小批問題。不要詢問那些答案已不再影響設計的問題。
 
-## Low-Impact Questions That Must Not Block Design
+## 不得阻塞設計的低影響問題
 
-Low-impact questions must not block design progress or the DESIGN_READY gate. These include preferences whose alternatives preserve algorithm semantics, the primary mental model, the teaching arc, and the high-level beats, such as minor color, typography, spacing, timing, wording, or decorative choices unless accessibility or correctness makes them material.
+低影響問題不得阻塞設計進度或 `DESIGN_READY` gate。這些問題包括不會改變演算法語意、主要心智模型、教學弧線與高層節拍的偏好，例如小幅顏色、字體、間距、時序、措辭或裝飾性選擇；除非 accessibility 或正確性讓它們變得重要。
 
-Choose a reasonable default, record it under risks or best-effort notes when useful, and continue. The user may revise these details during the edit loop.
+應選擇一個合理預設值，在需要時把它記錄到風險或 best-effort 備註中，然後繼續。使用者之後仍可在編輯循環中調整這些細節。
 
 ## DESIGN_READY Gate
 
-DESIGN_READY passes only when all of the following are true:
+只有當以下所有條件都為真時，`DESIGN_READY` 才能通過：
 
-- the design goal and audience are explicit;
-- the algorithm variant and operational semantics are unambiguous;
-- the primary mental model is explicit and technically faithful;
-- likely viewer misconceptions and their preventions are identified;
-- the sample input is suitable and its teaching rationale is stated;
-- every applicable required design decision and teaching risk in the routed type-specific reference is addressed; when no matching type reference exists, the design instead records best-effort classification, the specific coverage risk, and the strengthened-review requirement;
-- the core visual metaphor and visual semantics are defined;
-- structure presentation, scene structure, and information hierarchy are defined;
-- the teaching arc is coherent;
-- the high-level animation beats expose the important state transitions and causal relationships;
-- a recommended design and material alternatives include rationale and tradeoffs;
-- all material user decisions are incorporated faithfully;
-- zero unresolved blocking core questions remain;
-- only low-impact items remain unresolved, and each is documented as a risk with its chosen best-effort default;
-- the design document satisfies the required contract and self-check.
+- 設計目標與受眾已明確；
+- 演算法變體與操作語意沒有歧義；
+- 主要心智模型明確且技術上忠實；
+- 已辨識出觀眾可能的誤解，以及對應的預防方式；
+- 範例輸入適合，且其教學理由已陳述；
+- 所有經路由適用的型別專用設計決策與教學風險都已處理；若沒有相符型別參考，則設計必須記錄 best-effort 分類、具體覆蓋風險與強化審查要求；
+- 核心視覺隱喻與視覺語意已定義；
+- 結構呈現、場景結構與資訊層級已定義；
+- 教學弧線具一致性；
+- 高層動畫節拍有清楚呈現重要狀態轉換與因果關係；
+- 推薦設計與重要替代方案都附有理由與取捨；
+- 所有重要使用者決策都已忠實納入；
+- 不再有任何未解決的阻塞性核心問題；
+- 只剩低影響未解決項目，且每一項都已記錄為風險並附帶所選 best-effort 預設值；
+- 設計文件符合必需契約與自檢要求。
 
-Once every DESIGN_READY condition passes, the process must stop asking design questions and stop adding design work. It must send the exact DESIGN_READY version of `animation_design.md` to an independent animation design review. The independent reviewer must write `animation_design_review.md`; any result other than `PASS` rolls the design back to DESIGN_DEVELOPMENT.
+當每一項 `DESIGN_READY` 條件都通過後，流程必須停止提設計問題，也停止新增設計工作。它必須把 `animation_design.md` 的精確 `DESIGN_READY` 版本送交獨立動畫設計審查。獨立審查者必須撰寫 `animation_design_review.md`；只要結果不是 `PASS`，設計就必須回退到 `DESIGN_DEVELOPMENT`。
 
-Only after `animation_design_review.md = PASS` may the process request explicit user approval of the exact reviewed version of `animation_design.md`. After that approval binds the same exact version, the design may proceed to faithful conversion into `pre_build_brief.md`; neither review nor approval alone authorizes conversion. Continuing to elaborate, clarify, request approval before review passes, convert before exact-version approval, or expand the design after the gate passes is a process failure.
+只有在 `animation_design_review.md = PASS` 之後，流程才可請求使用者對該精確已審版本的 `animation_design.md` 給出明確核准。只有當該核准綁定到同一精確版本後，設計才可進入忠實轉換成 `pre_build_brief.md`；單有審查或單有核准都不足以授權轉換。若在 gate 通過後仍持續補充設計、持續澄清、在審查通過前請求核准、在精確版本核准前就轉換，或 gate 通過後又擴充設計，都是流程失敗。
 
-## User Edit Loop
+## 使用者編輯循環
 
-The user may edit `animation_design.md` directly. Every user edit creates a new version, invalidates the prior review result, and requires re-review before confirmation can be accepted. Edit impact determines whether the re-review is full or delta; no edit bypasses re-review.
+使用者可以直接編輯 `animation_design.md`。每一次使用者編輯都會建立新版本、使先前審查結果失效，且在接受確認前都必須重新審查。編輯影響決定重審是 full 還是 delta；任何編輯都不能繞過重新審查。
 
-After an edit, identify what changed, preserve the user's wording and intent, run the appropriate review scope, update the DESIGN_READY self-check, and present the reviewed document again for explicit confirmation. Silence, inactivity, or editing the file alone does not count as approval.
+發生編輯後，要辨識變更內容，保留使用者原意與措辭，執行適當範圍的審查，更新 `DESIGN_READY` 自檢，然後再把經審查文件呈現給使用者做明確確認。沉默、無回應或只是編輯檔案，都不算核准。
 
-## Full Review Versus Delta Review
+## Full Review 與 Delta Review
 
-Use full review for the initial design, after changes to algorithm semantics, primary mental model, core visual metaphor or semantics, teaching arc, scene structure, high-level beats, or whenever change impact is uncertain. Full review checks the entire document and every DESIGN_READY condition.
+第一次設計審查必須使用 full review。當修改涉及演算法語意、主要心智模型、核心視覺隱喻或語意、教學弧線、場景結構、高層節拍，或任何影響不確定的情況，也都必須使用 full review。full review 會檢查整份文件與所有 `DESIGN_READY` 條件。
 
-Use delta review only for a clearly bounded edit whose effects can be traced completely. Delta review must inspect the changed text, all dependent sections, internal consistency, and the DESIGN_READY self-check. Escalate immediately to full review if the edit has cross-cutting effects or reveals an earlier inconsistency.
+只有在修改範圍清楚且影響可完全追蹤時，才可使用 delta review。Delta review 必須檢查變更文字、所有相依段落、內部一致性，以及 `DESIGN_READY` 自檢。只要編輯有跨區影響或暴露出較早的不一致，就要立即升級為 full review。
 
-## Rollback Rules
+## 回退規則
 
-If review finds a regression, contradiction, unsupported claim, lost user decision, or failed DESIGN_READY condition, roll the design state back to DESIGN_DEVELOPMENT. Do not silently restore old text over a user edit. Preserve the user's requested change in the decision record, explain the conflict, and resolve it through one focused core question only when the impact is material.
+若審查發現回歸、矛盾、無支撐主張、遺失使用者決策，或任何 `DESIGN_READY` 條件失敗，就把設計狀態退回 `DESIGN_DEVELOPMENT`。不要默默用舊文字覆蓋使用者編輯。應保留使用者要求的變更於決策紀錄中，說明衝突，並只在影響重大時用一個聚焦的核心問題來解決。
 
-If downstream work reveals that the confirmed design is technically invalid or materially incomplete, stop downstream production and return to DESIGN_DEVELOPMENT. Re-review and explicit reconfirmation are required before downstream work resumes.
+若下游工作發現已確認設計在技術上無效或有實質缺漏，就必須停止下游製作並回到 `DESIGN_DEVELOPMENT`。在下游恢復之前，必須重新審查並重新取得明確確認。
 
-## Failure Conditions
+## 失敗條件
 
-The process fails if it:
+若流程有以下情況，就算失敗：
 
-- treats clarification as the primary deliverable instead of designing the teaching and presentation;
-- asks a large questionnaire, asks multiple user-facing questions at once, or mixes unrelated decisions in one batch;
-- omits the recommendation, rationale, or tradeoff from a core question;
-- relays a user answer inaccurately or silently substitutes another choice;
-- blocks on a low-impact preference;
-- leaves the mental model, visual presentation, teaching arc, or high-level beats undesigned;
-- declares DESIGN_READY while any gate condition is unmet or any unresolved blocking core question remains;
-- continues questioning or elaborating after every DESIGN_READY condition passes;
-- requests user approval before independent review records `PASS` in `animation_design_review.md`;
-- accepts silence, inactivity, or an unreviewed edit as approval;
-- uses delta review when the change requires full review;
-- continues downstream work after the design has rolled back.
+- 把澄清當成主要產物，而不是設計教學與呈現；
+- 提出大問卷、一次問多個使用者問題，或把無關決策混在同一批；
+- 核心問題缺少建議、理由或取捨；
+- 不準確轉述使用者答案，或默默替換成其他選擇；
+- 因低影響偏好而阻塞；
+- 心智模型、視覺呈現、教學弧線或高層節拍未完成設計；
+- 在 gate 條件未滿足或仍有阻塞性核心問題時宣告 `DESIGN_READY`；
+- 在所有 `DESIGN_READY` 條件都通過後仍繼續提問或擴充；
+- 在獨立審查尚未於 `animation_design_review.md` 中記錄 `PASS` 前請求使用者核准；
+- 把沉默、無回應或未經審查的編輯視為核准；
+- 在需要 full review 的情況下使用 delta review；
+- 設計已回退卻仍繼續下游工作。

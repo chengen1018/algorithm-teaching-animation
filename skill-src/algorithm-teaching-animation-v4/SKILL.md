@@ -1,27 +1,27 @@
 ---
 name: algorithm-teaching-animation-v3
-description: Use when an algorithm request must become a complete Manim teaching animation through design, review, rendering, and QA; not for pure-text algorithm explanations, general non-algorithm animations, or requests limited to local edits of an existing scene.
+description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執行過程製作成完整的動畫時使用。適用於需要規劃、實作、渲染及驗證動畫成品的任務；不適用於純文字演算法解說、一般非演算法動畫，或只修改既有場景的局部需求。
 ---
 
-# Algorithm Teaching Animation v3
+# 演算法教學動畫 v3
 
-## Overview
-This skill turns a user's algorithm request into a complete Manim teaching animation. The workflow covers animation design, teaching-script writing, optional voiceover production, animation implementation, independent review, QA, and delivery.
-The orchestrator must ensure that every step is completed in order and that every phase satisfies its requirements.
+## 概述
+此 skill 用來把使用者的演算法需求製作成完整的 Manim 教學動畫。整個製作過程包含動畫設計、撰寫教學腳本、視需要製作旁白、實作動畫、獨立檢查、QA 及交付成果。
+主要負責的 agent 必須確保所有步驟依序完成，並確認每個階段都符合要求。
 
-## Required Authorization
-Using this skill to complete the workflow requires the user's approval to use subagents.
-If explicit authorization has not already been obtained in the current conversation, ask verbatim:
+## 必要授權
+利用此 skill 完成各階段任務需要使用者核准使用 subagent。
+若目前對話中尚未取得明確授權，必須詢問：
 
 ```text
-This task requires subagents: `animation-designer` for animation design, `animation-design-reviewer` for independent animation-design review, and downstream roles for content writing, review, voiceover production, animation implementation, and quality verification. Do you agree to my using subagents for this task? Please answer explicitly with "I agree" or "I do not agree" (if you do not agree, this task cannot begin).
+此任務需要使用 subagent，由 `animation-designer` 執行動畫設計、`animation-design-reviewer` 執行獨立動畫設計審查，再由下游角色分別執行內容撰寫、審查、旁白製作、動畫實作及品質驗證。你是否同意我在此任務中使用 subagent？請明確回答「同意」或「不同意」(若不同意則無法開始此任務)。
 ```
 
-Begin subsequent work only if the user explicitly answers `I agree`.
-If the user answers `I do not agree`, refuses authorization, or does not explicitly agree, stop immediately and do not begin any subsequent phase.
+只有當使用者明確回答「同意」時，才能開始後續工作。
+若使用者回答「不同意」、拒絕授權或未明確表示同意則立即結束工作，不得開始任何後續階段。
 
-## Workflow
-Run these phases in order:
+## 工作流程
+依序執行以下階段：
 
 1. `ANIMATION_DESIGN`
 2. `SCRIPT`
@@ -30,389 +30,458 @@ Run these phases in order:
 5. `QA`
 6. `DELIVERY`
 
-Do not skip any phase.
-Before starting a phase, confirm that all prerequisites listed for that phase are complete.
-Read only the references required by the current phase. Do not read later-phase material early unless a problem occurs and a rule explicitly requires it.
-If a later phase reveals that an earlier decision is unclear, wrong, or missing required information, do not patch it in the current phase. Return to the phase that owns the problem, repair it there, and then continue in order.
+開始每個階段前確實閱讀完成目前階段需要的參考資料，不得跳過任何階段，也不得合併、提前或補做後續階段的工作來取代目前階段。
+請照各階段的描述完成工作，且該階段規定的必要產物、審查與通過條件都已滿足後，才能進入下一個階段。
 
-## Delegation Rules
-When a phase requires a specific subagent, that subagent must perform the specified work.
-Delegation does not transfer the orchestrator's responsibility for phase order, required artifacts, pass conditions, or rollback routing. When a phase requires independent review, dispatch the named reviewer only after the artifact under review is complete, and the reviewer must not be that artifact's author.
+## 階段 1：ANIMATION_DESIGN
 
-Read required material according to each phase's `Read Before Acting` section.
-The orchestrator reads additional references only when an artifact may be defective, a gate fails, or the proper rollback target is unclear.
+### 目標
+這個階段要先把使用者提供的內容記錄清楚，再完成動畫設計、獨立審查、精確版本核准，以及下游要用的 `pre_build_brief.md`。
+在腳本、旁白或場景製作開始前，只有這個階段可以定義或修改核心設計決定，包括：核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線與高階動畫節拍。
 
-## Artifact Chain
-The normal workflow produces these artifacts in order:
+### 委派
+協調者負責 `INTAKE`、面向使用者的逐題提問、忠實記錄回答，以及所有外部核准關卡。
+必須派遣 `animation-designer` 負責 `DESIGN_DEVELOPMENT`、建立或修訂 `animation_design.md`，並在設計通過精確版本核准後負責 `CONTRACT` 的忠實轉換。
+必須在設計者完成 `DESIGN_READY` 後，另行派遣獨立的 `animation-design-reviewer` 審查。審查者不得參與該版本設計的撰寫、修訂或修復。
 
-```text
-intake_summary.md
-animation_design.md
-animation_design_review.md
-pre_build_brief.md
-teaching_script.md
-script_review_result.md
-voiceover.md
-narration_manifest.json
-audio/voiceover/
-generated_algo_scene.py
-render_preflight.md
-scene_review_result.md
-qa_result.md
-```
+### 行動前須閱讀
+`INTAKE` 前，協調者閱讀 `references/intake-contract.md`。
+`DESIGN_DEVELOPMENT` 前，`animation-designer` 依其角色契約閱讀 `references/high-impact-clarification.md`、共用設計參考、視覺參考，以及符合演算法類型時唯一一份相符的類型參考。
+設計審查前，`animation-design-reviewer` 閱讀 `references/animation-design-review-checklist.md`，並使用與設計者相同的參考路由。
+`CONTRACT` 前，`animation-designer` 閱讀 `references/pre-build-brief.md`。
+不要只因為「可能會用到」就提前閱讀後續階段的參考資料。
 
-For the `no narration` delivery tier, the approved `pre_build_brief.md` must explicitly state that narration and voiceover files are not required.
-In this tier, `voiceover.md`, `narration_manifest.json`, and files under `audio/voiceover/` are not required.
+### 子階段 1：INTAKE
+協調者準確擷取使用者提出的演算法、版本或情境、範例輸入、目標受眾、教學目標、動畫需求、交付層級、限制、禁止事項及先前決定，並保留會影響語意、教學、交付或驗收的原始措辭與來源標籤。
+依 `references/intake-contract.md` 建立 `intake_summary.md`，清楚區分使用者來源與 agent 分析。
+`INTAKE` 只負責記錄、分類與提出非約束性的候選教學方向。
+`INTAKE` 不得直接完成動畫設計，也不得提前決定核心視覺語意、場景結構、資訊層級、教學弧線或高階節拍。
 
-For the `final narrated delivery` tier, `voiceover.md`, `narration_manifest.json`, and usable narration audio under `audio/voiceover/` must be complete before render and QA can pass.
+### 子階段 2：DESIGN_DEVELOPMENT
+此子階段由 `animation-designer` 實際完成動畫設計，並可先規劃小批、彼此密切相關的核心問題。
 
-## Global Rules
-These rules apply throughout the workflow:
+設計內容至少要涵蓋：
 
-- This file, `SKILL.md`, is the primary English workflow contract.
-- `references/*.md` provide phase-specific execution detail, and `agents/*.md` define role-specific behavior. Neither may override or change this contract.
-- `SKILL.md` and `SKILL.zh-TW.md` must remain semantically synchronized.
-- A missed supporting-file read, delegated work, successful render, or informal review opinion never permits skipping a phase, artifact, or formal gate required by this contract.
-- Do not add explanatory overlays, code panels, or on-screen annotation layers outside the contract unless the user explicitly requests them.
-- Every review and QA decision must use the formal gate artifact named by its phase.
-- If downstream work discovers inaccurate capture of user source material, roll back to `INTAKE`. If it discovers a gap in core semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, or another core design decision, roll back to `DESIGN_DEVELOPMENT` and repeat review and approval. If the problem is limited to brief wording, source labels, or faithful conversion, roll back to `CONTRACT`. Use `ANIMATION_DESIGN` only when referring to the entire first top-level phase.
+- 演算法版本與操作語意
+- 教學目標
+- 要預防的觀眾誤解
+- 主要心智模型及其界線
+- 範例與其教學理由
+- 核心視覺隱喻與穩定視覺語意
+- 資料結構呈現方式
+- 場景結構
+- 資訊層級
+- 教學弧線
+- 高階動畫節拍
+- 明確的建議、理由、替代方案與取捨
 
-## Phase 1: ANIMATION_DESIGN
+協調者在這個子階段只負責和使用者互動：
 
-### Goal
-First capture the user's source material accurately, then complete the teaching and visual design, independent review, external approval of an exact version, and faithful conversion into the downstream implementation contract.
-Before script, voiceover, or scene production begins, only this phase may define or change core semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, or high-level animation beats.
+- 每次只問一個問題
+- 忠實記錄並轉交回答
+- 不負責設計問題清單
+- 不負責動畫設計
+- 不得以設計者的建議取代使用者決定
 
-### Delegation
-The orchestrator owns `INTAKE`, user-facing one-at-a-time questions, faithful recording of answers, and every external approval gate.
-Dispatch `animation-designer` for `DESIGN_DEVELOPMENT`, creation or revision of `animation_design.md`, and, after exact-version design approval, faithful conversion during `CONTRACT`.
-After the designer produces `DESIGN_READY`, separately dispatch an independent `animation-design-reviewer`. The reviewer must not have participated in writing, revising, or repairing that design version.
+完成一整批問題後，協調者要把完整回答一次交回 `animation-designer`，不得每得到一個回答就要求設計者更新。
 
-### Read Before Acting
-Before `INTAKE`, the orchestrator reads `references/intake-contract.md`.
-Before `DESIGN_DEVELOPMENT`, `animation-designer` reads `references/high-impact-clarification.md`, the common design reference, the visual reference, and exactly one matching type reference when the algorithm type matches, as required by its role contract.
-Before design review, `animation-design-reviewer` reads `references/animation-design-review-checklist.md` and follows the same reference routing as the designer.
-Before `CONTRACT`, `animation-designer` reads `references/pre-build-brief.md`.
-Do not read later-phase references early merely because they might be useful.
+只要還有會實質改變下列項目的阻塞問題，就要繼續下一批問題：
 
-### Subphase 1: INTAKE
-The orchestrator accurately captures the algorithm, version or scenario, sample input, target audience, teaching goals, animation requirements, delivery tier, constraints, prohibitions, and prior decisions supplied by the user. Preserve original wording and source labels that affect semantics, teaching, delivery, or acceptance.
-Create `intake_summary.md` according to `references/intake-contract.md`, clearly separating user-sourced material from agent analysis.
-`INTAKE` only records, classifies, and offers non-binding candidate teaching directions. It must not complete the animation design or freeze core visual semantics, scene structure, information hierarchy, teaching arc, or high-level beats.
+- 演算法語意
+- 主要心智模型
+- 核心視覺語意
+- 教學弧線
+- 場景結構
+- 高階節拍
 
-### Subphase 2: DESIGN_DEVELOPMENT
-Dispatch `animation-designer` to plan small batches of closely related core questions and to perform the actual algorithm-animation design. At minimum, the design covers the algorithm version and operational semantics, teaching goals, audience misconceptions to prevent, the primary mental model and its boundaries, the example and its teaching rationale, the core visual metaphor and stable visual semantics, data-structure representation, scene structure, information hierarchy, teaching arc, high-level animation beats, and explicit recommendations, rationales, meaningful alternatives, and tradeoffs.
+低影響細節不得阻塞設計；應採用合理的 best-effort 預設值、記錄風險，然後繼續。
 
-The orchestrator asks the user only one question at a time, faithfully records and forwards each answer, and does not design the question list or the animation. The designer's recommendation must not replace a user decision. After the entire batch is answered, return the complete batch to `animation-designer` in one faithful consolidated handoff; do not ask the designer to update after each individual answer.
-Continue with another small batch while any blocking question could materially change algorithm semantics, the primary mental model, core visual semantics, teaching arc, scene structure, or high-level beats. Low-impact details must not block design; apply a reasonable best-effort default, record the risk, and continue.
+`animation-designer` 必須依 `references/animation-design-document.md` 建立 `animation_design.md`，並完成 `DESIGN_READY` 自我檢查。只有在全部條件都通過，且沒有阻塞核心問題時，才能交出 `DESIGN_READY`。
 
-`animation-designer` creates `animation_design.md` according to `references/animation-design-document.md`, performs the specified `DESIGN_READY` self-check, and may emit `DESIGN_READY` only when every condition passes and no blocking core question remains.
-Then dispatch the independent `animation-design-reviewer`, who creates the sole formal review artifact, `animation_design_review.md`. The review must build a complete evidence matrix against the `DESIGN_READY` conditions specified in `references/animation-design-process.md` and use either `Full` or fully traceable `Delta` routing according to change impact. The initial review, and any change to algorithm semantics, the primary mental model, the core visual metaphor or semantics, teaching arc, scene structure, high-level beats, or a change whose impact is unclear, requires `Full` review.
+之後必須派遣獨立的 `animation-design-reviewer` 建立唯一正式審查產物 `animation_design_review.md`。審查必須依 `references/animation-design-process.md` 的 `DESIGN_READY` 條件建立完整證據矩陣，並依變更影響採用：
 
-The reviewer must compute SHA-256 over the exact bytes of the actual `animation_design.md` under review both when review begins and immediately before review ends, and record `Reviewed Design SHA-256` in a `PASS` result. Only after `animation_design_review.md = PASS` may the orchestrator request explicit user approval of that exact reviewed version. The approval record must be stored outside `animation_design.md` and preserve `Approved Design SHA-256` plus an explicit reference to the user's approval.
-The user may directly edit `animation_design.md`. Every direct edit creates a new version, invalidates prior review and approval, and triggers `Full` or `Delta` re-review according to change impact. Any existing `pre_build_brief.md`, its `Source Design SHA-256` lineage, and its approval are also invalidated. Every new version must return to `DESIGN_DEVELOPMENT`, undergo the impact-appropriate full or delta review, receive `PASS`, receive the user's renewed explicit approval, and then have `pre_build_brief.md` regenerated with new external lineage and separately reapproved. Silence, no response, the edit itself, or approval of another version does not count as approval.
+- `Full`
+- 可完整追蹤的 `Delta`
 
-### Subphase 3: CONTRACT
-Dispatch `animation-designer` to convert the design faithfully into `pre_build_brief.md` only when the exact current `animation_design.md` version has received `PASS` from independent review, the user has explicitly approved the same version, and all of these values converge exactly:
+下列情況一律使用 `Full`：
+
+- 初次審查
+- 演算法語意改變
+- 主要心智模型改變
+- 核心視覺隱喻或視覺語意改變
+- 教學弧線改變
+- 場景結構改變
+- 高階節拍改變
+- 影響是否重大無法判定
+
+審查者在審查開始前與結束前，都必須對實際受審的 `animation_design.md` 位元組內容計算 SHA-256。若審查結果為 `PASS`，必須在結果中記錄 `Reviewed Design SHA-256`。
+
+只有在 `animation_design_review.md = PASS` 之後，協調者才能請求使用者明確核准該精確受審版本。核准記錄必須保存在 `animation_design.md` 之外，並保存：
+
+- `Approved Design SHA-256`
+- 明確的使用者核准參照
+
+使用者可以直接編輯 `animation_design.md`。每次直接編輯都視為新版本，並造成以下結果：
+
+- 先前的審查失效
+- 先前的核准失效
+- 先前的 `pre_build_brief.md` 失效
+- 先前的 `Source Design SHA-256` 血緣記錄失效
+- 先前的 brief 核准失效
+
+發生這種情況時，必須退回 `DESIGN_DEVELOPMENT`，並依變更影響重新完成：
+
+- `Full` 或 `Delta` 審查
+- 檔案化 `PASS`
+- 使用者重新明確核准
+- 重新產生 `pre_build_brief.md`
+- 建立新的外部血緣記錄
+- 重新取得 brief 核准
+
+下列情況都不算核准：
+
+- 使用者沉默
+- 使用者未回覆
+- 只修改檔案但沒有明確同意
+- 核准的是其他版本
+
+### 子階段 3：CONTRACT
+只有在目前 `animation_design.md` 的精確版本已滿足下列條件時，才能派遣 `animation-designer` 忠實轉換為 `pre_build_brief.md`：
+
+- 已由獨立審查取得 `PASS`
+- 使用者已明確核准同一版本
+- 下列值完全收斂
 
 ```text
 Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
 ```
 
-`Source Design SHA-256` is not required before conversion. During faithful conversion, record it in the external `CONTRACT` lineage record as the exact current `Approved Design SHA-256` used to produce `pre_build_brief.md`; do not write lineage or approval metadata into `animation_design.md` or `pre_build_brief.md`.
-The conversion may organize, condense, and label the sources of approved decisions, but it must not add, repair, or silently decide any core semantics, mental model, core visual semantics, scene structure, teaching arc, or high-level beat.
-After conversion and before requesting brief approval, recompute the current design SHA-256 and require `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`. Then the orchestrator must separately request the user's explicit approval of the exact `pre_build_brief.md` version. Design approval cannot substitute for brief approval. The external approval record must preserve `Approved Brief SHA-256` and an explicit reference to the user's approval; do not write approval status or metadata into the brief.
-Every edit to `pre_build_brief.md` invalidates prior approval. Recheck faithful conversion and obtain explicit approval of the new version. Immediately before starting `SCRIPT`, recompute SHA-256 for the current design and brief and require:
+`Source Design SHA-256` 在轉換前不是必要條件。進行忠實轉換時，應把它記錄在外部 `CONTRACT` 血緣記錄中；它的值必須是用來產生 `pre_build_brief.md` 的精確目前 `Approved Design SHA-256`。
+
+不得把血緣或核准中繼資料寫入：
+
+- `animation_design.md`
+- `pre_build_brief.md`
+
+這個轉換可以整理、濃縮與標示已核准決定的來源，但不得新增、修補或默默決定任何核心設計，包括：
+
+- 核心語意
+- 心智模型
+- 核心視覺語意
+- 場景結構
+- 教學弧線
+- 高階節拍
+
+完成轉換後、請求 brief 核准前，必須重新計算目前設計的 SHA-256，並確認：
+
+```text
+Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
+```
+
+接著，協調者必須另外請求使用者明確核准 `pre_build_brief.md` 的精確版本。設計核准不能取代 brief 核准。
+
+brief 的外部核准記錄必須保存：
+
+- `Approved Brief SHA-256`
+- 明確的使用者核准參照
+
+不得把核准狀態或中繼資料寫入 brief。
+
+每次編輯 `pre_build_brief.md` 都會使先前核准失效。發生這種情況時，必須重新檢查忠實轉換，並重新取得新版本的明確核准。
+
+在開始 `SCRIPT` 前，必須重新計算目前設計與 brief 的 SHA-256，並確認：
 
 ```text
 Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256
 Approved Brief SHA-256 = current pre_build_brief.md SHA-256
 ```
 
-### Required Outputs
-Create:
-
+### 必要輸出
 - `intake_summary.md`
 - `animation_design.md`
-- `animation_design_review.md`, produced by the independent reviewer with verdict `PASS`
+- 由獨立審查者產出的 `animation_design_review.md`，且 verdict 為 `PASS`
 - `pre_build_brief.md`
 
-### Pass / Exit Gate
-Leave `ANIMATION_DESIGN` and begin `SCRIPT` only when every condition below is true:
+### 通過／離開關卡
+僅當下列條件全部成立，才能離開 `ANIMATION_DESIGN` 並開始 `SCRIPT`：
 
-- `intake_summary.md` exists and accurately preserves user-sourced material.
-- `animation_design.md` exists and has emitted `DESIGN_READY`.
-- `animation_design_review.md = PASS` and was produced by the independent `animation-design-reviewer`.
-- `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`.
-- The user has explicitly approved the exact reviewed design version in an external record.
-- `pre_build_brief.md` exists and is a faithful conversion of that approved design.
-- `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
-- The user has separately and explicitly approved that exact brief version in an external record.
+- `intake_summary.md` 存在，且使用者來源已準確保留。
+- `animation_design.md` 存在並已交出 `DESIGN_READY`。
+- `animation_design_review.md = PASS`，且由獨立的 `animation-design-reviewer` 產出。
+- `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`。
+- 已取得使用者對該精確受審設計版本的明確外部核准。
+- `pre_build_brief.md` 存在，且是該核准設計的忠實轉換。
+- `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
+- 已另外取得使用者對該精確 brief 版本的明確外部核准。
 
-Informal reviewer comments, verbal opinions in chat, or the orchestrator's own check cannot replace file-backed `animation_design_review.md = PASS`.
+非正式 reviewer 留言、聊天中的口頭意見或協調者自行檢查，都不能取代檔案化的 `animation_design_review.md = PASS`。
 
-### Rollback Rules
-If intake captured source material inaccurately, omitted original user wording, or assigned an incorrect source label, return to `INTAKE`, repair `intake_summary.md`, and feed the corrected source back through the design process.
-If there is any gap in core algorithm semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, high-level beats, or another core design decision, or if `animation_design.md` changes in any way, return to `DESIGN_DEVELOPMENT`. After repair, repeat `DESIGN_READY`, the appropriate full or delta independent review, file-backed `PASS`, SHA-256 convergence, and exact-version user reapproval. The existing `pre_build_brief.md`, its `Source Design SHA-256` lineage, and its approval are invalid; regenerate the brief with new external lineage and separately reapprove it.
-If the problem is limited to brief wording, formatting, source labels, or faithful conversion without changing the meaning of the approved design, stay in or return to `CONTRACT`. Recheck faithful conversion, update `Source Design SHA-256`, and obtain approval for the new SHA-256 of `pre_build_brief.md`.
-If `CONTRACT` reveals a missing, conflicting, or materially ambiguous core decision, stop conversion and return to `DESIGN_DEVELOPMENT`. Do not perform design work in the brief.
+### 回退規則
+遇到問題時，依下列規則回退：
 
-## Phase 2: SCRIPT
+- 若來源擷取不準確、遺漏使用者原始措辭，或來源標籤錯誤發生在 intake，退回 `INTAKE` 修正 `intake_summary.md`，再把修正後的來源重新送回設計流程。
+- 若發現演算法核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高階節拍或其他核心設計有缺口，或 `animation_design.md` 有任何變更，退回 `DESIGN_DEVELOPMENT`。
+- 退回 `DESIGN_DEVELOPMENT` 後，必須重新完成 `DESIGN_READY`、適當的完整或差異獨立審查、檔案化 `PASS`、SHA-256 收斂，以及精確版本的使用者重新核准。
+- 一旦退回 `DESIGN_DEVELOPMENT`，既有的 `pre_build_brief.md`、其 `Source Design SHA-256` 血緣記錄與其核准都失效；必須重新產生 brief、建立新的外部血緣記錄，並重新核准。
+- 若問題只在 brief 的文字、格式、來源標籤或忠實轉換，且不改變已核准設計的意思，留在或退回 `CONTRACT`；修正後重新檢查忠實轉換、更新 `Source Design SHA-256`，並重新取得新 SHA-256 版本的 `pre_build_brief.md` 核准。
+- 若 `CONTRACT` 暴露的是缺漏、衝突，或會實質影響內容理解的核心決定模糊，必須停止轉換並退回 `DESIGN_DEVELOPMENT`；不得在 brief 中補做設計。
 
-### Goal
-Organize the approved `pre_build_brief.md` into teachable animation beats and content order.
+## 階段 2：SCRIPT
 
-### Do Not Start Until
-An approved `pre_build_brief.md` exists.
-Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`, with an external record of explicit approval for that exact `pre_build_brief.md` version.
+### 目標
+將已核准的 `pre_build_brief.md` 整理成適合教學的動畫節拍與內容順序。
 
-### Do
-Dispatch the `script-writer` subagent to create the teaching script.
-Require `script-writer` to read the approved `pre_build_brief.md` and `references/teaching-script.md` before writing.
-Then have `script-writer` produce a reviewable teaching script from the approved brief.
-The script must make viewer goals, beat order, teaching focus, and content progression explicit without adding meaning absent from the contract.
-After `teaching_script.md` exists, dispatch the independent `script-reviewer` subagent to review it against the approved `pre_build_brief.md`.
-Require `script-reviewer` to read the approved `pre_build_brief.md`, `teaching_script.md`, and `references/script-review-checklist.md` before reviewing.
-The script reviewer must not have written the script.
+### 不得開始直到
+已核准的 `pre_build_brief.md` 存在。
+緊接在開始本階段前，已重新計算目前設計與 brief 的 SHA-256，且 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`；另有該精確版本的外部 `pre_build_brief.md` 明確核准記錄。
 
-### Required Outputs
-Create `teaching_script.md`.
-Provide enough review context for `script-reviewer` to evaluate the script against the approved `pre_build_brief.md`.
-Create `script_review_result.md` through the independent reviewer.
+### 執行事項
+派遣 `script-writer` subagent 建立教學腳本。
+要求 `script-writer` 在寫作前閱讀已核准的 `pre_build_brief.md` 與 `references/teaching-script.md`。
+接著由 `script-writer` 根據已核准的 `pre_build_brief.md` 撰寫可供審查的教學腳本。
+腳本必須清楚說明觀眾應學到什麼、各節拍的順序、教學重點與內容如何逐步推進，而且不得加入契約中沒有的新意思。
+完成 `teaching_script.md` 後，派遣獨立的 `script-reviewer` subagent，依已核准的 `pre_build_brief.md` 審查腳本。
+要求 `script-reviewer` 在審查前閱讀已核准的 `pre_build_brief.md`、`teaching_script.md` 與 `references/script-review-checklist.md`。
+腳本審查者不得撰寫該腳本。
 
-### Pass / Exit Gate
-Advance only when `teaching_script.md` exists and `script_review_result.md = PASS`.
-The review result must be produced by `script-reviewer`, not `script-writer`.
+### 必要輸出
+建立 `teaching_script.md`。
+提供足夠的審查資訊，讓 `script-reviewer` 能依已核准的 `pre_build_brief.md` 評估腳本。
+透過獨立審查者建立 `script_review_result.md`。
 
-### Rollback When Problems Occur
-If the problem is limited to script content order, expression, or adherence to the brief, return to `SCRIPT`.
-If the script reveals an error in brief wording, source labels, or faithful conversion, return to `CONTRACT`, repair it, and regain exact-version brief approval.
-If the script reveals a gap in core semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, high-level beats, or another core design decision, return to `DESIGN_DEVELOPMENT`; complete redesign, independent review, design reapproval, `CONTRACT` conversion, and separate `pre_build_brief.md` approval before continuing. Do not patch core design in `SCRIPT`.
+### 通過／離開關卡
+僅當 `teaching_script.md` 存在且 `script_review_result.md = PASS` 時，才能前進。
+審查結果必須由 `script-reviewer` 產出，而非 `script-writer`。
 
-## Phase 3: VOICEOVER
+### 發生問題時退回
+若問題只在腳本的內容順序、表達或對 brief 的遵循，退回 `SCRIPT`。
+若腳本暴露 brief 的文字、來源標籤或忠實轉換錯誤，退回 `CONTRACT`，修正並重新取得精確版本的 brief 核准。
+若腳本暴露核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高階節拍或其他核心設計缺口，退回 `DESIGN_DEVELOPMENT`，完成重新設計、獨立審查、設計重新核准、`CONTRACT` 轉換並另行核准 `pre_build_brief.md` 後再繼續。不得在 `SCRIPT` 直接修補核心設計。
 
-### Goal
-Produce narration artifacts faithful to the approved `pre_build_brief.md` and the reviewed teaching script.
-Voiceover is a formal workflow phase, not optional polish added at the end.
+## 階段 3：VOICEOVER
 
-### Delegation
-If the approved delivery tier includes narration, this phase must use the `voiceover-manifest` subagent.
-This phase does not require a separate independent reviewer.
+### 目標
+製作符合已核准 `pre_build_brief.md` 與已通過審查之教學腳本的旁白產物。
+旁白是正式流程的一個階段，不是最後才視情況加入的潤飾。
 
-### Read Before Acting
-The `voiceover-manifest` subagent must read the approved `pre_build_brief.md`, `teaching_script.md`, `script_review_result.md`, and `references/voiceover.md`.
-If voiceover content appears inconsistent with the reviewed script, the orchestrator should read `script_review_result.md`.
+### 委派
+如果已核准的交付層級包含旁白，此階段必須使用 `voiceover-manifest` subagent。
+此階段不需要另外安排獨立審查者。
 
-### Do Not Start Until
-The delivery tier is confirmed and no longer changing.
-`teaching_script.md` exists.
-`script_review_result.md = PASS`.
-Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
-If narration is required, do not use an unreviewed or failed script.
+### 行動前須閱讀
+`voiceover-manifest` subagent 必須閱讀已核准的 `pre_build_brief.md`、`teaching_script.md`、`script_review_result.md` 與 `references/voiceover.md`。
+如果旁白內容似乎與已審查的腳本不一致，協調者應閱讀 `script_review_result.md`。
 
-### Do
-For `no narration`, verify that the approved `pre_build_brief.md` explicitly states that narration and voiceover files are not required.
-Do not create purposeless voiceover placeholders merely to fill the artifact chain.
+### 不得開始直到
+交付層級已確認，不再變更。
+`teaching_script.md` 已存在。
+`script_review_result.md = PASS`。
+緊接在開始本階段前，重新計算目前設計與 brief 的 SHA-256，並確認 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
+如果需要旁白，不得使用尚未審查或未通過審查的腳本。
 
-For `final narrated delivery`, dispatch `voiceover-manifest` to produce narration text, manifest data, and usable voiceover files that match the `pre_build_brief.md` and reviewed script.
+### 執行事項
+若已核准的交付層級為 `no narration`，確認已核准的 `pre_build_brief.md` 明確說明不需要旁白，也不需要任何配音檔案。
+不得只為了湊齊產物清單而建立沒有實際用途的旁白佔位檔案。
 
-### Required Outputs
-For `no narration`, no additional voiceover artifacts are required.
-For `final narrated delivery`, create `voiceover.md`, `narration_manifest.json`, and usable narration audio under `audio/voiceover/`.
+若已核准的交付層級為 `final narrated delivery`，派遣 `voiceover-manifest` 製作符合 `pre_build_brief.md` 與已審查腳本的旁白文字、旁白清單資料及可直接使用的配音檔案。
 
-### Pass / Exit Gate
-For `no narration`, advance only when the approved `pre_build_brief.md` explicitly states that narration and voiceover files are not required.
-For `final narrated delivery`, advance only when `voiceover.md`, `narration_manifest.json`, and usable narration audio are complete and ready for downstream render and QA.
+### 必要輸出
+若為 `no narration`，不需額外的旁白產物。
+若為 `final narrated delivery`，建立 `voiceover.md`、`narration_manifest.json`，以及 `audio/voiceover/` 下可直接使用的旁白音訊。
 
-### Rollback When Problems Occur
-For narration wording or pacing changes, return to `VOICEOVER`.
-For animation beat-structure mismatch, return to `SCRIPT`.
-If the approved design clearly defines the delivery tier or narration obligations but the brief has a wording, source-label, or faithful-conversion error, return to `CONTRACT`, repair it, and regain exact-version brief approval.
-If the delivery tier, core meaning, or teaching design itself is unresolved, conflicting, or incomplete, return to `DESIGN_DEVELOPMENT`; complete redesign, independent review, design reapproval, `CONTRACT` conversion, and separate `pre_build_brief.md` approval before continuing.
+### 通過／離開關卡
+若為 `no narration`，僅當已核准的 `pre_build_brief.md` 明確說明不需旁白，也不需要任何配音檔案時，才能前進。
+若為 `final narrated delivery`，只有在 `voiceover.md`、`narration_manifest.json` 與可直接使用的旁白音訊都已完成，且能交給後續渲染與 QA 使用時，才能前進。
 
-## Phase 4: RENDER
+### 發生問題時退回
+若需修正旁白用詞或節奏，退回 `VOICEOVER`。
+若動畫節拍結構不符，退回 `SCRIPT`。
+若已核准設計已明確定義交付層級或旁白義務，但 brief 的文字、來源標籤或忠實轉換有誤，退回 `CONTRACT`，修正並重新取得精確版本的 brief 核准。
+若交付層級、核心意思或教學設計本身未決、衝突或不完整，退回 `DESIGN_DEVELOPMENT`，完成重新設計、獨立審查、設計重新核准、`CONTRACT` 轉換並另行核准 `pre_build_brief.md` 後再繼續。
 
-### Goal
-Implement the approved `pre_build_brief.md`, reviewed script, and required voiceover material as scene code and render evidence.
-This phase implements the approved contract and must not invent new content or meaning.
+## 階段 4：RENDER
 
-### Delegation
-The `scene-writer` subagent must implement the scene and produce render evidence.
-After `render_preflight.md` exists, dispatch the independent `scene-reviewer` subagent to review the scene.
-The scene reviewer must not have written the scene.
+### 目標
+將已核准的 `pre_build_brief.md`、已審查腳本與必要的旁白資料，實作成場景程式碼與渲染證據。
+此階段只能實作已核准的契約，不得自行加入新的內容或意思。
 
-### Read Before Acting
-`scene-writer` must read:
+### 委派
+此階段必須由 `scene-writer` subagent 實作場景並產生渲染證據。
+完成 `render_preflight.md` 後，再派遣獨立的 `scene-reviewer` subagent 審查場景。
+場景審查者不得撰寫該場景。
 
-- the approved `pre_build_brief.md`
+### 行動前須閱讀
+`scene-writer` 必須閱讀：
+
+- 已核准的 `pre_build_brief.md`
 - `teaching_script.md`
-- `voiceover.md`, `narration_manifest.json`, and usable audio under `audio/voiceover/` when narration is required
+- 需要旁白時的 `voiceover.md`、`narration_manifest.json` 與 `audio/voiceover/` 下可直接使用的音訊
 - `references/manim-guidelines.md`
 - `references/render-preflight.md`
 
-The orchestrator reads `references/scene-review-checklist.md` or `script_review_result.md` only when render output may be defective, review cannot be routed successfully, or the correct rollback target is unclear.
+只有當渲染結果可能有問題、無法順利安排審查，或不確定問題應退回哪個階段處理時，協調者才閱讀 `references/scene-review-checklist.md` 或 `script_review_result.md`。
 
-### Do Not Start Until
-`teaching_script.md` exists and `script_review_result.md = PASS`.
-Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
-For `no narration`, the approved `pre_build_brief.md` explicitly states that narration and voiceover files are not required.
-For a delivery tier requiring narration, all required voiceover documents and usable audio exist.
-This phase may begin only after explicit authorization to use subagents has been obtained.
+### 不得開始直到
+`teaching_script.md` 存在且 `script_review_result.md = PASS`。
+緊接在開始本階段前，重新計算目前設計與 brief 的 SHA-256，並確認 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
+若為 `no narration`，已核准的 `pre_build_brief.md` 明確說明不需旁白，也不需要任何配音檔案。
+若交付層級需要旁白，必要的旁白文件與可直接使用的音訊都已存在。
+只有在已取得使用 subagent 的明確授權後，才能開始此階段。
 
-### Do
-Dispatch `scene-writer` to implement the Manim scene from the approved contract and reviewed script.
-Unless the user explicitly requests otherwise, the scene must not add meaning, explanatory overlays, code panels, or annotation layers absent from the contract.
-Produce the latest render and corresponding evidence.
-Create `render_preflight.md` using evidence verifiably derived from the latest MP4.
-Any rerender invalidates all prior latest-render evidence, `render_preflight.md`, and `scene_review_result.md`. Regenerate the evidence and preflight and obtain a new `PASS` from an independent `scene-reviewer` for that same latest MP4/version before `QA`.
-Prepare scene-review handoff context, including code-to-render mapping, preflight evidence, and affected-frame information.
-After `render_preflight.md` exists, dispatch `scene-reviewer` for independent review.
-The first independent scene-review handoff for a scene/render is always `Full`.
-Delta review is allowed only for bounded local `RENDER` changes with valid affected-frame evidence.
-Affected-frame evidence is valid only while it remains applicable to the bounded change under review.
-Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
-Treat broadened affected-frame scope or uncertain impact as invalidating affected-frame evidence and require full independent scene review.
+### 執行事項
+派遣 `scene-writer`，依已核准的契約與已審查腳本實作 Manim 場景。
+除非使用者明確要求，場景不得加入契約中沒有的新意思、額外的畫面解說、程式碼面板或註解層。
+產生最新的渲染結果與對應證據。
+使用可確認來自最新 MP4 的證據建立 `render_preflight.md`。
+每次重新渲染都會使先前所有最新渲染證據、`render_preflight.md` 與 `scene_review_result.md` 失效。進入 `QA` 前，必須為同一個最新 MP4／版本重新產生證據與預檢，並由獨立的 `scene-reviewer` 重新產出 `PASS`。
+準備場景審查所需的交接資訊，包括程式碼與渲染畫面的對應說明、預檢證據，以及受影響的影格資訊。
+在 `render_preflight.md` 存在後，派遣 `scene-reviewer` 進行獨立審查。
+對於某個 scene/render 的第一次獨立場景審查交接，一律使用 `Full`。
+只有範圍明確且局限於 `RENDER` 的變更，並具備有效的受影響影格證據時，才允許差異審查。
+受影響影格證據只有在仍適用於受審的明確範圍變更時才有效。
+若修正變更已核准語意、腳本節拍順序、交付層級、已核准契約、全場景結構、全場景版面、渲染對應關係，或以其他方式使受影響影格的證據失效，則退回完整審查。
+若受影響影格的範圍擴大或影響不確定，視為受影響影格證據失效，並要求完整的獨立場景審查。
 
-### Required Outputs
-Create:
+### 必要輸出
+建立：
 
 - `generated_algo_scene.py`
-- render evidence regenerated from the latest MP4
+- 由最新 MP4 重新產生的渲染證據
 - `render_preflight.md`
-- a code-to-render mapping or equivalent scene-review handoff context
-- `scene_review_result.md` produced by the independent reviewer
+- 程式碼與渲染畫面的對應說明，或其他足以進行場景審查的交接資訊
+- 由獨立審查者產出的 `scene_review_result.md`
 
-### Pass / Exit Gate
-Advance only when `generated_algo_scene.py`, latest-render evidence, and `render_preflight.md` exist and `scene_review_result.md = PASS`.
-`scene_review_result.md` must be produced by `scene-reviewer`, not `scene-writer`.
-A successful render, local self-check, or preflight does not mean the scene passed review.
+### 通過／離開關卡
+僅當 `generated_algo_scene.py`、最新渲染證據、`render_preflight.md` 均存在，且 `scene_review_result.md = PASS` 時，才能前進。
+`scene_review_result.md` 必須由 `scene-reviewer` 產出，而非 `scene-writer`。
+成功完成渲染、本機自行檢查或預檢，都不代表場景已通過審查。
 
-### Rollback When Problems Occur
-If the approved `pre_build_brief.md` and script are clear but the scene violates them in styling, spacing, timing, layout, or implementation content, return to `RENDER`.
-If animation beats do not match, or the script is incomplete and forces the scene implementer to guess structure, sequence, or emphasis, return to `SCRIPT`.
-If the approved design is clear but brief wording, source labels, or faithful conversion are incomplete, return to `CONTRACT`, repair it, and regain exact-version brief approval.
-If a gap remains in core semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, or another core design decision, return to `DESIGN_DEVELOPMENT`; complete redesign, independent review, design reapproval, `CONTRACT` conversion, and separate `pre_build_brief.md` approval before continuing. Do not patch core design in `RENDER`.
+### 發生問題時退回
+如果已核准的 `pre_build_brief.md` 與腳本已經寫得很清楚，但場景在樣式、間距、時間、版面或實作內容上未遵守它們，退回 `RENDER`。
+如果動畫節拍不符，或腳本不夠完整，導致場景實作者必須自行猜測結構、順序或強調重點，退回 `SCRIPT`。
+如果已核准設計清楚，但 brief 的文字、來源標籤或忠實轉換不完整，退回 `CONTRACT`，修正並重新取得精確版本的 brief 核准。
+如果仍有未解決的核心語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線或其他核心設計缺口，退回 `DESIGN_DEVELOPMENT`，完成重新設計、獨立審查、設計重新核准、`CONTRACT` 轉換並另行核准 `pre_build_brief.md` 後再繼續。不得在 `RENDER` 直接修補核心設計。
 
-## Phase 5: QA
+## 階段 5：QA
 
-### Goal
-Have an independent reviewer verify that the output matches the approved `pre_build_brief.md`, reviewed script, chosen delivery tier, on-screen supplementary-information rules, and narration requirements.
-QA verifies contract compliance and delivery readiness, not only whether the video plays.
+### 目標
+由獨立審查者確認成品是否符合已核准的 `pre_build_brief.md`、已審查腳本、選定的交付層級、畫面附加資訊規則與旁白要求。
+QA 不只確認影片能否播放，也要確認成品符合契約並具備交付條件。
 
-### Delegation
-This phase must use the independent `qa-verifier` subagent.
-`qa-verifier` must not have contributed to the output under review.
+### 委派
+此階段必須使用獨立的 `qa-verifier` subagent。
+`qa-verifier` 不得參與受審成品的製作。
 
-### Read Before Acting
-`qa-verifier` must read:
+### 行動前須閱讀
+`qa-verifier` 必須閱讀：
 
-- the approved `pre_build_brief.md`
+- 已核准的 `pre_build_brief.md`
 - `teaching_script.md`
-- rendered media output
+- 已渲染的媒體輸出
 - `render_preflight.md`
 - `scene_review_result.md`
-- `voiceover.md`, `narration_manifest.json`, and usable audio under `audio/voiceover/` when narration is required
+- 需要旁白時的 `voiceover.md`、`narration_manifest.json` 與 `audio/voiceover/` 下可直接使用的音訊
 - `references/render-qa-checklist.md`
 
-The orchestrator reads `scene_review_result.md` and `references/scene-review-checklist.md` only when QA cannot continue, review results conflict, or the proper rollback target is unclear.
+只有當 QA 無法繼續、不同審查結果互相衝突，或不確定問題應退回哪個階段時，協調者才閱讀 `scene_review_result.md` 與 `references/scene-review-checklist.md`。
 
-### Do Not Start Until
-`scene_review_result.md = PASS` exists as a formal file-backed review result.
-Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
-QA must be performed by an independent reviewer who did not contribute to the output under review.
-If `scene_review_result.md` is missing or is not `PASS`, QA must not begin and `qa_result.md` must not be produced.
+### 不得開始直到
+`scene_review_result.md = PASS` 已存在，並且是正式的檔案審查結果。
+緊接在開始本階段前，重新計算目前設計與 brief 的 SHA-256，並確認 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
+QA 必須由未參與受審成品製作的獨立審查者執行。
+若 `scene_review_result.md` 缺失或不是 `PASS`，QA 不得開始，也不得產出 `qa_result.md`。
 
-If `scene_review_result.md` is entirely absent, return to `RENDER` to complete scene review.
-If `scene_review_result.md` exists with `FAIL`, follow that artifact's named repair target instead of inventing a new QA-side route.
+若完全沒有 `scene_review_result.md`，應退回 `RENDER` 完成場景審查。
+若 `scene_review_result.md` 存在且結果為 `FAIL`，應依該檔案指定的階段處理，不得由 QA 另外決定新的處理路線。
 
-### Do
-Dispatch `qa-verifier` to inspect the actual rendered output and every required artifact against the approved contract.
-QA must check meaning, visual clarity, timing, layout, delivery completeness, compliance with on-screen supplementary-information rules, narration obligations, and audio synchronization when narration exists.
-Do not replace formal QA with a basic render test, playback check, or orchestrator self-check.
+### 執行事項
+派遣 `qa-verifier`，依已核准的契約檢查實際渲染成品與所有必要產物。
+QA 必須檢查內容意思、視覺清晰度、時間安排、版面、交付內容是否完整、畫面附加資訊是否符合規則、旁白要求，以及有旁白時的音訊同步。
+不得用基本渲染測試、播放檢查或協調者自行檢查取代正式 QA。
 
-### Required Outputs
-Create `qa_result.md`.
+### 必要輸出
+建立 `qa_result.md`。
 
-### Pass / Exit Gate
-Advance only when `qa_result.md = PASS`.
-QA cannot begin without `scene_review_result.md = PASS`.
+### 通過／離開關卡
+僅當 `qa_result.md = PASS` 時，才能前進。
+沒有 `scene_review_result.md = PASS`，QA 就不能開始。
 
-### Rollback When Problems Occur
-For visual, timing, layout, or scene implementation failures against the contract, return to `RENDER`.
-For missing audio, wrong-language narration, narration text that drifts from the script, or audio-sync problems rooted in voiceover artifacts, return to `VOICEOVER`.
-For animation beat-structure mismatch, return to `SCRIPT`.
-If output drift originates in brief wording, source-label, or faithful-conversion errors, return to `CONTRACT`, repair it, and regain exact-version brief approval.
-If the output reveals a gap in core semantics, the primary mental model, core visual semantics, teaching arc, or another core design decision, return to `DESIGN_DEVELOPMENT` and complete re-review, reapproval, and the downstream `CONTRACT` gates before continuing.
+### 發生問題時退回
+若問題出在視覺、時間安排、版面或場景未正確實作契約，退回 `RENDER`。
+若問題是缺少音訊、旁白語言錯誤、旁白文字偏離腳本，或音訊同步問題來自旁白產物，退回 `VOICEOVER`。
+若動畫節拍結構不符，退回 `SCRIPT`。
+若成品偏離源自 brief 的文字、來源標籤或忠實轉換錯誤，退回 `CONTRACT`，修正並重新取得精確版本的 brief 核准。
+若成品暴露核心語意、主要心智模型、核心視覺語意、教學弧線或其他核心設計缺口，退回 `DESIGN_DEVELOPMENT`，完成重新審查、重新核准與後續 `CONTRACT` 關卡後再繼續。
 
-## Phase 6: DELIVERY
+## 階段 6：DELIVERY
 
-### Goal
-Deliver the correct artifacts and summary for the approved delivery tier without overstating what is complete or passed.
-Every delivery claim must be supported by passed formal gate artifacts.
+### 目標
+依已核准的交付層級提供正確的產物與摘要，不得誇大已完成或已通過的項目。
+所有交付聲明都必須有已通過的正式關卡檔案作為依據。
 
-### Delegation
-The orchestrator handles this phase.
-It requires neither a subagent nor an independent reviewer.
+### 委派
+此階段由協調者處理。
+不需交給任何 subagent，也不需安排獨立審查者。
 
-### Read Before Acting
-Read `qa_result.md`, `scene_review_result.md`, and the approved `pre_build_brief.md`.
-Read `references/render-qa-checklist.md` only when delivery evidence is insufficient or tier completeness is unclear.
+### 行動前須閱讀
+閱讀 `qa_result.md`、`scene_review_result.md` 與已核准的 `pre_build_brief.md`。
+只有當交付證據不足，或不確定交付內容是否符合指定層級時，才閱讀 `references/render-qa-checklist.md`。
 
-### Do Not Start Until
-`qa_result.md = PASS`.
-Immediately before starting this phase, recompute SHA-256 for the current design and brief and confirm `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256` and `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
+### 不得開始直到
+`qa_result.md = PASS`。
+緊接在開始本階段前，重新計算目前設計與 brief 的 SHA-256，並確認 `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`、`Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
 
-### Do
-Report only artifacts that actually exist and gate status backed by formal files.
-The delivery summary must match the approved delivery tier.
+### 執行事項
+只回報實際存在的產物，以及有正式檔案佐證的關卡狀態。
+交付摘要應與已核准的交付層級相符。
 
-### Required Outputs
-Produce a delivery summary that matches the actual artifacts and approved delivery tier.
+### 必要輸出
+產出與實際產物及已核准交付層級相符的交付摘要。
 
-### Pass / Exit Gate
-Delivery is complete only when delivered artifacts match the approved delivery tier and are supported by passed formal gate artifacts.
-Do not begin `DELIVERY` without `qa_result.md = PASS`.
+### 通過／離開關卡
+只有當交付的產物符合已核准的交付層級，且有已通過的正式關卡檔案作為依據時，才算完成交付。
+若沒有 `qa_result.md = PASS`，不得開始 `DELIVERY`。
 
-### Rollback When Problems Occur
-For missing delivery evidence or tier-completeness problems, return to `QA`.
-If the delivery summary reveals brief wording, source-label, or faithful-conversion errors, return to `CONTRACT`, repair it, and regain exact-version brief approval.
-If the delivery summary reveals output drift caused by a core design gap, return to `DESIGN_DEVELOPMENT` and complete re-review, reapproval, and the downstream `CONTRACT` gates before continuing.
+### 發生問題時退回
+若缺少交付證據，或交付內容不符合指定層級，退回 `QA`。
+若交付摘要顯示 brief 的文字、來源標籤或忠實轉換有誤，退回 `CONTRACT`，修正並重新取得精確版本的 brief 核准。
+若交付摘要顯示成品偏離源自核心設計缺口，退回 `DESIGN_DEVELOPMENT`，完成重新審查、重新核准與後續 `CONTRACT` 關卡後再繼續。
 
-## Unacceptable Shortcuts
-Treat each statement below as a workflow violation, never as a reason to omit a step:
+## 不可接受的捷徑
+遇到下列說法時，必須視為違反流程，不能當成可以省略步驟的理由：
 
-| Shortcut | Required response |
+| 捷徑 | 必要回應 |
 | --- | --- |
-| "I can skip `DESIGN_DEVELOPMENT` and turn intake directly into the brief." | Do not skip it; `INTAKE` cannot replace actual animation design, `DESIGN_READY`, and independent design review. |
-| "The reviewer said it was fine in chat, so no review file is needed." | Informal opinion cannot replace `animation_design_review.md = PASS` produced by the independent `animation-design-reviewer`. |
-| "`pre_build_brief.md` is detailed enough, so I can skip `SCRIPT`." | Run `SCRIPT`; scene code cannot replace `teaching_script.md`. |
-| "The render runs, so review is complete." | Produce formal `scene_review_result.md` through the independent reviewer. |
-| "Preflight passed, so independent scene review is optional." | Run scene review after `render_preflight.md` exists. |
-| "A basic render test can replace QA." | Run independent QA and produce `qa_result.md`. |
-| "One more local patch is cheaper than investigating repeated visual problems." | If failures indicate ambiguity in an earlier phase, return to the owning phase. |
-| "I should read every reference now to be safe." | Read only current-phase requirements and additional references when a specified trigger occurs. |
-| "I delegated the phase, so I no longer own its gate." | The orchestrator still owns phase order, artifact existence, and pass conditions. |
-| "This core design gap is small enough to patch in `SCRIPT` or `RENDER`." | Do not patch core design downstream; return to `DESIGN_DEVELOPMENT`, repeat review and approval, then complete the `CONTRACT` gates. |
-| "Only one word changed in `animation_design.md`, so the old review and approval remain valid." | Every edit invalidates old review and approval; use full or delta review according to impact and regain `PASS` and exact-version approval. |
-| "The design is approved, so the brief does not need separate approval." | Design and brief are two independent external approval gates; `Approved Brief SHA-256` must equal the current brief SHA-256. |
+| 「可以略過 `DESIGN_DEVELOPMENT`，直接把 intake 整理成 brief。」 | 不得略過；`INTAKE` 不能取代實際動畫設計、`DESIGN_READY` 與獨立設計審查。 |
+| 「reviewer 在聊天中說沒問題，所以不用建立審查檔。」 | 非正式意見不能取代由獨立 `animation-design-reviewer` 產出的 `animation_design_review.md = PASS`。 |
+| 「`pre_build_brief.md` 已經夠詳細，所以可以略過 `SCRIPT`。」 | 仍須執行 `SCRIPT`；場景程式碼不能取代 `teaching_script.md`。 |
+| 「渲染能執行，所以等於已經完成審查。」 | 仍須由獨立審查者產出正式的 `scene_review_result.md`。 |
+| 「預檢已通過，因此獨立場景審查是選用的。」 | 在 `render_preflight.md` 存在後執行場景審查。 |
+| 「QA 可以由基本渲染測試取代。」 | 仍須執行獨立 QA 並產出 `qa_result.md`。 |
+| 「再做一次本機修補，比追查反覆發生的畫面問題更省事。」 | 如果問題顯示前面階段仍有歧義，應退回對應階段處理。 |
+| 「為求保險，我現在應該閱讀所有參考資料。」 | 只讀取目前階段要求的資料；遇到指定情況時，再讀取額外參考資料。 |
+| 「我已委派這個階段，所以不再負責該關卡。」 | 協調者仍負責階段順序、產物是否存在與通過條件。 |
+| 「這個核心設計缺口很小，可以直接在 `SCRIPT` 或 `RENDER` 中補上。」 | 不得在下游修補核心設計；退回 `DESIGN_DEVELOPMENT`，重新審查與重新核准後，再完成 `CONTRACT` 關卡。 |
+| 「只改了 `animation_design.md` 一個字，所以原本的審查與核准仍有效。」 | 每次編輯都使舊審查與核准失效；依影響進行完整或差異審查，重新取得 `PASS` 與精確版本核准。 |
+| 「設計已核准，所以 brief 不需要另外核准。」 | 設計與 brief 是兩個獨立外部核准關卡；`Approved Brief SHA-256` 必須等於目前 brief 的 SHA-256。 |
 
-## Completion Check
-Before claiming the workflow is complete, verify:
+## 完成檢查
+在聲稱工作流程完成前，確認：
 
-- `intake_summary.md` exists and accurately preserves user-sourced material and source labels.
-- `animation_design.md` exists and passes `DESIGN_READY`.
-- `animation_design_review.md = PASS` and was produced by the independent `animation-design-reviewer`.
-- `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`.
-- The user explicitly approved that exact reviewed design version in an external record.
-- `pre_build_brief.md` exists and faithfully converts the approved design.
-- `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`.
-- The user separately and explicitly approved that exact brief version in an external record.
-- `teaching_script.md` exists.
-- `script_review_result.md = PASS`.
-- Voiceover artifacts match the approved delivery tier.
-- `generated_algo_scene.py` exists.
-- Latest-render evidence exists and was derived from the latest MP4.
-- `render_preflight.md` exists and references latest-render evidence.
-- `scene_review_result.md = PASS`.
-- `qa_result.md = PASS`.
-- The delivery summary matches the approved delivery tier and does not claim any unmet gate is complete.
+- `intake_summary.md` 存在，且準確保留使用者來源與來源標籤。
+- `animation_design.md` 存在並通過 `DESIGN_READY`。
+- `animation_design_review.md = PASS`，且由獨立的 `animation-design-reviewer` 產出。
+- `Source Design SHA-256 = Reviewed Design SHA-256 = Approved Design SHA-256 = current animation_design.md SHA-256`。
+- 已取得使用者對該精確受審設計版本的明確外部核准。
+- `pre_build_brief.md` 存在，且忠實轉換已核准的設計。
+- `Approved Brief SHA-256 = current pre_build_brief.md SHA-256`。
+- 已另外取得使用者對該精確 brief 版本的明確外部核准。
+- `teaching_script.md` 存在。
+- `script_review_result.md = PASS`。
+- 旁白產物符合已核准的交付層級要求。
+- `generated_algo_scene.py` 存在。
+- 最新渲染證據存在，且確實來自最新 MP4。
+- `render_preflight.md` 存在且引用最新渲染證據。
+- `scene_review_result.md = PASS`。
+- `qa_result.md = PASS`。
+- 交付摘要符合已核准的交付層級，且沒有把尚未通過的關卡說成已完成。

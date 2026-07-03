@@ -1,42 +1,42 @@
 # Teaching Script
 
-This document defines `teaching_script.md` in `algorithm-teaching-animation-v3`.
+本文件定義 `algorithm-teaching-animation-v3` 中的 `teaching_script.md`。
 
-The script is the teaching-structure layer between the confirmed brief and the final scene.
+script 是介於已確認 brief 與最終 scene 之間的教學結構層。
 
-It is not:
+它不是：
 
-- a replacement for clarification
-- a place to settle unresolved semantics
-- a line-by-line scene implementation
+- 澄清工作的替代品
+- 用來定案未解決語意的地方
+- 逐行場景實作
 
-## Purpose
+## 目的
 
-The script should translate the frozen brief into a beat sequence that answers:
+script 應把已凍結 brief 轉成一個節拍序列，回答以下問題：
 
-- what each beat is trying to teach
-- what the viewer should inspect
-- how local actions build toward the overall lesson
+- 每個 beat 想教什麼
+- 觀眾應該看哪裡
+- 局部動作如何逐步累積成整體課程
 
-## Source of Truth
+## 真實來源
 
-The script must be derived from:
+script 必須從以下來源推導而來：
 
-- approved `pre_build_brief.md`
-- the concrete sample input or scenario
-- code or pseudocode only when needed to stay faithful to the algorithm flow
+- 已核准的 `pre_build_brief.md`
+- 具體 sample input 或 scenario
+- 只有在為了忠於演算法流程時，才使用 code 或 pseudocode
 
-If the script needs a semantic choice because the approved design itself lacks or conflicts on algorithm semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, high-level beats, the delivery decision, or a newly surfaced high-impact fork, stop and return to `DESIGN_DEVELOPMENT`; require design repair, review, and reapproval, then brief regeneration and reapproval.
+若 script 需要做出語意選擇，原因是已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上有缺漏或衝突，則必須停止並回到 `DESIGN_DEVELOPMENT`；要求設計修復、重新審查與重新核准，再重新產生並重新核准 brief。
 
-If the approved design is clear but the brief has wrong wording or source labels, or otherwise failed faithful conversion, stop and return to `CONTRACT` for brief repair and reapproval without redesign.
+若已核准設計是清楚的，但 brief 有錯誤文字或來源標籤，或在忠實轉換上失敗，則必須停止並回到 `CONTRACT` 做 brief 修復與重新核准，無需重新設計。
 
-## Gate Dependency
+## Gate 依賴
 
-`teaching_script.md` is not approved for downstream narration or render work until an independent review returns `script_review_result.md = PASS`.
+在獨立審查產出 `script_review_result.md = PASS` 前，`teaching_script.md` 不得被視為已核准供下游 narration 或 render 使用。
 
-No narration work may begin before script review passes.
+在 script review 通過前，不得開始任何 narration 工作。
 
-## Recommended Structure
+## 建議結構
 
 ```md
 # Teaching Script
@@ -62,89 +62,89 @@ No narration work may begin before script review passes.
 ...
 ```
 
-The exact headings may vary, but the information should remain easy to audit.
+標題可略有變化，但資訊仍必須容易稽核。
 
-## Required Beat Content
+## 必要 Beat 內容
 
-Each beat should define:
+每個 beat 都應定義：
 
-- `Viewer goal`: what the viewer should understand from this beat
-- `Algorithm moment`: the part of the algorithm flow this beat covers
-- `Visual focus`: what should receive the strongest attention
-- `Teaching note`: why this moment matters
-- `Progress cue`: what remains true after the beat
-- `Voiceover intent`: the spoken takeaway the later voiceover should carry
+- `Viewer goal`：觀眾應從此 beat 理解什麼
+- `Algorithm moment`：此 beat 對應演算法流程中的哪一段
+- `Visual focus`：畫面中最該被注意的是什麼
+- `Teaching note`：為什麼這一刻重要
+- `Progress cue`：此 beat 結束後，什麼仍然成立
+- `Voiceover intent`：後續 voiceover 應承載的口語 takeaway
 
-## Script Rules
+## Script 規則
 
-- one beat should have one main teaching point and one primary local teaching event
-- use concrete viewer-facing language
-- keep beat order faithful to the frozen semantics
-- keep support structures visible in beats where they matter to the lesson
-- do not hide unresolved ambiguity under generic wording such as "the normal step"
-- do not pack multiple named local comparisons, selections, swaps, or pointer moves into one beat when they require separate spoken attention
+- 一個 beat 應只有一個主要教學點與一個主要局部教學事件
+- 使用具體、面向觀眾的語言
+- beat 順序必須忠於已凍結語意
+- 當支援結構對教學重要時，應在相應 beats 保持可見
+- 不要用「the normal step」這種泛稱來隱藏未解決歧義
+- 不要把多個具名的局部比較、選擇、交換或 pointer move 塞進同一個 beat，若它們其實需要分開被講述
 
-## Beat Design Guidance
+## Beat 設計指引
 
-Good beats usually follow this rhythm:
+好的 beat 通常遵循以下節奏：
 
-1. establish the current local state
-2. show the local decision or transformation
-3. expose the progress cue or invariant
+1. 建立當前局部狀態
+2. 顯示局部決策或轉換
+3. 顯露進度線索或不變量
 
-The beat can be longer or shorter than one loop iteration, but it should stay teachable.
+一個 beat 可以長於或短於一次 loop iteration，但仍要保持可教。
 
-## Beat Atomicity Guidance
+## Beat 原子性指引
 
-For narrated tiers, a beat should usually correspond to one teachable unit that can stay visually coherent under one voiceover segment.
+對需要 narration 的 tier，beat 通常應對應到一個能在單一 voiceover segment 下維持視覺一致的教學單位。
 
-Use a finer beat split when the viewer needs to track multiple local decisions in sequence, especially for moments such as:
+當觀眾需要依序追蹤多個局部決策時，應進一步細分 beat，尤其是像下面這些情況：
 
-- compare-then-choose between two active candidates
-- swap or pointer move that changes the local state
-- re-test of the moved candidate at a new location
+- compare-then-choose 於兩個 active candidates 之間
+- 會改變局部狀態的 swap 或 pointer move
+- 被移動 candidate 在新位置上的重新檢查
 
-If the spoken explanation would need to say "then ... then ... then ..." across multiple local comparisons, swaps, or pointer moves, the beat is usually too coarse and should be split upstream in `SCRIPT`.
+若口語解說必須一路說「然後……然後……然後……」來跨越多個局部比較、交換或 pointer 移動，這個 beat 通常就太粗，應在 `SCRIPT` 上游先拆開。
 
-A beat may summarize repeated work only when the teaching goal is explicitly summary-level rather than step-by-step understanding.
+只有當教學目標明確是摘要層級，而不是逐步理解時，beat 才可以總結重複工作。
 
-## Relationship to Voiceover
+## 與 Voiceover 的關係
 
-The script is the upstream teaching source for beat-faithful voiceover derived from the approved script.
+script 是上游教學來源，供後續 voiceover 依照 beats 忠實產生 narration。
 
-That means:
+這表示：
 
-- the script should already contain the teaching logic
-- the later voiceover should compress and naturalize it without changing beat meaning
-- if the voiceover needs to invent a new idea, the script is incomplete
+- script 本身就應包含教學邏輯
+- 後續 voiceover 應在不改變 beat 含義的前提下，將其壓縮並口語化
+- 如果 voiceover 需要發明新想法，表示 script 不完整
 
-## Script Review Handoff
+## Script Review 交接
 
-The script must be reviewable against the approved brief before any narration or scene phase treats it as settled.
+在任何 narration 或 scene 階段把 script 當成已定案前，它必須能依據已核准 brief 被審查。
 
-The review gate result is `script_review_result.md`.
+審查 gate 結果是 `script_review_result.md`。
 
-Use that review to confirm:
+利用這個審查確認：
 
-- the script matches the approved brief
-- every beat has a concrete teaching purpose
-- downstream voiceover can stay beat-faithful without guessing
-- downstream render work does not need to invent missing semantics
+- script 符合已核准 brief
+- 每個 beat 都有具體教學目的
+- 下游 voiceover 可以忠於 beat 而不用猜
+- 下游 render 工作不需要自行發明缺失語意
 
-## Relationship to Scene Work
+## 與 Scene 工作的關係
 
-The script should be strong enough that a scene writer can implement it without guessing:
+script 必須強到讓 scene writer 不用猜就能實作：
 
-- where the focus should land
-- which structure must remain visible
-- when progress should become visible
+- 焦點應落在哪裡
+- 哪個結構必須保持可見
+- 何時進度應變得可見
 
-The scene may choose layout details, but it should not have to choose the lesson.
+scene 可以選擇版面細節，但不應該還要替課程本身做決策。
 
-## Common Failures
+## 常見失敗
 
-- Writing a scene description instead of a teaching plan.
-- Writing generic algorithm prose that does not map to beats.
-- Packing multiple unrelated takeaways into one beat.
-- Packing several sequential local decisions into one beat and expecting downstream voiceover or scene work to infer hidden sub-beat timing.
-- Letting script structure drift away from the frozen brief.
+- 寫成場景描述，而不是教學規劃。
+- 寫出無法映射到 beats 的通用演算法散文。
+- 把多個彼此無關的 takeaway 塞進同一個 beat。
+- 把多個連續局部決策塞進同一個 beat，卻期待下游 voiceover 或 scene 自行推論隱藏子節拍時序。
+- 讓 script 結構偏離已凍結 brief。

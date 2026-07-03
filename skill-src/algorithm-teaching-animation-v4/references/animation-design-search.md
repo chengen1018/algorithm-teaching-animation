@@ -1,47 +1,47 @@
-# Animation Design: Search
+# 動畫設計：Search
 
-Use this reference only for interval or candidate-region narrowing searches whose teaching depends on eliminating part of a candidate region after each decision. It adds narrowing-search state and choreography decisions without redefining the common design workflow or document structure.
+只有當搜尋屬於區間或候選區域收縮型，且教學重點依賴每次決策後淘汰部分候選區域時，才使用這份參考。它補充 narrowing-search 的狀態與編排決策，但不重新定義通用設計流程或文件結構。
 
-## Applicability
+## 適用性
 
-Apply the requirements below only when the algorithm maintains and narrows an explicit candidate interval or region. The interval convention, pointer, and excluded-region requirements must not be applied to linear, graph, substring, or other searches without candidate-region elimination. Those searches must use a matching specialized reference when one is available. When none is available, they must use the common teaching-design and process guidance, be marked best-effort, disclose the coverage risk, and receive strengthened review. They must not invent interval semantics.
+只有當演算法維持並逐步收縮一個明確的候選區間或區域時，才套用以下要求。Interval convention、pointer 與 excluded-region 要求，不得套用到 linear、graph、substring 或其他沒有候選區域淘汰的搜尋上。這類搜尋若有相符專用參考就必須使用；若沒有，就必須使用通用 teaching-design 與 process 指引、標記為 best-effort、揭露覆蓋風險，並接受強化審查。不得發明 interval semantics。
 
-## Required Design Decisions
+## 必要設計決策
 
 ### interval convention
 
-The design must declare the exact interval convention, such as closed `[low, high]` or half-open `[low, high)`, and encode it consistently in labels, brackets, and region shading. Every endpoint update must preserve that convention visibly.
+設計必須宣告精確的 interval convention，例如 closed `[low, high]` 或 half-open `[low, high)`，並在 labels、brackets 與 region shading 中一致編碼。每一次 endpoint 更新都必須可見地保持該慣例。
 
 ### pointer meaning
 
-The design must define what each pointer names: a candidate endpoint, a probe position, an insertion boundary, or another precise role. Pointer labels and placement must prevent viewers from confusing an index with the value stored at that index.
+設計必須定義每個 pointer 所代表的意義：候選端點、probe position、insertion boundary，或其他精確角色。Pointer 的 labels 與位置必須避免讓觀眾把某個 index 與該 index 上存放的 value 混淆。
 
 ### stopping rule
 
-The design must state the success and failure stopping conditions in terms of the chosen interval convention. The final frame must show the state that satisfies the rule, not jump directly from the last comparison to a result caption.
+設計必須以所選 interval convention 來說明 success 與 failure 的停止條件。最終畫面必須顯示符合該規則的狀態，而不是從最後一次 comparison 直接跳到結果 caption。
 
 ### elimination logic
 
-The design must show why a comparison proves that a region cannot contain the target. Highlight the compared values and relevant ordering fact before marking the eliminated region, so exclusion is evidence-based rather than magical disappearance.
+設計必須顯示為什麼某次 comparison 能證明某個區域不可能包含 target。要先強調被比較的 values 與相關排序事實，再標記被淘汰區域，讓 exclusion 是以證據為基礎，而不是像魔法消失。
 
 ### pointer choreography
 
-The design must order each cycle as probe, comparison, conclusion, then pointer update. If multiple pointers change, sequence them or tie them to one shared conclusion so viewers can identify which comparison caused each move.
+設計必須讓每個循環依序呈現 probe、comparison、conclusion，再來 pointer update。若多個 pointers 都會變動，就必須排序呈現，或把它們綁到同一個 conclusion，讓觀眾能辨識是哪一次 comparison 導致每一個移動。
 
 ### excluded-region persistence
 
-The design must keep excluded regions visible in a subdued but readable state until their role is understood. Persistence must communicate accumulated proof and shrinking possibility while leaving the active interval dominant.
+設計必須讓 excluded regions 在被理解之前，保持 dimmed 但可讀。這種持續性應傳達累積證明與逐步縮小的可能性，同時讓 active interval 仍是主角。
 
-## Teaching Risks
+## 教學風險
 
-### deleting context too early
+### 太早刪除脈絡
 
-Do not remove excluded values immediately. Early deletion hides how the candidate set shrank and makes later pointer positions appear arbitrary; retain enough context to compare the old and new interval.
+不要立刻移除被排除的值。太早刪除會隱藏候選集合如何縮小，也會讓後續 pointer 位置顯得任意；應保留足夠脈絡，讓觀眾能比較舊區間與新區間。
 
-### visually implying the wrong interval convention
+### 視覺上暗示錯誤的 interval convention
 
-Do not place endpoint markers, brackets, or shading where they contradict the declared interval. Check boundary frames, especially the empty and one-element cases, because those frames expose off-by-one implications most clearly.
+不要把 endpoint markers、brackets 或 shading 放在與宣告慣例矛盾的位置。要檢查 boundary frames，尤其是 empty 與 one-element cases，因為這些畫面最容易暴露 off-by-one 含義。
 
-### moving pointers without showing the comparison that caused the move
+### 移動 pointers 時沒有先顯示造成移動的 comparison
 
-Do not animate a pointer update as an unexplained navigation step. Keep the probe, target, comparison relation, and eliminated side visible through the move so viewers can reconstruct the decision.
+不要把 pointer update 動畫化成沒有解釋的導航步驟。在移動過程中，probe、target、comparison relation 與被淘汰那一側都應保持可見，讓觀眾能重建這個決策。

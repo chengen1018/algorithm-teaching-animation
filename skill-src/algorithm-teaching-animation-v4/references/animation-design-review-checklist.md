@@ -1,50 +1,50 @@
-# Animation Design Review Checklist
+# 動畫設計審查檢查表
 
-## Review Preconditions
+## 審查前提
 
-- Review only an `animation_design.md` version that the designer marked `DESIGN_READY` and handed off for independent review.
-- Identify the exact design version under review. A prior `animation_design_review.md` does not apply after any edit.
-- Read the exact `animation_design.md` bytes at review start and compute their SHA-256 digest. Immediately before finalizing the verdict, re-read the file, recompute the digest, and confirm that the bytes still match the version reviewed. Restart on the new bytes or return `FAIL` if they changed during review.
-- Read the intake and the design references routed for the algorithm category. Confirm that the reviewer did not author or repair the design.
-- Do not request external user approval during review. External approval may be requested only after this exact version receives `PASS`.
-- Use `references/animation-design-process.md` as the canonical source of `DESIGN_READY` gate conditions. Build the evidence matrix from every canonical gate condition there, whether or not the reviewed `animation_design.md` repeats it in its own self-check.
+- 只審查 designer 已標記為 `DESIGN_READY` 且已交接做獨立審查的 `animation_design.md` 版本。
+- 明確辨識受審的精確設計版本。只要發生任何編輯，先前的 `animation_design_review.md` 就不再適用。
+- 在審查開始時讀取 `animation_design.md` 的精確位元組並計算其 SHA-256 摘要。在最終定稿前立刻重新讀取檔案、重新計算摘要，並確認位元組仍與受審版本一致。若審查過程中版本發生變更，則應以新位元組重新開始，或直接回傳 `FAIL`。
+- 讀取 intake 與該演算法類別所路由到的設計參考。確認 reviewer 並非設計的作者或修復者。
+- 審查期間不得請求外部使用者核准。只有在這個精確版本獲得 `PASS` 後，才能請求外部核准。
+- 以 `references/animation-design-process.md` 作為 `DESIGN_READY` gate 條件的權威來源。證據矩陣必須根據其中每一個 canonical gate condition 建立，不論受審 `animation_design.md` 是否在自己的自檢中重複列出它們。
 
-## Review Scope Selection
+## 審查範圍選擇
 
-Record `Review Scope: Full` or `Review Scope: Delta` and explain why that scope is valid. When impact is uncertain, use full review.
-If the scope is `Delta`, record the base reviewed SHA-256 and the bounded reviewed change set / locations before review continues; if either cannot be bounded, escalate to `Full`.
+記錄 `Review Scope: Full` 或 `Review Scope: Delta`，並說明為何此範圍有效。若影響不確定，就使用 full review。
+若範圍是 `Delta`，在審查繼續前，必須記錄 base reviewed SHA-256 與界定清楚的 reviewed change set / locations；若其中任何一項無法界定，就升級為 `Full`。
 
 ### Full Review
 
-Use full review for the initial review. Also use it after changes to algorithm semantics, the primary mental model, the core visual metaphor or visual semantics, the teaching arc, scene structure, high-level beats, or any change with cross-cutting or uncertain impact. Inspect the complete document and every `DESIGN_READY` condition.
+第一次審查一律使用 full review。當修改涉及演算法語意、主要心智模型、核心視覺隱喻或視覺語意、教學弧線、場景結構、高層節拍，或任何跨區 / 不確定影響的變更時，也必須使用 full review。需檢查整份文件與每一項 `DESIGN_READY` 條件。
 
 ### Delta Review
 
-Use delta review only for a clearly localized change whose complete effects can be traced. Inspect the changed text, every dependent section, internal consistency, preserved user decisions, and the updated `DESIGN_READY` self-check. Escalate to full review immediately if the change affects or may affect algorithm semantics, the primary mental model, core visual semantics, the teaching arc, scene structure, or high-level beats.
+只有在變更明確局部，且其完整影響可被追蹤時，才可使用 delta review。必須檢查變更文字、每個相依章節、內部一致性、保留的使用者決策，以及更新後的 `DESIGN_READY` 自檢。只要變更影響或可能影響演算法語意、主要心智模型、核心視覺語意、教學弧線、場景結構或高層節拍，就必須立刻升級為 full review。
 
-## Teaching Coherence
+## 教學一致性
 
-Require evidence that the design has a clear audience and learning goal, one faithful primary mental model, a teaching sample that exposes meaningful behavior, and a teaching arc in which each high-level beat prepares the next. Confirm that visible evidence supports the intended viewer inference and prevents the named misconceptions.
+必須有證據證明設計具備清楚的受眾與學習目標、一個忠實的主要心智模型、能暴露重要行為的教學 sample，以及每個高層 beat 都在為下一個 beat 鋪路的教學弧線。還要確認可見證據能支撐預期觀眾推論，並預防已點名的誤解。
 
-## Visual Feasibility
+## 視覺可行性
 
-Require evidence that the visual metaphor, stable visual semantics, structure presentation, scene regions, information hierarchy, and high-level beats can be implemented without contradictory encodings, hidden teaching-critical state, overloaded focus, or an unexplained layout change. Feasibility does not require low-level Manim choreography.
+必須有證據證明視覺隱喻、穩定視覺語意、結構呈現、場景區域、資訊層級與高層節拍，可以在不產生矛盾編碼、隱藏教學關鍵狀態、焦點過載或無法解釋的版面變化下實作。可行性不要求低層 Manim 編排。
 
-## Algorithm Semantic Consistency
+## 演算法語意一致性
 
-Require evidence that the algorithm variant, state, invariants, boundary and tie conventions, transitions, termination, sample result, mental model, visual encodings, and beats agree. Presentation choices must not imply behavior or guarantees the algorithm does not have.
+必須有證據證明演算法變體、狀態、不變量、邊界與 tie 慣例、轉換、終止條件、sample 結果、心智模型、視覺編碼與節拍彼此一致。呈現選擇不得暗示演算法其實沒有的行為或保證。
 
-## High-Impact Gap Check
+## 高影響缺口檢查
 
-Fail if any unresolved question could materially change algorithm semantics, the primary mental model, the core visual metaphor or semantics, the teaching arc, scene structure, or high-level beats. Do not downgrade a core gap into a best-effort note. Confirm that all material user decisions are represented faithfully and that only documented low-impact defaults remain.
+若仍有任何未解決問題會實質改變演算法語意、主要心智模型、核心視覺隱喻或語意、教學弧線、場景結構或高層節拍，就必須判定失敗。不要把核心缺口降格成 best-effort 備註。必須確認所有重要使用者決策都被忠實表達，且只剩下有記錄的低影響預設值。
 
-## Best-Effort Strengthened Review
+## Best-Effort 強化審查
 
-When no matching type-specific design reference exists, require the design to mark the category as best-effort and disclose the resulting coverage risk. Strengthen review by checking category-specific semantics, data-structure state, likely misconceptions, and visual feasibility directly against the intake and common design references. Unsupported-category routing is not an automatic failure, but an undisclosed risk or an unresolved high-impact gap is.
+當沒有相符的型別專用設計參考時，必須要求設計把該類別標示為 best-effort，並揭露因此產生的覆蓋風險。應透過 intake 與通用設計參考，直接檢查該類別專有語意、資料結構狀態、可能誤解與視覺可行性。unsupported-category routing 本身不是自動失敗，但未揭露風險或存在未解決高影響缺口就一定失敗。
 
-## Required Result Schema
+## 必要結果格式
 
-Write `animation_design_review.md` using all of these fields and sections:
+請用以下全部欄位與章節撰寫 `animation_design_review.md`：
 
 ```markdown
 # Animation Design Review
@@ -84,19 +84,19 @@ Write `animation_design_review.md` using all of these fields and sections:
 PASS | FAIL
 ```
 
-Emit exactly one verdict: either `PASS` or `FAIL`. Do not emit a mixed, conditional, provisional, or second verdict. The result must state the review scope, evidence for teaching coherence, visual feasibility, and semantic consistency, unresolved issues, required repairs, and rollback target even when a field is `None`.
+只能輸出一個判定：`PASS` 或 `FAIL`。不要輸出混合式、條件式、暫定式，或第二個判定。結果中必須寫出審查範圍、教學一致性證據、視覺可行性證據、語意一致性證據、未解決問題、必要修復與回退目標，即使某欄位內容是 `None` 也一樣。
 
-The evidence matrix must contain exactly one row or item for every canonical `DESIGN_READY` gate condition in `references/animation-design-process.md`. Each row must state the condition, result, and concrete evidence with a section or other precise location. A condition may be `N/A` only when the review explicitly justifies why it does not apply and explains how the governing requirement is still satisfied. Missing rows, missing evidence, unexplained `N/A`, or failed conditions forbid `PASS`.
-The evidence matrix must not be derived only from the reviewed design's local self-check; omit any canonical gate condition at your peril, because missing canonical conditions, missing evidence, or missing locations forbid `PASS`.
+證據矩陣必須對 `references/animation-design-process.md` 中每一個 canonical `DESIGN_READY` gate condition 都剛好對應一列或一項。每列都必須說明條件、結果，以及帶有章節或其他精確位置的具體證據。只有在審查明確說明為何不適用，且解釋 governing requirement 仍如何被滿足時，某條件才可標為 `N/A`。若缺列、缺證據、`N/A` 沒解釋，或有失敗條件，都不能 `PASS`。
+證據矩陣不能只依賴受審設計中的自檢；若漏掉任何 canonical gate condition、證據或位置，就不得 `PASS`。
 
-## PASS Conditions
+## PASS 條件
 
-Return `PASS` only when the selected scope is valid; the recorded SHA-256 identifies the exact bytes reviewed; for `Delta`, the base reviewed SHA-256 and bounded reviewed change set / locations are present and match the review scope, and for `Full` both are `None`; every canonical `DESIGN_READY` gate condition from `references/animation-design-process.md` has one evidence-matrix entry and either passes with concrete evidence and location or has explicit justified `N/A` handling; teaching coherence, visual feasibility, and algorithm semantic consistency pass; material user decisions are preserved; no high-impact gap remains; and best-effort coverage risks are disclosed and adequately strengthened. For `PASS`, unresolved issues and required repairs must be `None` and the rollback target must be `None`.
+只有當下列所有條件都成立時才能回傳 `PASS`：所選審查範圍有效；所記錄的 SHA-256 精確對應受審位元組；若為 `Delta`，則 base reviewed SHA-256 與界定清楚的 reviewed change set / locations 已存在且符合審查範圍；若為 `Full`，兩者都必須是 `None`；`references/animation-design-process.md` 中每個 canonical `DESIGN_READY` gate condition 都在證據矩陣中有一列，且要嘛有具體證據與位置而通過，要嘛有明確合理的 `N/A` 處理；教學一致性、視覺可行性與演算法語意一致性都通過；重要使用者決策被保留；沒有高影響缺口；best-effort 覆蓋風險已揭露且審查充分強化。若為 `PASS`，則 `Unresolved Issues` 與 `Required Repairs` 必須是 `None`，且 `Rollback Target` 也必須是 `None`。
 
-`animation_design_review.md = PASS` authorizes only a request for explicit user approval of that exact reviewed version. Conversion to `pre_build_brief.md` is forbidden until the same version has that approval; any design edit invalidates the review and returns the design to `DESIGN_DEVELOPMENT`.
+`animation_design_review.md = PASS` 只授權請求該精確已審版本的使用者明確核准。在該版本核准前，禁止轉換成 `pre_build_brief.md`；任何設計編輯都會使審查失效，並使設計回到 `DESIGN_DEVELOPMENT`。
 
-## FAIL and Rollback Rules
+## FAIL 與回退規則
 
-Return `FAIL` for any missing evidence, contradiction, regression, unsupported claim, lost user decision, invalid review scope, failed `DESIGN_READY` condition, undisclosed best-effort risk, or unresolved high-impact gap. Name concrete required repairs and set the rollback target to `DESIGN_DEVELOPMENT`.
+若有任何缺少證據、矛盾、回歸、無支撐主張、遺失使用者決策、無效審查範圍、失敗的 `DESIGN_READY` 條件、未揭露的 best-effort 風險，或未解決的高影響缺口，都必須回傳 `FAIL`。要明確指出必要修復，並把回退目標設為 `DESIGN_DEVELOPMENT`。
 
-The reviewer reports defects but must not author or repair `animation_design.md`. After repair, the designer must produce a new `DESIGN_READY` version and request a new independent review. A failed or stale review cannot authorize external approval or conversion to `pre_build_brief.md`.
+reviewer 只報告缺陷，不得撰寫或修復 `animation_design.md`。修復後，designer 必須產出新的 `DESIGN_READY` 版本並請求新的獨立審查。失敗或過期的審查都不能授權外部核准或轉換到 `pre_build_brief.md`。

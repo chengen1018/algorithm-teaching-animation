@@ -1,107 +1,107 @@
-# Animation Design Document
+# 動畫設計文件
 
-## Purpose
+## 目的
 
-`animation_design.md` is the authoritative design contract for how an algorithm animation teaches and presents its subject. It records the approved mental model, visual system, teaching progression, high-level beats, user decisions, and known risks before downstream production begins.
+`animation_design.md` 是定義演算法動畫如何教學與呈現主題的權威設計契約。它在下游製作開始前，記錄已核准的心智模型、視覺系統、教學推進、高層節拍、使用者決策與已知風險。
 
-The document must be specific enough for design review and later implementation without turning into scene code or a frame-by-frame production script.
+文件必須足夠具體，能支援設計審查與後續實作，但不能膨脹成場景程式碼或逐格製作腳本。
 
-## Confirmation Rule
+## 確認規則
 
-The user must explicitly approve the exact version of `animation_design.md` for which independent review produced `animation_design_review.md` with a `PASS` result. The user may edit `animation_design.md`. Every user edit creates a new version, invalidates prior review, and requires re-review before approval can be accepted. Edit impact determines whether re-review is full or delta; no edit bypasses re-review. Silence, inactivity, or editing the file alone does not count as approval.
+使用者必須對 `animation_design.md` 的精確版本給出明確核准，而該版本必須是獨立審查後得到 `animation_design_review.md = PASS` 的版本。使用者可以編輯 `animation_design.md`。每次使用者編輯都會建立新版本、使先前審查失效，且在接受核准前都必須重新審查。編輯影響決定重審是 full 還是 delta；沒有任何編輯可以繞過重新審查。沉默、無回應或僅編輯檔案都不算核准。
 
-Approval applies only to the exact reviewed version. Any later edit creates another new version and requires review and explicit confirmation again.
+核准只適用於精確已審版本。任何後續編輯都會建立另一個新版本，並再次需要審查與明確確認。
 
-The orchestrator must record exact-version user approval externally in the workflow gate. It must not mutate `animation_design.md` to record approval, approval status, an approval reference, or review metadata.
+orchestrator 必須在工作流程 gate 之外部記錄精確版本的使用者核准。不得修改 `animation_design.md` 來記錄核准、核准狀態、核准參照或審查中繼資料。
 
-## Required Sections
+## 必要章節
 
-### Design Goal and Audience
+### 設計目標與受眾
 
-State what the viewer should understand by the end, the intended audience, assumed prior knowledge, and the desired depth. Use observable learning outcomes rather than a generic goal such as “explain the algorithm.”
+說明觀眾在最後應該理解什麼、目標受眾是誰、假設的先備知識，以及期望的深度。請使用可觀察的學習成果，而不是像「解釋這個演算法」這種泛泛目標。
 
-### Algorithm Variant and Semantics
+### 演算法變體與語意
 
-Name the exact algorithm variant and define the behavior that affects the animation: state, invariants, tie handling, termination, indexing or boundary conventions, and expected output. Distinguish required semantics from presentation choices.
+說出精確的演算法變體，並定義會影響動畫的行為：狀態、不變量、tie handling、終止條件、索引或邊界慣例，以及預期輸出。區分哪些是必要語意，哪些只是呈現選擇。
 
-### Primary Mental Model
+### 主要心智模型
 
-Describe the single main conceptual model the viewer should use to reason about the algorithm. Explain how it maps to actual algorithm state and where the analogy or simplification stops being literal.
+描述觀眾應用來推理此演算法的單一主要概念模型。說明它如何映射到實際演算法狀態，以及這個類比或簡化在哪裡停止對應。
 
-### Viewer Misconceptions to Prevent
+### 要預防的觀眾誤解
 
-List the most likely incorrect conclusions and the design response that prevents each one. Prioritize misconceptions caused by hidden state, ambiguous motion, misleading visual persistence, or confusion between a heuristic and a guarantee.
+列出最可能出現的錯誤結論，以及設計用來預防各自誤解的回應。優先處理由隱藏狀態、模糊移動、誤導性視覺殘留，或 heuristic 與 guarantee 混淆所造成的誤解。
 
-### Sample Input and Rationale
+### 範例輸入與理由
 
-Give the exact sample input and expected result. Explain why it exposes the important decisions, state changes, edge behavior, or contrast needed for teaching. Avoid an example that is correct but visually trivial.
+提供精確的範例輸入與預期結果。說明它為何能暴露出教學所需的重要決策、狀態變化、邊界行為或對比。不要選一個雖然正確卻在視覺上過於平淡的例子。
 
-### Core Visual Metaphor and Visual Semantics
+### 核心視覺隱喻與視覺語意
 
-Define the central visual metaphor and the stable meaning of position, color, shape, labels, highlights, motion, connectors, and state changes. Every encoded property must have one clear meaning; decorative styling must not imply algorithmic state.
+定義中央視覺隱喻，以及 position、color、shape、labels、highlights、motion、connectors 與 state changes 的穩定含義。每一個被編碼的屬性都只能有一個清楚含義；裝飾性樣式不可暗示演算法狀態。
 
-### Structure Presentation
+### 結構呈現
 
-Specify how the algorithm's data structures and control state appear, how they relate spatially, what remains persistent, and what transforms. Explain how the viewer can locate the current item, active region, candidates, committed results, and relevant history.
+說明演算法的資料結構與控制狀態如何出現、如何在空間上彼此關聯、哪些元素保持持續存在、哪些會變形。要讓觀眾能定位目前項目、active region、candidates、已確定結果，以及相關歷史。
 
-### Scene Structure and Information Hierarchy
+### 場景結構與資訊層級
 
-Define the major scene regions and the priority of information within them. State what is primary, supporting, persistent, transient, or intentionally omitted. Prevent simultaneous elements from competing for attention.
+定義主要場景區域，以及它們之間的資訊優先順序。說明哪些是 primary、supporting、persistent、transient，或刻意省略。避免同時出現的元素彼此爭奪注意力。
 
-### Teaching Arc
+### 教學弧線
 
-Describe the instructional progression: motivation, setup, first concrete action, repeated reasoning pattern, pivotal insight or contrast, completion, and takeaway. Connect each phase to the mental model the viewer is building.
+描述教學推進：動機、鋪陳、第一個具體動作、重複推理模式、關鍵洞見或對比、完成與總結。每一個階段都要連回觀眾正在建立的心智模型。
 
-### High-Level Animation Beats
+### 高層動畫節拍
 
-List the major beats in order. For each beat, state the teaching purpose, visible algorithm state, meaningful transition, and viewer takeaway. Keep beats above implementation-level timing and Manim operations.
+依順序列出主要節拍。每個節拍都要說明教學目的、可見的演算法狀態、重要轉換，以及觀眾應得到的 takeaway。節拍內容應維持在實作時序與 Manim 操作之上。
 
-### Recommended Design and Alternatives
+### 推薦設計與替代方案
 
-Present the recommended design with its rationale and meaningful tradeoffs. Include only material alternatives, explaining when each would be preferable and why it was not selected. Do not list options without making a recommendation.
+提出推薦設計，附上其理由與重要取捨。只列出真正重要的替代方案，並說明各自何時更合適，以及為何這次沒有選它。不要只是列選項卻不做推薦。
 
-### Incorporated User Decisions
+### 已納入的使用者決策
 
-Record user decisions faithfully, including the question context when needed to prevent reinterpretation. Distinguish direct user choices from designer defaults and derived consequences.
+忠實記錄使用者決策；若需要脈絡來避免誤解，也應一併保留。區分直接來自使用者的選擇、designer 的預設值，以及由此導出的後果。
 
-### Risks and Best-Effort Notes
+### 風險與 Best-Effort 備註
 
-Record unresolved low-impact details, assumptions, accessibility concerns, visual density risks, technical uncertainties, and simplifications. State the chosen best-effort handling and whether any item could trigger rollback if later evidence raises its impact.
+記錄未解決的低影響細節、假設、accessibility 顧慮、視覺密度風險、技術不確定性與簡化處理。說明採用的 best-effort 處理方式，以及某項是否可能因後續證據提升影響而觸發回退。
 
-### DESIGN_READY Self-Check
+### DESIGN_READY 自檢
 
-Mark each DESIGN_READY condition as pass or fail and cite the section that supports the result. The check must cover goal and audience, semantics, mental model, misconceptions, sample input, every applicable routed type-specific requirement or the unsupported-category best-effort classification, specific coverage risk, and strengthened independent review requirement, visual metaphor and semantics, structure presentation, scene structure and information hierarchy, teaching arc, high-level beats, recommendation and tradeoffs, incorporated decisions, documented risks and defaults, and zero unresolved blocking core questions.
+將每個 `DESIGN_READY` 條件標記為 pass 或 fail，並引用支持該結果的章節。自檢必須涵蓋目標與受眾、語意、心智模型、誤解、範例輸入、每一項適用的型別專用要求；若是 unsupported-category，則要檢查 best-effort 分類、具體覆蓋風險與強化獨立審查要求；另外還要檢查視覺隱喻與語意、結構呈現、場景結構與資訊層級、教學弧線、高層節拍、推薦與取捨、已納入決策、已記錄的風險與預設值，以及零個未解決的阻塞性核心問題。
 
-Do not mark the document ready if any required section is missing, internally inconsistent, materially ambiguous, or awaiting a core answer.
+若任何必要章節缺失、內部不一致、存在重大歧義，或仍在等待核心答案，就不可標示為 ready。
 
-## Writing Rules
+## 撰寫規則
 
-- Write for reviewers and downstream implementers; use precise, testable design statements.
-- Separate algorithm truth, visual encoding, teaching intent, user decisions, and best-effort assumptions.
-- Use one stable term for each concept and preserve code identifiers or formal notation where precision matters.
-- Describe what the viewer sees and learns, not only what the algorithm does.
-- Keep high-level beats free of low-level animation API calls and frame-by-frame choreography.
-- Make recommendations explicit and pair each with rationale and tradeoffs.
-- Preserve user answers faithfully; do not rewrite them into a different decision.
-- Use concise diagrams or tables only when they clarify mappings, hierarchy, or sequence.
-- Keep every required heading even when its content is brief; write `None` with a reason instead of silently omitting a section.
+- 為 reviewers 與下游實作者而寫；使用精確、可檢驗的設計敘述。
+- 分開描述演算法真實狀態、視覺編碼、教學意圖、使用者決策與 best-effort 假設。
+- 每個概念使用一個穩定術語；當精確性重要時，保留 code identifiers 或正式記號。
+- 描述觀眾看到與學到什麼，不要只寫演算法做了什麼。
+- 讓高層節拍遠離低層動畫 API 呼叫與逐格編排。
+- 推薦必須明確，並附上理由與取捨。
+- 忠實保留使用者答案；不要把它們改寫成不同決策。
+- 只有在能澄清映射、層級或順序時，才使用簡潔圖表或表格。
+- 即使內容很短，也保留所有必要標題；若某節無內容，請寫 `None` 並附原因，而不是默默省略。
 
-## Failure Conditions
+## 失敗條件
 
-The document fails review if it:
+若文件有以下情況，審查會失敗：
 
-- omits or renames a required section;
-- leaves algorithm semantics or the primary mental model ambiguous;
-- describes an attractive visual treatment without stable visual semantics;
-- restates algorithm steps without designing the teaching arc and viewer experience;
-- gives high-level beats that hide important state changes or causality;
-- lists alternatives without a recommendation, rationale, and tradeoffs;
-- misstates, loses, or silently overrides a user decision;
-- treats unresolved low-impact details as blockers or hides material uncertainty as a best-effort note;
-- marks DESIGN_READY as passed without evidence from the document;
-- treats silence, inactivity, editing alone, or an unreviewed edit as user approval.
+- 遺漏或重新命名必要章節；
+- 讓演算法語意或主要心智模型保持歧義；
+- 只描述吸引人的視覺處理，卻沒有穩定視覺語意；
+- 只是重述演算法步驟，而沒有設計教學弧線與觀眾體驗；
+- 給出的高層節拍隱藏重要狀態變化或因果關係；
+- 列出替代方案，卻沒有推薦、理由與取捨；
+- 誤述、遺失或默默覆蓋使用者決策；
+- 把未解決的低影響細節當 blocker，或把重要不確定性藏成 best-effort 備註；
+- 在文件沒有證據時，卻把 `DESIGN_READY` 標成通過；
+- 把沉默、無回應、單純編輯檔案，或未經審查的編輯，當成使用者核准。
 
-## Recommended Template
+## 建議範本
 
 ```markdown
 # Animation Design: <Algorithm and Variant>

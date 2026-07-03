@@ -1,55 +1,55 @@
 # Voiceover
 
-This document defines voiceover work in `algorithm-teaching-animation-v3`.
+本文件定義 `algorithm-teaching-animation-v3` 中的 voiceover 工作。
 
-When narration is required and no other language was explicitly approved, the default spoken language is English. Optional overlays remain separate and opt-in.
+當 narration 為必要且未明確核准其他語言時，預設 spoken language 為 English。Optional overlays 仍然是獨立且 opt-in 的。
 
-## Purpose
+## 目的
 
-Voiceover should turn the approved teaching script into spoken guidance that is:
+voiceover 應把已核准教學 script 轉成口語引導，並滿足以下要求：
 
-- natural to hear
-- synchronized beat by beat
-- faithful to the confirmed brief
+- 聽起來自然
+- 能逐 beat 同步
+- 忠於已確認 brief
 
-Voiceover is not allowed to repair missing semantics by improvising new explanation.
+Voiceover 不允許靠即興補充新解釋來修補缺失語意。
 
-## Start Gate
+## 開始 Gate
 
-Narration work may start only after:
+只有在以下條件成立後，才可開始 narration 工作：
 
-- the approved `pre_build_brief.md` exists
-- `teaching_script.md` exists
+- 已核准的 `pre_build_brief.md` 已存在
+- `teaching_script.md` 已存在
 - `script_review_result.md = PASS`
 
-No narration work may begin before script review passes.
+在 script review 通過前，不得開始任何 narration 工作。
 
-## Delivery-Tier Expectations
+## Delivery-Tier 預期
 
 ### No Narration
 
-- no voiceover is required
-- preserve the no-narration decision in the approved `pre_build_brief.md`
-- do not pretend an on-screen text-heavy scene is an audio-free substitute for clear teaching
+- 不需要 voiceover
+- 保留已核准 `pre_build_brief.md` 中的 no-narration 決策
+- 不要假裝一個文字很多的畫面可以取代清楚教學的無音訊版本
 
 ### Final Narrated Delivery
 
-- provide approved spoken segments and usable audio assets
-- the delivered result must be ready for viewer-facing playback
+- 提供已核准的 spoken segments 與可用的音訊資產
+- 最終交付結果必須可直接提供給觀眾播放
 
-## Required Artifacts
+## 必要產物
 
-When the tier includes voiceover, produce:
+當 tier 包含 voiceover 時，需產出：
 
-- `voiceover.md` for the beat-level script
-- `narration_manifest.json` for segment timing and file references
-- `audio/voiceover/` for the generated or recorded audio files
+- `voiceover.md` 作為逐 beat 腳本
+- `narration_manifest.json` 作為 segment timing 與檔案參照
+- `audio/voiceover/` 作為生成或錄製好的音訊檔
 
-The voiceover must stay beat-faithful to the approved script rather than inventing new teaching logic locally.
+voiceover 必須忠於已核准 script 的 beat，而不是在本地自行發明新教學邏輯。
 
-For no-narration tiers, do not produce `voiceover.md`, `narration_manifest.json`, audio assets, or a separate status file; rely on the approved `pre_build_brief.md` to record the explicit no-narration decision.
+對 no-narration tiers，不要產出 `voiceover.md`、`narration_manifest.json`、音訊資產，或額外的狀態檔；請直接依賴已核准 `pre_build_brief.md` 來記錄這個明確 no-narration 決策。
 
-## Recommended Structure
+## 建議結構
 
 ```md
 # Voiceover
@@ -68,64 +68,64 @@ For no-narration tiers, do not produce `voiceover.md`, `narration_manifest.json`
 - Pronunciation notes:
 ```
 
-## Beat Rules
+## Beat 規則
 
-Each beat-level voiceover entry should include:
+每個 beat-level voiceover 項目都應包含：
 
-- a stable beat id or title
-- the scene hook it speaks over
-- the actual narration text
-- a pacing target
-- pronunciation notes only when needed
+- 穩定的 beat id 或 title
+- 它對應的 scene hook
+- 實際 narration 文字
+- pacing target
+- 只有在必要時才加入 pronunciation notes
 
-The narration should make sense when heard once, in real time.
+Narration 必須在觀眾即時聽一次時就能理解。
 
-## Writing Rules
+## 撰寫規則
 
-- keep the narration faithful to the approved script
-- explain why the current moment matters, not just what is visible
-- use short, spoken sentences natural in the approved narration language
-- prefer one main takeaway per beat
-- if a line sounds like a paragraph from a textbook, rewrite it
+- narration 必須忠於已核准 script
+- 解釋這一刻為何重要，而不是只說看到了什麼
+- 用已核准 narration language 中自然、簡短、適合口說的句子
+- 每個 beat 優先保留一個主要 takeaway
+- 若某一句聽起來像教科書段落，就重寫它
 
-## Source Contract
+## 來源契約
 
-Derive the narration from:
+Narration 必須從以下來源導出：
 
-- approved `pre_build_brief.md`
-- approved `teaching_script.md`
+- 已核准 `pre_build_brief.md`
+- 已核准 `teaching_script.md`
 - `script_review_result.md`
 
-If `script_review_result.md` did not pass, stop and return to script repair instead of drafting narration around ambiguity.
+若 `script_review_result.md` 沒有通過，就應停止，回去修 script，而不是在歧義之上硬寫 narration。
 
-If narration work reveals that the approved design itself lacks or conflicts on algorithm semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, high-level beats, the delivery decision, or a newly surfaced high-impact fork, return to `DESIGN_DEVELOPMENT`; require design repair, review, and reapproval, then brief regeneration and reapproval.
+若 narration 工作暴露出已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上有缺漏或衝突，則應回到 `DESIGN_DEVELOPMENT`；要求設計修復、重新審查與重新核准，再重新產生並重新核准 brief。
 
-If the approved design is clear but the brief has wrong wording or source labels, or otherwise failed faithful conversion, return to `CONTRACT` for brief repair and reapproval without redesign.
+若已核准設計清楚，但 brief 有錯誤文字或來源標籤，或是不忠實轉換，則應回到 `CONTRACT` 做 brief 修復與重新核准，無需重新設計。
 
-## Sync Rules
+## 同步規則
 
-- the visual focus should be established before the narration begins
-- the beat should remain coherent until the narration ends
-- verbose wording, compression, spoken pacing, and narration-local timing defects stay in `VOICEOVER`
-- if the approved beat itself contains too many distinct teaching actions or decisions to support one coherent narration segment, return to `SCRIPT` and restructure the beat upstream
-- do not pad the scene with dead time to hide weak voiceover drafting
+- narration 開始前，visual focus 必須先建立起來
+- beat 必須在 narration 結束前保持視覺一致
+- verbose wording、壓縮問題、spoken pacing 與 narration-local timing 缺陷都留在 `VOICEOVER`
+- 若已核准 beat 本身包含太多不同教學動作或決策，無法支撐單一一致 narration segment，則應回到 `SCRIPT`，在上游重構 beat
+- 不要用畫面空白時間來掩飾薄弱的 voiceover 撰寫
 
-## Provider Contract
+## Provider 契約
 
-Any voiceover provider must support:
+任何 voiceover provider 都必須支援：
 
-- input narration text per beat
-- output audio per beat
-- duration reporting per beat
+- 每個 beat 的 input narration text
+- 每個 beat 的 output audio
+- 每個 beat 的 duration reporting
 
-Do not store secrets in skill artifacts.
+不要把 secrets 存進 skill artifacts。
 
-For `final narrated delivery`, viewer-usable audio assets are required before `RENDER` and `QA`. Do not defer actual audio-file production to `QA` or leave narrated tiers with only planning artifacts.
+對 `final narrated delivery`，在 `RENDER` 與 `QA` 前，必須先具備可供觀眾使用的音訊資產。不要把真正的音訊檔產出延到 `QA`，也不要讓 narrated tiers 只剩規劃文件而沒有實際音訊。
 
-## Common Failures
+## 常見失敗
 
-- Reading the script too literally instead of writing for speech.
-- Starting narration from an unreviewed script and forcing voiceover to choose missing teaching logic.
-- Smuggling new semantic explanation into voiceover because the brief was thin.
-- Treating missing audio files as acceptable for a narrated tier.
-- Letting narration timing drift so far that the scene and speech stop matching.
+- 太字面地照著 script 念，而不是為口說重寫。
+- 用尚未審查的 script 就開始 narration，逼 voiceover 自己決定缺失的教學邏輯。
+- 因 brief 太薄，就把新的語意解釋偷偷塞進 voiceover。
+- 對 narrated tier 缺少音訊檔卻視為可接受。
+- narration timing 漂移過大，導致畫面與語音不再對齊。

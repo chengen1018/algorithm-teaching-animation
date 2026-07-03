@@ -1,39 +1,39 @@
-# Animation Design: Array Sorting
+# 動畫設計：Array Sorting
 
-Use this reference for array-sorting animations after the common teaching design guidance has been applied. It adds decisions specific to how comparisons or updates, movement, identity, and progress are understood; it does not replace the process or artifact contracts.
+在套用通用教學設計指引之後，對 array-sorting 動畫使用這份參考。它補充如何理解 comparisons 或 updates、movement、identity 與 progress 的專用決策；不會取代流程或產物契約。
 
-## Required Design Decisions
+## 必要設計決策
 
 ### active comparison unit
 
-The design must define the algorithm-appropriate active decision or update unit. For a comparison-based sort, state whether that unit is a pair, a key and candidate, a pivot and scanned item, or another exact set of elements; the comparison operands and result must become visible before the resulting change. For a non-comparison sort, identify the count, bucket placement, digit pass, distribution step, or other update that causes the next state change, and show its inputs and result without inventing a comparison.
+設計必須定義符合該演算法的 active decision 或 update 單位。對 comparison-based sort，要說明這個單位是 pair、key 與 candidate、pivot 與 scanned item，或其他精確元素組合；比較的 operands 與結果必須在 resulting change 之前就變得可見。對 non-comparison sort，則要辨識 count、bucket placement、digit pass、distribution step，或其他造成下一個狀態變化的 update，並顯示其輸入與結果，而不是硬發明 comparison。
 
 ### movement model
 
-When elements move, the design must choose whether values swap, shift, copy, or move as persistent objects. Position must encode one stable meaning throughout the operation. Show enough of the path or intermediate vacancy to distinguish the chosen operation from a visually similar one. If the algorithm updates counts, buckets, or auxiliary storage instead, define that update model and do not imply element movement that does not occur.
+當元素移動時，設計必須選定它是 swap、shift、copy，還是作為持續物件移動。Position 必須在整個操作中編碼一個穩定含義。要顯示足夠的路徑或中間空位，讓觀眾能分辨所選操作與視覺上相似但語意不同的操作。若演算法更新的是 counts、buckets 或 auxiliary storage，則應定義該 update 模型，而不要暗示其實不存在的元素移動。
 
 ### settled-progress expression
 
-The design must define a progress model that matches the algorithm, such as a settled boundary, completed pass, processed digit, accumulated counts, filled buckets, or merged runs. It must not assume a contiguous growing settled region. If “settled” is meaningful, state exactly what it guarantees; otherwise use algorithm-appropriate progress language. Progress styling must remain distinct from the active decision or update and from untouched data, so viewers do not mistake attention for completion.
+設計必須定義符合該演算法的 progress 模型，例如 settled boundary、completed pass、processed digit、accumulated counts、filled buckets 或 merged runs。不應預設一定有一個連續成長的 settled region。若「settled」有意義，必須精確說明它保證什麼；否則就使用更符合演算法的 progress 語言。Progress styling 必須與 active decision / update 以及 untouched data 保持區別，避免觀眾把「正在被注意」誤認成「已完成」。
 
 ### temporary holding position
 
-If an item leaves the array while others shift, the design must provide a visible temporary holding position and preserve the item's connection to the open slot. If the algorithm never holds an item outside the array, state that explicitly and do not invent a holding area that implies false state. Auxiliary counts or buckets must not be presented as a temporary holding position unless they actually contain array items.
+若某項目離開 array，而其他項目會 shift，設計必須提供一個可見的 temporary holding position，並保留該項目與 open slot 之間的關聯。若演算法從未把項目暫時拿到 array 外，必須明確說明，且不得憑空發明一個會暗示錯誤狀態的 holding area。Auxiliary counts 或 buckets 不能被當成 temporary holding position，除非它們真的存放 array items。
 
 ### duplicate-value identity tracking
 
-When relative order, movement, or bucket placement of equal values matters, the design must give those items persistent identities. Labels, tokens, or another non-color-only cue must let viewers distinguish value equality from object identity and observe stability or instability accurately. If identity is irrelevant to the stated goal, do not add tracking that implies stability is being evaluated.
+當 equal values 的相對順序、移動，或 bucket placement 會影響理解時，設計必須為這些項目提供持續身份。應透過 labels、tokens 或其他非純色彩線索，讓觀眾能區分 value equality 與 object identity，並正確觀察 stability 或 instability。若身份對既定目標不重要，就不要加入會暗示正在評估 stability 的追蹤機制。
 
-## Teaching Risks
+## 教學風險
 
-### movement that hides causality
+### 會掩蓋因果的 movement
 
-Do not animate several swaps, shifts, placements, or auxiliary updates before showing the decision or update that caused them. For comparison-based sorts, separate comparison evidence from its result; for non-comparison sorts, retain the relevant count, digit, bucket, or distribution evidence until the cause-effect link is clear.
+不要在顯示造成它們的決策或 update 之前，就先動畫化多個 swaps、shifts、placements 或 auxiliary updates。對 comparison-based sorts，要把 comparison 證據與其結果分開；對 non-comparison sorts，則應保留相關的 count、digit、bucket 或 distribution 證據，直到因果連結足夠清楚。
 
-### settled styling that resembles active styling
+### settled styling 與 active styling 太像
 
-When the design uses settled styling, do not make it resemble active styling. For algorithms without settled elements, distinguish the chosen progress model from the active update instead. Verify that a paused frame cannot make an in-progress item look complete or permanently placed.
+若設計使用 settled styling，就不要讓它與 active styling 相似。對沒有 settled elements 的演算法，應改為把所選 progress 模型與 active update 區分開。必須確認在暫停畫面時，不會讓 still-in-progress 的項目看起來像已完成或已永久定位。
 
-### a sample that never demonstrates the defining operation
+### sample 從未示範關鍵操作
 
-Do not choose a sample that avoids the algorithm's characteristic comparison, swap, shift, partition, merge, count update, bucket placement, digit pass, or other required operation. Identify that operation in advance and point to the exact sample moment that makes it necessary.
+不要選一個避開演算法特徵性 comparison、swap、shift、partition、merge、count update、bucket placement、digit pass，或其他必要操作的 sample。應預先指出那個關鍵操作，並標明 sample 中哪個精確時刻迫使它發生。

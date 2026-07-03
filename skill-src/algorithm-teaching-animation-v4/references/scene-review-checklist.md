@@ -1,154 +1,154 @@
-# Scene Review Checklist
+# Scene Review 檢查表
 
-This document defines the `RENDER` gate review for `algorithm-teaching-animation-v3`.
+本文件定義 `algorithm-teaching-animation-v3` 的 `RENDER` gate review。
 
-The reviewer checks scene fidelity and viewer clarity. The reviewer does not invent or repair semantics.
+reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不負責發明或修補語意。
 
-## Required Output
+## 必要輸出
 
-Return `scene_review_result.md` with:
+回傳 `scene_review_result.md`，內容需包含：
 
-- `PASS` or `FAIL`
-- independent reviewer authorship of the review result
-- reviewer ownership of the `RENDER` gate
-- categorized blocking findings
+- `PASS` 或 `FAIL`
+- 審查結果必須由獨立 reviewer 撰寫
+- reviewer 負責 `RENDER` gate
+- 分類好的阻塞性 findings
 - evidence references
-- repair direction: `RENDER`, `SCRIPT`, `DESIGN_DEVELOPMENT`, or `CONTRACT`
+- 修復方向：`RENDER`、`SCRIPT`、`DESIGN_DEVELOPMENT` 或 `CONTRACT`
 
-Use these finding categories:
+使用以下 finding 類別：
 
 - `styling`
 - `layout`
 - `semantic ambiguity`
 - `contract mismatch`
 
-## Review Inputs
+## 審查輸入
 
-Review against:
+審查時應對照：
 
-- approved `pre_build_brief.md`
-- approved `teaching_script.md`
+- 已核准的 `pre_build_brief.md`
+- 已核准的 `teaching_script.md`
 - `generated_algo_scene.py`
 - `render_preflight.md`
-- rendered output or render evidence
+- rendered output 或 render evidence
 
-Before judging visual quality, verify that `render_preflight.md` and latest-render evidence exist, match each other, and were regenerated after the latest MP4. Missing, stale, incomplete, or mismatched preflight or latest-render evidence is a blocked or invalid review handoff and an evidence/process defect routed to `RENDER`, not a `layout` finding. Do not proceed or return `PASS` until `RENDER` regenerates matching evidence and preflight for the latest MP4. Classify actual visual layout findings as `layout`.
+在判斷視覺品質前，先確認 `render_preflight.md` 與 latest-render evidence 存在、彼此一致，且是在最新 MP4 之後重新產生。若 preflight 或 latest-render evidence 缺失、過期、不完整或互不一致，這屬於被阻塞或無效的 review handoff，以及應送回 `RENDER` 的 evidence / process defect，而不是 `layout` finding。未重新產生符合最新 MP4 的 evidence 與 preflight 前，不得繼續審查或回傳 `PASS`。真正的視覺版面問題則分類為 `layout`。
 
-## Review Questions
+## 審查問題
 
 ### Contract Fidelity
 
-- Does the scene implement the frozen semantics rather than a new interpretation?
-- Does each major beat match the teaching purpose in the approved script?
-- Are support structures present when the brief says they matter?
+- scene 是否實作了已凍結語意，而不是新的詮釋？
+- 每個主要 beat 是否符合已核准 script 中的教學目的？
+- 當 brief 說 support structures 重要時，它們是否有出現？
 
 ### Visual Clarity
 
-- Is the current focus obvious?
-- Are pointers, boundaries, and temporary structures readable?
-- Do resolved regions remain understandable without stealing focus?
-- Are active prefix, header, pointer, or state labels readable under highlight?
-- Are explanatory text panels judged in settled frames rather than unreadable transition frames?
+- 當前焦點是否明顯？
+- pointers、boundaries 與 temporary structures 是否可讀？
+- resolved regions 是否保持可理解，且不搶焦？
+- active prefix、header、pointer 或 state labels 在 highlight 下是否仍可讀？
+- explanatory text panels 是否以穩定畫面審查，而不是用不可讀的 transition frames？
 
 ### Layout Safety
 
-- Are labels and structures free of collisions?
-- Is important content kept inside safe margins?
-- If overlays are enabled, do they avoid the teaching-critical area?
-- Does the intro avoid future-phase helper objects?
-- Does the final frame contain only the intended final-result presentation?
+- labels 與結構是否沒有碰撞？
+- 重要內容是否都在安全邊界內？
+- 若 overlays 啟用，它們是否避開教學關鍵區域？
+- intro 是否避免出現未來 phase 的 helper objects？
+- 最終畫面是否只包含預期的 final-result presentation？
 
 ### Semantic Safety
 
-- Does any styling choice force the viewer to infer a rule the brief never froze?
-- Does any implementation convenience change what the viewer learns?
-- Does any mismatch reveal unresolved semantic ambiguity, a semantic mismatch, or a missing upstream decision?
+- 是否有任何 styling 選擇迫使觀眾推論 brief 從未凍結的規則？
+- 是否有任何實作方便性改變了觀眾學到的內容？
+- 是否有任何不匹配暴露了未解決的語意歧義、語意不匹配，或缺失的上游決策？
 
-## Repair Routing
+## 修復路由
 
-### Stay Within RENDER
+### 留在 RENDER
 
-Use this when the problem is limited to:
+當問題只限於以下情況時，使用此路徑：
 
 - styling
 - spacing
 - layout execution
-- implementation fidelity without semantic ambiguity
+- 沒有語意歧義的 implementation fidelity
 
-The repaired scene must keep the same confirmed semantics.
+修復後的 scene 必須保留相同的已確認語意。
 
-### Return to SCRIPT
+### 回到 SCRIPT
 
-Use this when:
+當：
 
-- the scene exposes a beat-structure mismatch against the approved script
-- the approved brief is clear, but the script did not give scene work enough faithful beat guidance
-- the approved brief is clear, but script-layer incompleteness forced the scene to guess structure, sequencing, or emphasis
+- scene 暴露出相對於已核准 script 的 beat-structure mismatch
+- 已核准 brief 很清楚，但 script 沒有提供足夠忠實的 beat 指引給 scene work
+- 已核准 brief 很清楚，但 script 層的不完整迫使 scene 自行猜測結構、順序或重點
 
-Do not patch beat logic locally inside `RENDER` just because the implementation is already in motion.
+不要因為實作已經開始，就在 `RENDER` 內本地修補 beat logic。
 
-### Return to DESIGN_DEVELOPMENT
+### 回到 DESIGN_DEVELOPMENT
 
-Use this when the issue is:
+當問題是：
 
-- the approved design itself lacks or conflicts on algorithm semantics
-- the approved design itself lacks or conflicts on the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, or high-level beats
-- the approved design itself lacks or conflicts on the delivery decision
-- the approved design itself lacks or conflicts on a newly surfaced high-impact fork
+- 已核准設計本身在演算法語意上有缺漏或衝突
+- 已核准設計本身在主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線或高層節拍上有缺漏或衝突
+- 已核准設計本身在交付決策上有缺漏或衝突
+- 已核准設計本身在新暴露的高影響分歧上有缺漏或衝突
 
-Require design repair, review, and reapproval, then brief regeneration and reapproval before resuming scene work.
+此時必須先設計修復、重新審查、重新核准，再重新產生並重新核准 brief，之後才能恢復 scene 工作。
 
-### Return to CONTRACT
+### 回到 CONTRACT
 
-Use this when the approved design is clear but `pre_build_brief.md` has wrong wording or source labels, or otherwise failed faithful conversion. Repair and reapprove the brief without redesign.
+當已核准設計清楚，但 `pre_build_brief.md` 有錯誤 wording 或 source labels，或是其他不忠實轉換問題時，使用此路徑。修復並重新核准 brief，無需重新設計。
 
-## Contract Mismatch Rule
+## Contract Mismatch 規則
 
-Use `contract mismatch` when the scene conflicts with the confirmed brief or approved script.
+當 scene 與已確認 brief 或已核准 script 衝突時，使用 `contract mismatch`。
 
-Default handling:
+預設處理方式：
 
-- keep it inside `RENDER` when the brief and script are clear and the scene simply violated them
-- return to `SCRIPT` when the brief is clear but the approved script is the layer that mismatched the intended beat structure or otherwise left scene work with script-layer incompleteness
-- return to `DESIGN_DEVELOPMENT` when the mismatch proves that the approved design itself lacks or conflicts on algorithm semantics, the primary mental model, core visual semantics, scene structure, information hierarchy, teaching arc, high-level beats, the delivery decision, or a newly surfaced high-impact fork; require design repair, review, and reapproval, then brief regeneration and reapproval
-- return to `CONTRACT` when the approved design is clear but the mismatch comes from wrong brief wording or source labels, or another failure of faithful conversion; repair and reapprove the brief without redesign
+- 若 brief 與 script 都清楚，而 scene 只是違反了它們，就留在 `RENDER`
+- 若 brief 清楚，但已核准 script 才是節拍結構錯配的來源，或使 scene work 受 script 層不完整所迫，則回到 `SCRIPT`
+- 若不匹配證明已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上有缺漏或衝突，則回到 `DESIGN_DEVELOPMENT`；必須先修設計、重新審查、重新核准，再重新產生並重新核准 brief
+- 若已核准設計清楚，但不匹配來自 brief wording 或 source labels 錯誤，或其他不忠實轉換問題，則回到 `CONTRACT`；修復並重新核准 brief，無需重新設計
 
 ## Delta Review
 
-Delta review is allowed only for bounded local `RENDER` changes with valid affected-frame evidence.
+只有在局部 `RENDER` 變更且具有效受影響影格證據時，才允許 delta review。
 
-The first independent scene-review handoff for a scene/render is always `Full`.
+某個 scene/render 的第一次獨立 scene-review 交接一律是 `Full`。
 
-A delta review checks only:
+delta review 只檢查：
 
-- previous blocking findings
-- changed frames and directly adjacent phases
-- new visual regressions caused by the repair
-- evidence freshness
+- 先前的 blocking findings
+- 已變更影格及其直接相鄰 phases
+- 修復造成的新視覺回歸
+- 證據新鮮度
 
-Return to full review when a repair changes approved semantics, script beat order, delivery tier, the approved contract, scene-wide structure, scene-wide layout, render mapping, or otherwise invalidates affected-frame evidence.
+若修復改變了已核准語意、script beat order、delivery tier、已核准契約、全場景結構、全場景版面、render mapping，或使受影響影格證據失效，就必須回到 full review。
 
-Treat broadened affected-frame scope or uncertain impact as invalidating affected-frame evidence and require full independent scene review.
+若受影響影格範圍擴大或影響不確定，就視為受影響影格證據失效，必須使用完整獨立 scene review。
 
-If two consecutive failures share the same Manim visual-state class, require the scene writer to rewrite phase ownership or visibility planning before another review. If a third failure occurs after that rewrite, route according to the failed artifact's repair target instead of continuing local patch loops.
+若連續兩次失敗屬於同一類 Manim visual-state 問題，必須要求 scene writer 在再次送審前重寫 phase ownership 或 visibility planning。若在重寫後第三次仍失敗，則依失敗產物的 repair target 路由，而不是繼續本地 patch 迴圈。
 
-## PASS Standard
+## PASS 標準
 
-Pass only when:
+只有在以下條件成立時才能通過：
 
-- the scene is faithful to the contract
-- the scene is visually readable
-- layout is safe
-- `render_preflight.md` exists and references latest-render evidence
-- no unresolved semantic question remains visible to the reviewer
-- `scene_review_result.md` is written by an independent reviewer rather than the render executor
-- `scene_review_result.md` exists as the explicit review artifact; implicit passes, waivers, or undocumented substitutes do not count
+- scene 忠實於契約
+- scene 在視覺上可讀
+- 版面安全
+- `render_preflight.md` 已存在，且引用 latest-render evidence
+- reviewer 看不到任何仍未解決的語意問題
+- `scene_review_result.md` 由獨立 reviewer 撰寫，而非 render executor
+- `scene_review_result.md` 以明確 review artifact 存在；隱含通過、豁免或未記錄的替代品都不算
 
-## Common Failures
+## 常見失敗
 
-- Approving a scene because it runs, even though it invented semantics.
-- Mislabeling a semantic problem as styling to avoid rollback.
-- Returning `FAIL` without evidence or without naming the repair level.
-- Treating support-structure removal as harmless cleanup when it changes the lesson.
-- Reviewing stale frames after a rerender.
-- Repeating full review when the handoff only needs delta review.
+- 因 scene 可以執行就通過，即使它發明了語意。
+- 把語意問題誤標成 styling，以避免回退。
+- 回傳 `FAIL` 卻沒有證據或沒有指出修復層級。
+- 把移除 support structure 當成無害清理，明明它改變了課程。
+- rerender 後仍拿過期影格來審查。
+- 明明只需要 delta review，卻重做 full review。

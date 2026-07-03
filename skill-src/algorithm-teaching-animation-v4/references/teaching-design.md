@@ -1,65 +1,65 @@
-# Teaching Design
+# 教學設計
 
-## Purpose
+## 目的
 
-Use this reference to decide how an algorithm animation will teach, not to redefine the design process or the `animation_design.md` contract. Every design must explain:
+使用這份參考來判斷演算法動畫要如何教，而不是用來重新定義設計流程或 `animation_design.md` 契約。每一份設計都必須說清楚：
 
-- what viewers should understand;
-- what visible evidence teaches it;
-- how each beat prepares the next beat;
-- why the selected sample exposes meaningful behavior.
+- 觀眾最後應該理解什麼；
+- 哪些可見證據在教這件事；
+- 每個 beat 如何為下一個 beat 做準備；
+- 為何選定的 sample 能暴露有意義的行為。
 
-These explanations must be specific to the stated audience, algorithm variant, and learning goal. A sequence of correct algorithm steps is not yet a teaching design unless the viewer can use the visible evidence to form and revise a faithful mental model.
+這些說明都必須對應到已陳述的受眾、演算法變體與學習目標。只有一串正確的演算法步驟，還不算教學設計；除非觀眾能藉由可見證據形成並修正一個忠實的心智模型。
 
-## Choosing a Mental Model
+## 選擇心智模型
 
-Choose one primary mental model that lets the viewer predict the algorithm's next meaningful action. State the algorithm state represented by the model, the invariant it helps explain, and the point where any analogy stops being literal. Prefer a model that remains valid across the full sample instead of changing metaphors when the algorithm becomes difficult to show.
+選擇一個能讓觀眾預測演算法下一個重要動作的主要心智模型。說明這個模型代表哪個演算法狀態、它幫助解釋哪個不變量，以及哪裡開始不再能把類比視為字面真實。優先選擇能在整個 sample 中持續有效的模型，而不是等演算法變難呈現時才換隱喻。
 
-Test the choice by asking what a viewer could correctly infer from the screen without narration. If the model makes a heuristic look guaranteed, hides required state, or depends on unexplained motion, revise it.
+驗證方式是問：如果沒有 narration，觀眾只看畫面能正確推論出什麼？若這個模型讓 heuristic 看起來像 guarantee、隱藏了必要狀態，或依賴沒有說明的動作，就必須修正。
 
-## Identifying Viewer Misconceptions
+## 找出觀眾誤解
 
-Identify likely misconceptions before choosing highlights or motion. For each misconception, state the incorrect conclusion a viewer might draw, the visual condition that could cause it, and the concrete evidence that will prevent or correct it.
+在選擇 highlights 或 motion 之前，先找出可能的誤解。對每個誤解，都要說明觀眾可能得出什麼錯誤結論、哪種視覺條件可能造成它，以及將用什麼具體證據來防止或修正它。
 
-Prioritize confusion about state boundaries, identity, ordering, commitment, and the difference between considering an item and finishing it. Do not rely on narration to repair a contradiction created by the visuals.
+優先處理關於狀態邊界、身份、順序、承諾狀態，以及「正在考慮某個項目」與「已經完成它」之間差異的混淆。不要依賴 narration 去修補畫面本身造成的矛盾。
 
-## Selecting a Teaching Sample
+## 選擇教學樣本
 
-Select the smallest sample that still forces the algorithm to exhibit its defining decisions. Explain why the selected sample exposes meaningful behavior, including the operation, state transition, contrast, or edge condition that would remain hidden in an easier sample.
+選擇最小但仍能迫使演算法展現其關鍵決策的 sample。說明為什麼選定的 sample 能暴露有意義的行為，包括某個操作、狀態轉換、對比或邊界情況；若換成更容易的 sample，這些內容會被隱藏。
 
-Avoid samples that are already solved, take only one undifferentiated path, or accidentally remove the need for the algorithm's defining operation. Include duplicates, failed comparisons, reversals, or branching only when they teach behavior required by the learning goal.
+避免選已經解完、只走單一路徑，或意外消除演算法關鍵操作必要性的 sample。只有當 duplicates、failed comparisons、reversals 或 branching 對學習目標確實重要時，才納入它們。
 
-## Building a Teaching Arc
+## 建立教學弧線
 
-Build the arc as a progression in viewer capability: establish the problem, introduce the state that matters, demonstrate one complete reasoning cycle, vary or challenge that cycle, then consolidate the invariant and result. Each phase must add a question or piece of evidence that the next phase resolves.
+把教學弧線建構成觀眾能力的遞進：先建立問題，再引入重要狀態，示範一個完整推理循環，然後變化或挑戰這個循環，最後整合不變量與結果。每個階段都必須增加一個下一階段會解決的問題或證據。
 
-State how each beat prepares the next beat. If two beats can be swapped without changing what the viewer knows, their instructional dependency is probably missing or the beats should be combined.
+要明確說明每個 beat 如何為下一個 beat 做準備。若兩個 beats 可以互換而不影響觀眾知道什麼，那它們之間很可能缺少教學依賴，或本來就該合併。
 
-## Designing High-Level Beats
+## 設計高層節拍
 
-Define each beat by its teaching purpose, starting state, visible change, and intended viewer inference. Keep beats above camera timing and animation-library operations. A beat must expose a meaningful decision or state transition rather than merely announce that an algorithm step occurred.
+對每個 beat，要定義它的教學目的、起始狀態、可見變化，以及預期觀眾推論。保持節拍高於鏡頭時序與動畫函式庫操作層級。Beat 必須暴露一個有意義的決策或狀態轉換，而不是只是宣告發生了一步演算法操作。
 
-For every beat, explain what viewers should understand and what visible evidence teaches it. Preserve enough prior state for viewers to compare before and after without holding hidden facts in memory.
+對每個 beat，都要說明觀眾應該理解什麼，以及哪些可見證據在教這件事。保留足夠的先前狀態，讓觀眾能比較前後差異，而不需要在腦中記住隱藏事實。
 
-## Connecting Visual Cause and Effect
+## 串連視覺因果
 
-Show cause before or with effect. First make the relevant operands, condition, or frontier visible; then show the comparison or rule; only then animate the resulting movement, elimination, discovery, or commitment. Keep the causal evidence visible long enough to connect it to the result.
+先呈現 cause，再呈現 effect，或至少兩者同步呈現。先讓相關 operands、condition 或 frontier 可見；再顯示比較或規則；最後才動畫化 resulting movement、elimination、discovery 或 commitment。讓因果證據在畫面上保留足夠久，好讓觀眾把它與結果連起來。
 
-Use stable visual semantics so the same color, position, connector, or motion does not change meaning between beats. When an effect changes several regions, sequence or group those changes so viewers can identify the single algorithmic cause.
+使用穩定視覺語意，使同一種 color、position、connector 或 motion 不會在不同 beats 改變含義。當某個 effect 會同時改變多個區域時，要把這些變化排序或分組，讓觀眾仍能辨識單一演算法原因。
 
-## Comparing Alternatives
+## 比較替代方案
 
-Compare only alternatives that materially change the mental model, visible evidence, teaching arc, or interpretation of state. Recommend one approach and explain why it better serves the audience and learning goal. For each rejected alternative, state its genuine advantage, its teaching cost, and the condition under which it would become preferable.
+只比較那些會實質改變心智模型、可見證據、教學弧線或狀態解讀的替代方案。提出一個推薦方法，並解釋它為何更符合受眾與學習目標。對每個未選方案，都要說明其真正優勢、教學成本，以及在什麼條件下它會變成更好的選擇。
 
-Do not treat cosmetic variations as competing teaching designs, and do not list options without deciding which one makes causality and state easiest to understand.
+不要把純外觀變化當成競爭中的教學設計，也不要只列選項卻不判斷哪個最有助於理解因果與狀態。
 
-## Common Failures
+## 常見失敗
 
-- Restating pseudocode without explaining the viewer inference produced by each beat.
-- Selecting a convenient sample that never reveals the algorithm's defining behavior.
-- Introducing a visual state after the viewer needed it to interpret an earlier action.
-- Using motion as decoration, so an effect appears without its comparison or rule.
-- Removing history before it can serve as evidence for progress, exclusion, or commitment.
-- Letting narration and visuals assert different state or timing.
-- Adding alternatives that differ only in style and provide no teaching tradeoff.
-- Repeating process gates or document schemas instead of supplying design reasoning.
+- 重述 pseudocode，卻不解釋每個 beat 會讓觀眾產生什麼推論。
+- 選了方便的 sample，卻從未展現演算法的關鍵行為。
+- 在觀眾需要某個視覺狀態來理解前一個動作之後，才把它引入。
+- 把 motion 當裝飾，導致 effect 出現時沒有對應比較或規則。
+- 太早移除歷史，讓它無法作為進度、排除或承諾的證據。
+- narration 與 visuals 宣稱了不同的狀態或時序。
+- 加入只在風格上不同、沒有教學取捨的替代方案。
+- 重複流程 gate 或文件格式，而不是提供設計推理。
