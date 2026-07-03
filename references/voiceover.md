@@ -1,6 +1,6 @@
 # Voiceover
 
-本文件定義 `algorithm-teaching-animation-v3` 中的 voiceover 工作。
+本文件定義 `algorithm-teaching-animation-v4` 中的 voiceover 工作。
 
 當 narration 為必要且未明確核准其他語言時，預設 spoken language 為 English。Optional overlays 仍然是獨立且 opt-in 的。
 

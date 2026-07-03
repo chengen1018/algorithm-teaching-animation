@@ -1,6 +1,6 @@
 # Scene Review 檢查表
 
-本文件定義 `algorithm-teaching-animation-v3` 的 `RENDER` gate review。
+本文件定義 `algorithm-teaching-animation-v4` 的 `RENDER` gate review。
 
 reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不負責發明或修補語意。
 

@@ -1,6 +1,6 @@
 # Teaching Script
 
-本文件定義 `algorithm-teaching-animation-v3` 中的 `teaching_script.md`。
+本文件定義 `algorithm-teaching-animation-v4` 中的 `teaching_script.md`。
 
 script 是介於已確認 brief 與最終 scene 之間的教學結構層。
 

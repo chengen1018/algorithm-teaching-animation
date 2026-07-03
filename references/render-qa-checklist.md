@@ -1,6 +1,6 @@
 # Render QA 檢查表
 
-本文件定義 `algorithm-teaching-animation-v3` 的最終 QA 流程。
+本文件定義 `algorithm-teaching-animation-v4` 的最終 QA 流程。
 
 scene review 要回答的是 scene implementation 是否忠實表達契約。Render QA 要回答的是對選定 tier 而言，實際渲染輸出是否已安全可交付。
 

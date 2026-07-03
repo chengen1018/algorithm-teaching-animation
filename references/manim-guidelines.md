@@ -1,6 +1,6 @@
 # Manim 指引
 
-本文件定義 `generated_algo_scene.py` 應如何實作 `v3` 教學設計。
+本文件定義 `generated_algo_scene.py` 應如何實作 `v4` 教學設計。
 
 scene 是已確認 brief 與已核准 teaching script 的渲染器。它可以自由選擇實作結構，但不能發明新語意。
 
@@ -115,7 +115,7 @@ self.beat_state = {}
 
 ## 以 Beat 為核心的實作
 
-`v3` scenes 應以教學 beats 組織，而不只是原始 loop mechanics。
+`v4` scenes 應以教學 beats 組織，而不只是原始 loop mechanics。
 
 每個 beat 實作都應讓以下問題容易回答：
 

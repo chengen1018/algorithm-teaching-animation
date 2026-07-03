@@ -1,6 +1,6 @@
 # Pre-build Brief
 
-本文件定義 `algorithm-teaching-animation-v3` 中作為下游 `CONTRACT` 產物的 `pre_build_brief.md`。
+本文件定義 `algorithm-teaching-animation-v4` 中作為下游 `CONTRACT` 產物的 `pre_build_brief.md`。
 
 在目前精確版本的 `animation_design.md` 尚未同時擁有獨立 `animation_design_review.md = PASS` 與對該精確已審版本的明確外部使用者核准前，不得開始任何 `CONTRACT` 轉換。在轉換後的 brief 尚未獲得自己獨立的明確使用者核准前，不得開始任何 script、voiceover 或 scene 工作。
 
