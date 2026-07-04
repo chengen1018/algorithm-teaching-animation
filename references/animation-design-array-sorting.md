@@ -1,6 +1,6 @@
 # 動畫設計：Array Sorting
 
-在套用通用教學設計指引之後，對 array-sorting 動畫使用這份參考。它補充如何理解 comparisons 或 updates、movement、identity 與 progress 的專用決策；不會取代流程或產物契約。
+在套用 `references/how-to-design-animation.md` 後，對 array-sorting 動畫使用這份參考。它補充如何理解 comparisons 或 updates、movement、identity 與 progress 的專用決策；不會取代通用流程或產物契約。
 
 ## 必要設計決策
 

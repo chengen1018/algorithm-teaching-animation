@@ -1,14 +1,14 @@
-# INTAKE
+# How to Collect Requirements
 
 ## 目的
 
-`INTAKE` 負責向使用者取得製作演算法教學動畫所需的基本需求，並建立 `intake_summary.md`。
+`COLLECT_REQUIREMENTS` 負責向使用者取得製作演算法教學動畫所需的基本需求，並建立 `confirmed_requirements.md`。
 
 只處理需求，不做動畫設計。
 
 ## 必須確認的需求
 
-下列資料缺少任何一項，都必須詢問使用者。確認並記錄完整後，才能完成 `INTAKE`。
+下列資料缺少任何一項，都必須詢問使用者。確認並記錄完整後，才能完成 `COLLECT_REQUIREMENTS`。
 
 1. **演算法或問題**
    - 要製作哪一個演算法或問題的動畫。
@@ -43,7 +43,7 @@
 
 有就記錄，沒有就不要詢問。不得為了補齊額外需求而增加問題。
 
-## `intake_summary.md` 格式
+## `confirmed_requirements.md` 格式
 
 ```md
 # Intake Summary
@@ -71,16 +71,16 @@
 
 ## 完成條件
 
-只有在下列條件全部成立時，`INTAKE` 才能完成：
+只有在下列條件全部成立時，`COLLECT_REQUIREMENTS` 才能完成：
 
 - 4項必要需求都有明確答案。
 - 不存在尚未解除的需求矛盾。
 - 使用者主動提出的額外需求都已記錄。
-- `intake_summary.md` 不包含 agent 的建議、推論或動畫設計。
+- `confirmed_requirements.md` 不包含 agent 的建議、推論或動畫設計。
 
-完成後，將 `intake_summary.md` 交給 `animation-designer` 進入 `DESIGN_DEVELOPMENT`。
+完成後，由主要 Agent 讀取 `confirmed_requirements.md` 並進入 `DESIGN_DEVELOPMENT`，直接與使用者共同設計動畫。
 
-## 不屬於 INTAKE
+## 不屬於 COLLECT_REQUIREMENTS
 
 不要在此階段決定或詢問：
 

@@ -1,6 +1,6 @@
 # 動畫設計：Graph Traversal
 
-在套用通用教學設計指引後，對 graph traversal 動畫使用這份參考。它規範 traversal 專有的狀態與支援結構，但不會取代流程或 `animation_design.md` 契約。
+在套用 `references/how-to-design-animation.md` 後，對 graph traversal 動畫使用這份參考。它規範 traversal 專有的狀態與支援結構，但不會取代通用流程或 `animation_design.md` 契約。
 
 ## 必要設計決策
 

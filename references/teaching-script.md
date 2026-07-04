@@ -2,7 +2,7 @@
 
 本文件定義 `algorithm-teaching-animation-v4` 中的 `teaching_script.md`。
 
-script 是介於已確認 brief 與最終 scene 之間的教學結構層。
+script 是介於已確認需求、已核准動畫設計與最終 scene 之間的教學結構層。
 
 它不是：
 
@@ -12,7 +12,7 @@ script 是介於已確認 brief 與最終 scene 之間的教學結構層。
 
 ## 目的
 
-script 應把已凍結 brief 轉成一個節拍序列，回答以下問題：
+script 應把已確認需求與已核准設計轉成一個節拍序列，回答以下問題：
 
 - 每個 beat 想教什麼
 - 觀眾應該看哪裡
@@ -22,13 +22,14 @@ script 應把已凍結 brief 轉成一個節拍序列，回答以下問題：
 
 script 必須從以下來源推導而來：
 
-- 已核准的 `pre_build_brief.md`
+- `confirmed_requirements.md`
+- 已核准的 `animation_design.md`
 - 具體 sample input 或 scenario
 - 只有在為了忠於演算法流程時，才使用 code 或 pseudocode
 
-若 script 需要做出語意選擇，原因是已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上有缺漏或衝突，則必須停止並回到 `DESIGN_DEVELOPMENT`；要求設計修復、重新審查與重新核准，再重新產生並重新核准 brief。
+若使用者需求記錄不準確，則必須停止並回到 `COLLECT_REQUIREMENTS` 修正，再重新送入設計流程。
 
-若已核准設計是清楚的，但 brief 有錯誤文字或來源標籤，或在忠實轉換上失敗，則必須停止並回到 `CONTRACT` 做 brief 修復與重新核准，無需重新設計。
+若 script 需要做出語意選擇，原因是已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍或使用者選定設計上有缺漏或衝突，則必須停止並回到 `DESIGN_DEVELOPMENT`；要求設計修復、重新審查與重新核准。
 
 ## Gate 依賴
 
@@ -44,8 +45,6 @@ script 必須從以下來源推導而來：
 ## Summary
 - Algorithm:
 - Teaching goal:
-- Audience:
-- Delivery tier:
 - Key semantics:
 
 ## Beats
@@ -96,7 +95,7 @@ script 必須從以下來源推導而來：
 
 ## Beat 原子性指引
 
-對需要 narration 的 tier，beat 通常應對應到一個能在單一 voiceover segment 下維持視覺一致的教學單位。
+beat 通常應對應到一個能在單一 voiceover segment 下維持視覺一致的教學單位。
 
 當觀眾需要依序追蹤多個局部決策時，應進一步細分 beat，尤其是像下面這些情況：
 
@@ -120,13 +119,13 @@ script 是上游教學來源，供後續 voiceover 依照 beats 忠實產生 nar
 
 ## Script Review 交接
 
-在任何 narration 或 scene 階段把 script 當成已定案前，它必須能依據已核准 brief 被審查。
+在任何 narration 或 scene 階段把 script 當成已定案前，它必須能依據已確認需求與已核准設計被審查。
 
 審查 gate 結果是 `script_review_result.md`。
 
 利用這個審查確認：
 
-- script 符合已核准 brief
+- script 符合已確認需求與已核准設計
 - 每個 beat 都有具體教學目的
 - 下游 voiceover 可以忠於 beat 而不用猜
 - 下游 render 工作不需要自行發明缺失語意
@@ -147,4 +146,4 @@ scene 可以選擇版面細節，但不應該還要替課程本身做決策。
 - 寫出無法映射到 beats 的通用演算法散文。
 - 把多個彼此無關的 takeaway 塞進同一個 beat。
 - 把多個連續局部決策塞進同一個 beat，卻期待下游 voiceover 或 scene 自行推論隱藏子節拍時序。
-- 讓 script 結構偏離已凍結 brief。
+- 讓 script 結構偏離已確認需求或已核准設計。

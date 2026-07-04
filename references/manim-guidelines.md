@@ -2,7 +2,13 @@
 
 本文件定義 `generated_algo_scene.py` 應如何實作 `v4` 教學設計。
 
-scene 是已確認 brief 與已核准 teaching script 的渲染器。它可以自由選擇實作結構，但不能發明新語意。
+scene 是已確認需求、已核准動畫設計與已審查 teaching script 的渲染器。它可以自由選擇實作結構，但不能發明新語意。
+
+## 六個獨立 Scene
+
+依 `animation_design.md` 實作六個獨立 Manim `Scene` 類別，不使用 `Section` 代替。六個 Scene 分別對應問題與目標、核心觀念、演算法特有的重要資料與狀態、一次關鍵動作、完整演示，以及結果回顧。
+
+每個 Scene 必須獨立建立並清理自己的畫面。Scene 結尾淡出至空白，下一個 Scene 再淡入。分別渲染六個 Scene，確認每段都可單獨檢查後，再依核准順序合併成一支完整影片。
 
 ## 核心原則
 
@@ -17,7 +23,6 @@ scene layer 負責：
 scene layer 不負責：
 
 - semantic fork 決策
-- delivery-tier 變更
 - 新的 support-structure 需求
 - 對 teaching goal 的重新詮釋
 
@@ -25,10 +30,11 @@ scene layer 不負責：
 
 scene 必須以下列內容為基礎：
 
-- 已確認的 `pre_build_brief.md`
-- 已核准的 `teaching_script.md`
+- `confirmed_requirements.md`
+- 已核准的 `animation_design.md`
+- 已審查的 `teaching_script.md`
 - 當需要維持執行忠實性時使用的 algorithm code 或 pseudocode
-- 當 delivery tier 包含 narration 時，必須使用已核准的 `voiceover.md`、`narration_manifest.json` 與所需音訊資產
+- 已核准的 `voiceover.md`、`narration_manifest.json` 與所需音訊資產
 
 若 scene 無法說明自己正在實作哪個已凍結決策，就代表它還沒準備好 render。
 
@@ -131,7 +137,7 @@ self.beat_state = {}
 - 只移動觀眾需要追蹤的東西
 - 讓 pointer 的起點與終點都清楚可辨
 - 除非消失本身是課程的一部分，否則應淡化 resolved regions，而不是刪除它們
-- 當 brief 說 support structures 在語意上重要時，就要讓它們持續存在
+- 當已核准設計說 support structures 在語意上重要時，就要讓它們持續存在
 
 ## Render-Layer 修復政策
 
@@ -150,17 +156,16 @@ self.beat_state = {}
 - 改變 pointer meaning
 - 改變 visited timing
 - 改變課程中的 active support structure
-- 改變 delivery-tier obligations
 
 若實作暴露 script 不完整或 beat-structure mismatch，就停止並回到 `SCRIPT`。
 
-若實作暴露已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上有缺漏或衝突，就停止並回到 `DESIGN_DEVELOPMENT`；要求設計修復、重新審查與重新核准，再重新產生並重新核准 brief。
+若實作暴露使用者需求記錄不準確，就停止並回到 `COLLECT_REQUIREMENTS` 修正後重新送入設計流程。
 
-若已核准設計清楚，但 brief 有錯誤文字或來源標籤，或是不忠實轉換，就停止並回到 `CONTRACT` 做 brief 修復與重新核准，無需重新設計。
+若實作暴露已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍或使用者選定設計上有缺漏或衝突，就停止並回到 `DESIGN_DEVELOPMENT`；要求設計修復、重新審查與重新核准。
 
 ## Voiceover 與 Overlay 同步
 
-當 delivery tier 包含 voiceover 時：
+旁白同步必須符合：
 
 - 每個已核准 beat 對應一個 voiceover segment
 - 對應 narration 開始前，visual focus 必須先建立
@@ -211,24 +216,24 @@ self.beat_state = {}
 
 - 保持 node layout 固定
 - 在視覺上區分目前擴展與已發現結構
-- 當 queue 或 stack 是 brief 的一部分時，保持它可讀
+- 當 queue 或 stack 是已核准設計的一部分時，保持它可讀
 
 ## 審查準備度
 
 在把 scene 交給審查前，請確認：
 
-- 每個主要 beat 都能追溯到 brief 與 script
+- 每個主要 beat 都能追溯到已核准設計與 script
 - 沒有任何語意含義依賴未陳述的 styling convention
-- support structures 只在 brief 有正當理由時才出現
-- audio 行為與所需 voiceover 產物符合選定 delivery tier
-- overlay 行為符合 brief 已凍結的 overlay policy，或符合明確使用者 opt-in
+- support structures 只在已核准設計有正當理由時才出現
+- audio 行為與所需 voiceover 產物一致
+- overlay 行為符合已核准設計，或符合明確使用者 opt-in
 - `render_preflight.md` 已存在，且引用從最新 render 抽出的證據
 - 代表性的穩定影格能證明可見性、label 可讀性、phase isolation 與 final cleanup
 
 ## 常見失敗
 
 - 為了讓版面更乾淨而刪除語意上必要的 support structure。
-- 因 brief 模糊，就在 scene code 內自行決定語意。
+- 因需求或設計模糊，就在 scene code 內自行決定語意。
 - 讓動畫 polish 蓋過焦點清晰度。
 - 把實作方便性當成重新詮釋課程的理由。
 - 已加入但隱藏的物件沒有可靠的 opacity 或 creation path 就被揭露。

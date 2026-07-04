@@ -14,7 +14,8 @@ Preflight 不是 review 的替代品。它的作用是避免明顯的 render-lay
 # Render Preflight
 
 ## Source Evidence
-- MP4: `<path>`
+- Six Scene MP4s: `<six paths in approved order>`
+- Combined MP4: `<path>`
 - MP4 last-write time: `<timestamp>`
 - MP4 size: `<bytes or human-readable size>`
 - Evidence frames regenerated after latest render: `PASS` or `FAIL`
@@ -23,6 +24,8 @@ Preflight 不是 review 的替代品。它的作用是避免明顯的 render-lay
 | Check | Result | Evidence |
 | --- | --- | --- |
 | Intro has no future-phase helper objects | PASS/FAIL/N/A | `<frame or timestamp>` |
+| All six independent Scenes are present in the approved order | PASS/FAIL | `<six Scene files and combined timestamps>` |
+| Every Scene boundary fades to blank before the next Scene fades in | PASS/FAIL | `<boundary timestamps>` |
 | Required base values and labels are visible | PASS/FAIL/N/A | `<frame or timestamp>` |
 | One mismatch/update beat shows focus, references, formula/state, and written result | PASS/FAIL/N/A | `<frame or timestamp>` |
 | One match/success beat shows focus, references, formula/state, and written result | PASS/FAIL/N/A | `<frame or timestamp>` |
@@ -55,7 +58,8 @@ Preflight 不是 review 的替代品。它的作用是避免明顯的 render-lay
 
 在送審前，scene writer 必須檢查具代表性的穩定影格：
 
-- opening 或 intro 畫面
+- 六個獨立 Scene 各至少一個能代表該幕教學目的的穩定影格
+- 合併影片中的五個 Scene 邊界
 - 至少一個一般 update 或 mismatch 畫面（若適用）
 - 至少一個 match、success 或 acceptance 畫面（若適用）
 - completed primary structure 畫面
@@ -68,7 +72,7 @@ Preflight 不是 review 的替代品。它的作用是避免明顯的 render-lay
 
 只有在局部 `RENDER` 變更且具有效受影響影格證據時，才允許 delta review。
 
-若修復改變了已核准語意、script beat order、delivery tier、已核准契約、全場景結構、全場景版面、render mapping，或使受影響影格證據失效，就必須回到 full review。
+若修復改變了已核准語意、script beat order、全場景結構、全場景版面、render mapping，或使受影響影格證據失效，就必須回到 full review。
 
 若受影響影格範圍擴大或影響不確定，就視為受影響影格證據失效，必須進行完整獨立 scene review。
 
@@ -81,4 +85,4 @@ Preflight 不是 review 的替代品。它的作用是避免明顯的 render-lay
 
 若連續兩次失敗都由同一類 Manim visual-state 缺陷造成，必須停止局部修補，改在 `RENDER` 中重寫場景的 phase ownership 或 visibility plan，再重新請求 review。
 
-若重寫之後出現第三次 scene-review 失敗，則應將問題升級為架構層級，而不是繼續 patch-and-review 迴圈。若缺陷由 `RENDER` 或 `SCRIPT` 持有，就送回對應階段。若已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上有缺漏或衝突，則送回 `DESIGN_DEVELOPMENT`；要求設計修復、重新審查與重新核准，再重新產生並重新核准 brief。若已核准設計清楚，但 brief 有錯誤文字或來源標籤，或是不忠實轉換，則送回 `CONTRACT`，修復並重新核准 brief，無需重新設計。
+若重寫之後出現第三次 scene-review 失敗，則應將問題升級為架構層級，而不是繼續 patch-and-review 迴圈。若缺陷由 `RENDER` 或 `SCRIPT` 持有，就送回對應階段。若使用者需求記錄不準確，送回 `COLLECT_REQUIREMENTS`；若已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍或使用者選定設計上有缺漏或衝突，則送回 `DESIGN_DEVELOPMENT`，要求設計修復、重新審查與重新核准。
