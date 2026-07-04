@@ -13,21 +13,22 @@ reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不�
 - reviewer 負責 `RENDER` gate
 - 分類好的阻塞性 findings
 - evidence references
-- 修復方向：`RENDER`、`SCRIPT`、`DESIGN_DEVELOPMENT` 或 `CONTRACT`
+- 修復方向：`RENDER`、`SCRIPT`、`COLLECT_REQUIREMENTS` 或 `DESIGN_DEVELOPMENT`
 
 使用以下 finding 類別：
 
 - `styling`
 - `layout`
 - `semantic ambiguity`
-- `contract mismatch`
+- `source mismatch`
 
 ## 審查輸入
 
 審查時應對照：
 
-- 已核准的 `pre_build_brief.md`
-- 已核准的 `teaching_script.md`
+- `confirmed_requirements.md`
+- 已核准的 `animation_design.md`
+- 已審查的 `teaching_script.md`
 - `generated_algo_scene.py`
 - `render_preflight.md`
 - rendered output 或 render evidence
@@ -36,11 +37,11 @@ reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不�
 
 ## 審查問題
 
-### Contract Fidelity
+### Source Fidelity
 
 - scene 是否實作了已凍結語意，而不是新的詮釋？
 - 每個主要 beat 是否符合已核准 script 中的教學目的？
-- 當 brief 說 support structures 重要時，它們是否有出現？
+- 當已核准設計說 support structures 重要時，它們是否有出現？
 
 ### Visual Clarity
 
@@ -60,7 +61,7 @@ reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不�
 
 ### Semantic Safety
 
-- 是否有任何 styling 選擇迫使觀眾推論 brief 從未凍結的規則？
+- 是否有任何 styling 選擇迫使觀眾推論需求或設計從未定義的規則？
 - 是否有任何實作方便性改變了觀眾學到的內容？
 - 是否有任何不匹配暴露了未解決的語意歧義、語意不匹配，或缺失的上游決策？
 
@@ -82,8 +83,8 @@ reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不�
 當：
 
 - scene 暴露出相對於已核准 script 的 beat-structure mismatch
-- 已核准 brief 很清楚，但 script 沒有提供足夠忠實的 beat 指引給 scene work
-- 已核准 brief 很清楚，但 script 層的不完整迫使 scene 自行猜測結構、順序或重點
+- 已核准設計很清楚，但 script 沒有提供足夠忠實的 beat 指引給 scene work
+- 已核准設計很清楚，但 script 層的不完整迫使 scene 自行猜測結構、順序或重點
 
 不要因為實作已經開始，就在 `RENDER` 內本地修補 beat logic。
 
@@ -93,25 +94,24 @@ reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不�
 
 - 已核准設計本身在演算法語意上有缺漏或衝突
 - 已核准設計本身在主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線或高層節拍上有缺漏或衝突
-- 已核准設計本身在交付決策上有缺漏或衝突
-- 已核准設計本身在新暴露的高影響分歧上有缺漏或衝突
+- 已核准設計本身在新發現的使用者選定設計問題上有缺漏或衝突
 
-此時必須先設計修復、重新審查、重新核准，再重新產生並重新核准 brief，之後才能恢復 scene 工作。
+此時必須先設計修復、重新審查並重新核准，之後才能恢復 scene 工作。
 
-### 回到 CONTRACT
+### 回到 COLLECT_REQUIREMENTS
 
-當已核准設計清楚，但 `pre_build_brief.md` 有錯誤 wording 或 source labels，或是其他不忠實轉換問題時，使用此路徑。修復並重新核准 brief，無需重新設計。
+當使用者需求遺漏、來源擷取不準確或語言記錄錯誤時，使用此路徑。修正後重新送入設計流程。
 
-## Contract Mismatch 規則
+## Source Mismatch 規則
 
-當 scene 與已確認 brief 或已核准 script 衝突時，使用 `contract mismatch`。
+當 scene 與已確認需求、已核准設計或已審查 script 衝突時，使用 `source mismatch`。
 
 預設處理方式：
 
-- 若 brief 與 script 都清楚，而 scene 只是違反了它們，就留在 `RENDER`
-- 若 brief 清楚，但已核准 script 才是節拍結構錯配的來源，或使 scene work 受 script 層不完整所迫，則回到 `SCRIPT`
-- 若不匹配證明已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上有缺漏或衝突，則回到 `DESIGN_DEVELOPMENT`；必須先修設計、重新審查、重新核准，再重新產生並重新核准 brief
-- 若已核准設計清楚，但不匹配來自 brief wording 或 source labels 錯誤，或其他不忠實轉換問題，則回到 `CONTRACT`；修復並重新核准 brief，無需重新設計
+- 若需求、設計與 script 都清楚，而 scene 只是違反了它們，就留在 `RENDER`
+- 若設計清楚，但已審查 script 才是節拍結構錯配的來源，或使 scene work 受 script 層不完整所迫，則回到 `SCRIPT`
+- 若不匹配來自使用者需求記錄錯誤，則回到 `COLLECT_REQUIREMENTS`
+- 若不匹配證明已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍或使用者選定設計上有缺漏或衝突，則回到 `DESIGN_DEVELOPMENT`；必須先修設計、重新審查並重新核准
 
 ## Delta Review
 
@@ -126,7 +126,7 @@ delta review 只檢查：
 - 修復造成的新視覺回歸
 - 證據新鮮度
 
-若修復改變了已核准語意、script beat order、delivery tier、已核准契約、全場景結構、全場景版面、render mapping，或使受影響影格證據失效，就必須回到 full review。
+若修復改變了已核准語意、script beat order、全場景結構、全場景版面、render mapping，或使受影響影格證據失效，就必須回到 full review。
 
 若受影響影格範圍擴大或影響不確定，就視為受影響影格證據失效，必須使用完整獨立 scene review。
 
@@ -136,7 +136,7 @@ delta review 只檢查：
 
 只有在以下條件成立時才能通過：
 
-- scene 忠實於契約
+- scene 忠實於已確認需求、已核准設計與已審查 script
 - scene 在視覺上可讀
 - 版面安全
 - `render_preflight.md` 已存在，且引用 latest-render evidence

@@ -4,7 +4,7 @@
 
 ## 適用性
 
-只有當演算法維持並逐步收縮一個明確的候選區間或區域時，才套用以下要求。Interval convention、pointer 與 excluded-region 要求，不得套用到 linear、graph、substring 或其他沒有候選區域淘汰的搜尋上。這類搜尋若有相符專用參考就必須使用；若沒有，就必須使用通用 teaching-design 與 process 指引、標記為 best-effort、揭露覆蓋風險，並接受強化審查。不得發明 interval semantics。
+只有當演算法維持並逐步收縮一個明確的候選區間或區域時，才套用以下要求。Interval convention、pointer 與 excluded-region 要求，不得套用到 linear、graph、substring 或其他沒有候選區域淘汰的搜尋上。沒有相符專用參考時，只使用 `references/how-to-design-animation.md`，不得發明 interval semantics。
 
 ## 必要設計決策
 

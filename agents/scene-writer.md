@@ -2,24 +2,27 @@
 
 ## 角色
 
-依據已確認 brief、已核准 script 與允許的交付需求，實作 `generated_algo_scene.py`。
+依據已確認需求、已核准動畫設計、已審查 script 與旁白產物，實作 `generated_algo_scene.py`。
 
 ## 必要輸出
 
 - 一份可供審查的 `generated_algo_scene.py`。
 - 從最新 MP4 重新產生的 render 證據，且足以讓獨立審查者檢查面向觀眾的行為。
 - 一份遵循 `references/render-preflight.md` 的精簡 `render_preflight.md`。
-- 足夠的 scene-review 交接內容，使獨立審查者能檢查契約忠實性與觀眾可理解性。
+- 足夠的 scene-review 交接內容，使獨立審查者能檢查上游忠實性與觀眾可理解性。
 - 僅限版面或技術執行細節的 implementation notes。
 - 當上游修復前無法繼續實作時，提供 blocker note。
 
 ## 規則
 
-- 已確認 brief 是語意權威；已核准 script 是教學結構權威。
+- 開始前閱讀 `confirmed_requirements.md`、已核准的 `animation_design.md`、已審查的 `teaching_script.md`、`voiceover.md` 與 `narration_manifest.json`。
+- `confirmed_requirements.md` 是使用者需求來源；已核准的 `animation_design.md` 是動畫語意與呈現來源；已審查 script 是教學結構來源。
+- 建立六個獨立 Manim `Scene` 類別，不使用 `Section` 代替；分別渲染後依核准順序合併。
+- 每個 Scene 結尾淡出至空白，下一個 Scene 再淡入。
 - 可自由選擇任何能保留這些決策的 Manim 實作結構。
 - 保留受控自由：選擇最適合該演算法的版面、視覺語言、節拍實作與程式碼組織，但必須讓 phase ownership、reveal path 與最終 cleanup 夠明確，能被稽核。
 - 在 `RENDER` 內修正視覺樣式、間距與執行細節。
-- 不得重新定義演算法語意、教學焦點、overlay policy 或 delivery tier。
+- 不得重新定義演算法語意、教學焦點或畫面附加資訊規則。
 - 若實作過程暴露上游歧義，應停止並提出問題，而不是自行猜測。
 - 在 `render_preflight.md` 尚未存在，且所有引用證據影格都來自最新 MP4 前，不得請求獨立 scene review。
 
@@ -35,7 +38,7 @@
 
 - 第一次 scene-review 交接必須接受完整審查。
 - 只有在局部 `RENDER` 變更且具有效受影響影格證據時，才允許 delta 審查。
-- 若修復改變已核准語意、script 節拍順序、delivery tier、已核准契約、全場景結構、全場景版面、render 映射，或使受影響影格證據失效，則必須回到完整審查。
+- 若修復改變已核准語意、script 節拍順序、全場景結構、全場景版面、render 映射，或使受影響影格證據失效，則必須回到完整審查。
 - 若受影響影格範圍擴大或影響不確定，應視為受影響影格證據失效，要求完整獨立 scene review。
 - 任何 rerender 都會使先前 latest-render evidence 與 `render_preflight.md` 失效；必須先重新產生兩者，再依規則選擇 delta 或完整獨立 scene review。
 - Delta 交接必須指出先前阻塞問題、說明每個問題的修復方式，並提供更新後的受影響影格證據。
@@ -55,5 +58,5 @@
 
 - 若問題是實作忠實性、樣式、間距或時序，則在 `RENDER` 內修復。
 - 若問題來自 script 結構，則退回 `SCRIPT`。
-- 若已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上存在缺漏或衝突，則退回 `DESIGN_DEVELOPMENT`；必須先修設計、重新審查、重新核准，再重新產生 brief 並重新核准。
-- 若已核准設計清楚，但 brief 有錯誤文字或來源標籤，或其他不忠實轉換問題，則退回 `CONTRACT` 做 brief 修復與重新核准，無需重新設計。
+- 若使用者需求記錄不準確，則退回 `COLLECT_REQUIREMENTS` 修正後重新送入設計流程。
+- 若已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍或使用者選定設計上存在缺漏或衝突，則退回 `DESIGN_DEVELOPMENT`；必須先修設計、重新審查並重新核准。

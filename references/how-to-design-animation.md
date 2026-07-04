@@ -4,8 +4,6 @@
 
 `DESIGN_DEVELOPMENT` 的工作是讓主要 Agent 與使用者共同決定演算法要如何被解釋與演示，並持續更新 `animation_design.md`。主要 Agent 負責設計思考與面向使用者的互動，不把這項工作委派給其他 Agent。
 
-開始前，讀取 `confirmed_requirements.md`、本指南，以及唯一一份符合演算法類型的專用參考。沒有相符專用參考時，只使用本指南，不得發明不存在的專用語意。
-
 ## 六個固定 Scene 與文件格式
 
 `animation_design.md` 必須依序設計六個獨立 Manim `Scene`：
@@ -129,4 +127,4 @@ Queue、stack、搜尋範圍、temporary slot 或其他支援結構只有在它�
 - 不改變使用者選定呈現方式的問題，由主要 Agent 直接修正。
 - 會改變使用者選定呈現方式的問題，必須重新提出修正方案並詢問使用者。
 - 每次修正後重新審查，直到 `animation_design_review.md = PASS`。
-- 審查通過後，請使用者檢查完整 `animation_design.md`。只有明確核准後才能進入 `CONTRACT`。
+- 審查通過後，請使用者檢查完整 `animation_design.md`。只有明確核准後才能進入 `SCRIPT`。

@@ -7,12 +7,12 @@
 整併完成後，子階段二只需閱讀：
 
 1. 動態需求產物 `confirmed_requirements.md`
-2. 單一通用參考 `references/animation-design-guide.md`
+2. 單一通用參考 `references/how-to-design-animation.md`
 3. 唯一一份符合演算法類型的專用參考
 
 ## 整併範圍
 
-以下四份通用參考整編為 `references/animation-design-guide.md`：
+以下四份通用參考整編為 `references/how-to-design-animation.md`：
 
 - `references/animation-design-process.md`
 - `references/animation-design-document.md`
@@ -32,7 +32,7 @@
 
 ## 新文件結構
 
-`references/animation-design-guide.md` 使用以下章節順序：
+`references/how-to-design-animation.md` 使用以下章節順序：
 
 1. **目的、責任與開始條件**：定義 `DESIGN_DEVELOPMENT` 的擁有者、必要輸入與通用／專用參考的關係。
 2. **六個固定 Scene 與文件格式**：保留六幕順序、每幕四個必要欄位、完整 Markdown 範本及場景規則。
@@ -45,7 +45,7 @@
 
 ## 引用更新
 
-更新儲存庫內所有指向四份舊文件的有效引用，使其改指向 `references/animation-design-guide.md`。至少涵蓋：
+更新儲存庫內所有指向四份舊文件的有效引用，使其改指向 `references/how-to-design-animation.md`。至少涵蓋：
 
 - 頂層 `SKILL.md` 中 `DESIGN_DEVELOPMENT` 的必讀清單
 - 演算法專用參考中描述通用指引或流程的文字
@@ -65,7 +65,7 @@
 
 實作完成後應確認：
 
-1. `references/animation-design-guide.md` 存在且包含六個預定章節。
+1. `references/how-to-design-animation.md` 存在且包含六個預定章節。
 2. 四份舊通用參考已移除。
 3. `SKILL.md` 的子階段二必讀清單只包含需求產物、單一通用參考與唯一一份演算法專用參考。
 4. 排除歷史 `docs/superpowers/` 後，儲存庫不存在指向四份舊文件的有效引用。

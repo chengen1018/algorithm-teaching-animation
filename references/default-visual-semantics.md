@@ -6,11 +6,11 @@
 
 本檔案只負責在核心設計凍結後，提供一般呈現的低風險 fallback 決策，例如普通配色、小幅位置調整、easing 與局部 timing。
 
-- 當 brief 與較高層視覺原則仍留有一般性選擇空間時，使用本檔案提供例行預設值。
+- 當已核准設計與較高層視覺原則仍留有一般性選擇空間時，使用本檔案提供例行預設值。
 - 不要用這些預設值來取代缺失的核心設計決策。
-- 不要用本檔案覆蓋已核准的 `animation_design.md`、已核准的 `pre_build_brief.md` 或 `visual-language.md`。
-- 不要用本檔案推翻 `visual-language.md` 所涵蓋的清晰度問題；核心缺口應升級送回 `DESIGN_DEVELOPMENT`。
-- 這些預設值的權限最低，絕不能用來解決已核准設計 / brief 與 `visual-language.md` 之間的衝突。遇到衝突時，應走 visual-language 的回退路線，而不是自行決定優先順序或在本地修補契約。
+- 不要用本檔案覆蓋已核准的 `animation_design.md` 或 `references/how-to-design-animation.md`。
+- 不要用本檔案推翻 `references/how-to-design-animation.md` 所涵蓋的清晰度問題；核心缺口應升級送回 `DESIGN_DEVELOPMENT`。
+- 這些預設值的權限最低，絕不能用來解決已核准設計與 `references/how-to-design-animation.md` 之間的衝突。遇到衝突時，應走動畫共同設計指南的回退路線，而不是自行決定優先順序或在本地修補設計。
 
 ## 適用範圍
 
@@ -30,7 +30,6 @@
 - pointer meaning
 - visited timing
 - overlay enablement
-- delivery tier
 - 核心視覺語意或角色定義
 - 場景結構或資訊層級
 - 支援結構是否存在或是否持續
@@ -81,7 +80,7 @@
 
 - node positions 一旦引入就固定
 - 除非 edge traversal 是當前焦點，否則 edge styling 要比 node state styling 更安靜
-- 當局部契約說支援結構重要時，就顯示該支援結構
+- 當已核准設計說支援結構重要時，就顯示該支援結構
 - 讓處理完成的區域慢慢安靜下來，而不是消失
 
 ## First-Class Support 預設

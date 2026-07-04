@@ -2,7 +2,7 @@
 
 本文件定義 `algorithm-teaching-animation-v4` 的最終 QA 流程。
 
-scene review 要回答的是 scene implementation 是否忠實表達契約。Render QA 要回答的是對選定 tier 而言，實際渲染輸出是否已安全可交付。
+scene review 要回答的是 scene implementation 是否忠實表達已確認需求、已核准設計與已審查 script。Render QA 要回答的是實際渲染輸出是否已安全可交付。
 
 ## 必要輸出
 
@@ -11,9 +11,8 @@ scene review 要回答的是 scene implementation 是否忠實表達契約。Ren
 - `PASS` 或 `FAIL`
 - 審查結果必須由獨立 reviewer 撰寫
 - reviewer 負責 `QA` gate
-- 受審的 delivery tier
 - 帶有證據的 findings
-- 修復方向：`RENDER`、`VOICEOVER`、`SCRIPT`、`DESIGN_DEVELOPMENT` 或 `CONTRACT`
+- 修復方向：`RENDER`、`VOICEOVER`、`SCRIPT`、`COLLECT_REQUIREMENTS` 或 `DESIGN_DEVELOPMENT`
 
 若 `scene_review_result.md` 缺失或不是 `PASS`，則 `QA` 無法開始。在這種情況下，不得輸出 `qa_result.md`；必須回傳一份上游 gate-block 通知，指出造成阻塞的 scene-review 條件與其修復目標。若 `scene_review_result.md` 完全缺失，應以 `RENDER` 作為預設修復目標，以便完成 scene-review gate。
 
@@ -25,33 +24,23 @@ scene review 要回答的是 scene implementation 是否忠實表達契約。Ren
 
 審查時應對照：
 
-- 已核准的 `pre_build_brief.md`
-- 已核准的 `teaching_script.md`
+- `confirmed_requirements.md`
+- 已核准的 `animation_design.md`
+- 已審查的 `teaching_script.md`
 - `render_preflight.md`
 - `scene_review_result.md`
 - rendered media output
-- 當 tier 包含 narration 時，已核准的 `voiceover.md`、`narration_manifest.json` 與可用音訊資產
+- 已核准的 `voiceover.md`、`narration_manifest.json` 與可用音訊資產
 - 當 overlays 啟用時，對應的 overlay output
 
 只有當 rendered media 是最新最終 render，且 latest-render evidence、`render_preflight.md` 與 `scene_review_result.md = PASS` 都綁定到同一個最新 MP4/版本時，QA 才能審查並通過。任何 rerender 都會使先前所有 latest-render evidence、`render_preflight.md` 與 `scene_review_result.md` 失效；在 QA 開始前，必須回到 `RENDER` 重新產生證據與 preflight，並讓獨立 scene reviewer 對新 MP4/版本給出新的 `PASS`。
 
-## Delivery-Tier 檢查
-
-### No Narration
-
-驗證：
-
-- 已核准 `pre_build_brief.md` 已明確記錄不欠 narration，且不需要任何 voiceover 資產
-- 沒有 narration 時，render 本身仍可被理解
-- 沒有任何依賴音訊的教學步驟處於未解釋狀態
-- 除非明確啟用，否則 overlays 不存在
-
-### Final Narrated Delivery
+## Narration 檢查
 
 驗證：
 
 - 所有必要音訊資產都存在
-- narration language 符合已核准 brief
+- narration language 符合 `confirmed_requirements.md`
 - visual focus 與 voiceover 在每個 beat 上都保持對齊
 - 結果品質足以交付，而不只是除錯用
 
@@ -66,12 +55,12 @@ scene review 要回答的是 scene implementation 是否忠實表達契約。Ren
 - 沒有重要內容被裁切或遮住
 - 最終交付證據來自最新 render，而不是過期 review frames
 
-### Contract Fidelity
+### Source Fidelity
 
 - render 符合已確認語意
 - 當需要時，support structures 有出現
 - 實作過程沒有新增新語意
-- overlay 行為符合 brief
+- overlay 行為符合已核准設計或使用者明確要求
 
 ### Timing and Audio
 
@@ -82,9 +71,9 @@ scene review 要回答的是 scene implementation 是否忠實表達契約。Ren
 
 ### Delivery Completeness
 
-- 實際產出的是正確 tier
-- 該 tier 所需檔案存在且可用
-- 不會把 no-narration 輸出誤標為 narrated
+- 六個獨立 Scene 都已渲染，並依核准順序合併成一支完整影片
+- 每個 Scene 邊界皆先淡出至空白，再淡入下一幕
+- 所需檔案存在且可用
 - 不會把 draft-quality narration 誤標為 final
 - rendered media 是最新最終 render，且 latest-render evidence、`render_preflight.md` 與 `scene_review_result.md = PASS` 都綁定到同一個最新 MP4/版本
 
@@ -95,12 +84,12 @@ scene review 要回答的是 scene implementation 是否忠實表達契約。Ren
 - `stay within RENDER`：用於不改變已凍結語意的版面、間距、時序、樣式或忠實性修復
 - `return to VOICEOVER`：當 QA 發現缺少音訊資產、錯誤語言 narration、narration 文字漂移，或根源於 narration 產物的音訊同步缺陷
 - `return to SCRIPT`：當 QA 發現 render 無法單獨修正的 beat-structure mismatch
-- `return to DESIGN_DEVELOPMENT`：當已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍、交付決策，或新暴露的高影響分歧上有缺漏或衝突；必須設計修復、重新審查與重新核准，再重新產生並重新核准 brief
-- `return to CONTRACT`：當已核准設計清楚，但 brief 有錯誤文字或來源標籤，或是不忠實轉換；修復並重新核准 brief，無需重新設計
+- `return to COLLECT_REQUIREMENTS`：當使用者需求遺漏、來源擷取不準確或語言記錄錯誤；修正後重新送入設計流程
+- `return to DESIGN_DEVELOPMENT`：當已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍或使用者選定設計上有缺漏或衝突；必須設計修復、重新審查與重新核准
 
-QA 不可默默重寫契約。
+QA 不可默默重寫需求、設計或 script。
 QA 不可透過自行給出通過，或把同一個被阻塞的工作改標成普通 `QA` 缺陷，來推翻失敗的 scene review。
-若 `scene_review_result.md = PASS` 存在且證據新鮮，QA 不應重做 scene review；QA 應改為檢查交付安全性、tier 完整性與最終輸出是否 ready。
+若 `scene_review_result.md = PASS` 存在且證據新鮮，QA 不應重做 scene review；QA 應改為檢查交付安全性、產物完整性與最終輸出是否 ready。
 
 ## PASS 標準
 
@@ -108,15 +97,15 @@ QA 不可透過自行給出通過，或把同一個被阻塞的工作改標成�
 
 - `scene_review_result.md = PASS` 以明確檔案形式存在
 - rendered media 是最新最終 render，且 latest-render evidence、`render_preflight.md` 與 `scene_review_result.md = PASS` 都綁定到同一個最新 MP4/版本
-- 選定的 delivery tier 已滿足
+- narration 與其他必要產物皆存在且可用
 - render 可讀
-- 契約被忠實實作
+- 已確認需求、已核准設計與已審查 script 被忠實實作
 - 沒有任何仍對觀眾可見的未解決語意歧義
 - `qa_result.md` 由獨立 reviewer 撰寫，而非任何參與該輸出的作者
 
 ## 常見失敗
 
 - scene 在語意上正確，卻因視覺不可讀仍被通過。
-- 把 narrated tier 缺少音訊當成小備註。
-- 在 QA 備註中即興發明新語意來補契約缺口。
+- 把缺少音訊當成小備註。
+- 在 QA 備註中即興發明新語意來補上游缺口。
 - 因為演算法邏輯正確，就把 debug 品質 render 稱作「final」。
