@@ -1,0 +1,6 @@
+file '../video/scenes/DijkstraProblemGoal.mp4'
+file '../video/scenes/DijkstraCoreConcept.mp4'
+file '../video/scenes/DijkstraStateStructures.mp4'
+file '../video/scenes/DijkstraRelaxation.mp4'
+file '../video/scenes/DijkstraFullRun.mp4'
+file '../video/scenes/DijkstraResultRecap.mp4'

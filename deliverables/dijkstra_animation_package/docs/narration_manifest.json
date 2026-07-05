@@ -1,0 +1,361 @@
+{
+  "version": 1,
+  "language": "en-US",
+  "provider": "macOS say",
+  "voice": "Samantha",
+  "source": "voiceover.md",
+  "segments": [
+    {
+      "id": "beat-1-1",
+      "scene": 1,
+      "script_beat": "1.1",
+      "audio_file": "audio/voiceover/beat-1-1.aiff",
+      "duration_seconds": 3.994,
+      "narration": "Our goal is to find a path from A to F with the smallest total edge weight."
+    },
+    {
+      "id": "beat-1-2",
+      "scene": 1,
+      "script_beat": "1.2",
+      "audio_file": "audio/voiceover/beat-1-2.aiff",
+      "duration_seconds": 4.505,
+      "narration": "This three-edge route has total weight four plus five plus six, which is fifteen."
+    },
+    {
+      "id": "beat-1-3",
+      "scene": 1,
+      "script_beat": "1.3",
+      "audio_file": "audio/voiceover/beat-1-3.aiff",
+      "duration_seconds": 7.175,
+      "narration": "But this four-edge route totals thirteen. Fewer edges did not mean less weight, so we need a systematic way to find the minimum."
+    },
+    {
+      "id": "beat-2-1",
+      "scene": 2,
+      "script_beat": "2.1",
+      "audio_file": "audio/voiceover/beat-2-1.aiff",
+      "duration_seconds": 5.596,
+      "narration": "Each label is the best distance known so far. We begin with zero at A and infinity everywhere else."
+    },
+    {
+      "id": "beat-2-2",
+      "scene": 2,
+      "script_beat": "2.2",
+      "audio_file": "audio/voiceover/beat-2-2.aiff",
+      "duration_seconds": 6.153,
+      "narration": "Dijkstra always chooses the unfinalized node with the smallest tentative distance. Here, that node is A."
+    },
+    {
+      "id": "beat-2-3",
+      "scene": 2,
+      "script_beat": "2.3",
+      "audio_file": "audio/voiceover/beat-2-3.aiff",
+      "duration_seconds": 6.502,
+      "narration": "Removing the minimum finalizes A's distance. The separate current outline shows that we are now checking A's neighbors."
+    },
+    {
+      "id": "beat-2-4",
+      "scene": 2,
+      "script_beat": "2.4",
+      "audio_file": "audio/voiceover/beat-2-4.aiff",
+      "duration_seconds": 3.715,
+      "narration": "From A, the edge of weight four gives B a tentative distance of four."
+    },
+    {
+      "id": "beat-2-5",
+      "scene": 2,
+      "script_beat": "2.5",
+      "audio_file": "audio/voiceover/beat-2-5.aiff",
+      "duration_seconds": 4.76,
+      "narration": "The second edge gives C a tentative distance of two. That completes A's neighbor checks."
+    },
+    {
+      "id": "beat-2-6",
+      "scene": 2,
+      "script_beat": "2.6",
+      "audio_file": "audio/voiceover/beat-2-6.aiff",
+      "duration_seconds": 3.576,
+      "narration": "Two is smaller than four, so C is the next node selected."
+    },
+    {
+      "id": "beat-2-7",
+      "scene": 2,
+      "script_beat": "2.7",
+      "audio_file": "audio/voiceover/beat-2-7.aiff",
+      "duration_seconds": 7.454,
+      "narration": "Because every edge weight is non-negative, no later route through a farther node can reduce this minimum. C's distance can now be finalized."
+    },
+    {
+      "id": "beat-3-1",
+      "scene": 3,
+      "script_beat": "3.1",
+      "audio_file": "audio/voiceover/beat-3-1.aiff",
+      "duration_seconds": 8.754,
+      "narration": "Distances hold the best known costs. Predecessors remember the route, and the min-priority queue orders discovered, unfinalized nodes by distance."
+    },
+    {
+      "id": "beat-3-2",
+      "scene": 3,
+      "script_beat": "3.2",
+      "audio_file": "audio/voiceover/beat-3-2.aiff",
+      "duration_seconds": 5.201,
+      "narration": "The minimum item leaves the queue and moves to A. That removal finalizes A and makes it the current node."
+    },
+    {
+      "id": "beat-3-3",
+      "scene": 3,
+      "script_beat": "3.3",
+      "audio_file": "audio/voiceover/beat-3-3.aiff",
+      "duration_seconds": 6.548,
+      "narration": "Discovering a neighbor updates three records together: its distance, its predecessor, and its position in the queue."
+    },
+    {
+      "id": "beat-3-4",
+      "scene": 3,
+      "script_beat": "3.4",
+      "audio_file": "audio/voiceover/beat-3-4.aiff",
+      "duration_seconds": 6.014,
+      "narration": "The second neighbor receives the same coordinated update. The ordered queue now reveals which candidate is smaller."
+    },
+    {
+      "id": "beat-3-5",
+      "scene": 3,
+      "script_beat": "3.5",
+      "audio_file": "audio/voiceover/beat-3-5.aiff",
+      "duration_seconds": 5.921,
+      "narration": "The smallest queued distance leaves next. Its node becomes finalized and current for the next neighbor checks."
+    },
+    {
+      "id": "beat-3-6",
+      "scene": 3,
+      "script_beat": "3.6",
+      "audio_file": "audio/voiceover/beat-3-6.aiff",
+      "duration_seconds": 8.638,
+      "narration": "A tentative value can still improve. When a shorter route appears, its distance, predecessor, and queue position all change before finalization."
+    },
+    {
+      "id": "beat-4-1",
+      "scene": 4,
+      "script_beat": "4.1",
+      "audio_file": "audio/voiceover/beat-4-1.aiff",
+      "duration_seconds": 4.156,
+      "narration": "B currently costs four through A. We now ask whether reaching B through C is shorter."
+    },
+    {
+      "id": "beat-4-2",
+      "scene": 4,
+      "script_beat": "4.2",
+      "audio_file": "audio/voiceover/beat-4-2.aiff",
+      "duration_seconds": 4.923,
+      "narration": "Reaching C costs two, and the edge to B costs one more. The new candidate is three."
+    },
+    {
+      "id": "beat-4-3",
+      "scene": 4,
+      "script_beat": "4.3",
+      "audio_file": "audio/voiceover/beat-4-3.aiff",
+      "duration_seconds": 4.226,
+      "narration": "Three is less than four, so the route through C becomes the best known route to B."
+    },
+    {
+      "id": "beat-4-4",
+      "scene": 4,
+      "script_beat": "4.4",
+      "audio_file": "audio/voiceover/beat-4-4.aiff",
+      "duration_seconds": 2.763,
+      "narration": "B's tentative distance changes from four to three."
+    },
+    {
+      "id": "beat-4-5",
+      "scene": 4,
+      "script_beat": "4.5",
+      "audio_file": "audio/voiceover/beat-4-5.aiff",
+      "duration_seconds": 4.435,
+      "narration": "The shorter route came from C, so B's predecessor changes from A to C."
+    },
+    {
+      "id": "beat-4-6",
+      "scene": 4,
+      "script_beat": "4.6",
+      "audio_file": "audio/voiceover/beat-4-6.aiff",
+      "duration_seconds": 8.266,
+      "narration": "Finally, B's queue value becomes three and moves to its sorted position. A shorter route updates the distance, predecessor, and queue together."
+    },
+    {
+      "id": "beat-5-1",
+      "scene": 5,
+      "script_beat": "5.1",
+      "audio_file": "audio/voiceover/beat-5-1.aiff",
+      "duration_seconds": 6.432,
+      "narration": "For the full run, A starts at zero, every other distance starts at infinity, and A is the first queue item."
+    },
+    {
+      "id": "beat-5-2",
+      "scene": 5,
+      "script_beat": "5.2",
+      "audio_file": "audio/voiceover/beat-5-2.aiff",
+      "duration_seconds": 3.808,
+      "narration": "Removing the minimum finalizes A at distance zero and makes it current."
+    },
+    {
+      "id": "beat-5-3",
+      "scene": 5,
+      "script_beat": "5.3",
+      "audio_file": "audio/voiceover/beat-5-3.aiff",
+      "duration_seconds": 3.808,
+      "narration": "The edge to B discovers distance four, with A as B's predecessor."
+    },
+    {
+      "id": "beat-5-4",
+      "scene": 5,
+      "script_beat": "5.4",
+      "audio_file": "audio/voiceover/beat-5-4.aiff",
+      "duration_seconds": 7.059,
+      "narration": "The edge to C discovers distance two, with A as predecessor. C moves ahead of B in the queue, completing A's checks."
+    },
+    {
+      "id": "beat-5-5",
+      "scene": 5,
+      "script_beat": "5.5",
+      "audio_file": "audio/voiceover/beat-5-5.aiff",
+      "duration_seconds": 4.435,
+      "narration": "C has the smallest tentative distance, so it is finalized next at two."
+    },
+    {
+      "id": "beat-5-6",
+      "scene": 5,
+      "script_beat": "5.6",
+      "audio_file": "audio/voiceover/beat-5-6.aiff",
+      "duration_seconds": 3.738,
+      "narration": "The edge back to A needs no update because A is already finalized."
+    },
+    {
+      "id": "beat-5-7",
+      "scene": 5,
+      "script_beat": "5.7",
+      "audio_file": "audio/voiceover/beat-5-7.aiff",
+      "duration_seconds": 6.78,
+      "narration": "Through C, B costs two plus one, which is less than four. B improves to three, with C as its predecessor."
+    },
+    {
+      "id": "beat-5-8",
+      "scene": 5,
+      "script_beat": "5.8",
+      "audio_file": "audio/voiceover/beat-5-8.aiff",
+      "duration_seconds": 4.04,
+      "narration": "C also discovers D with tentative distance ten and predecessor C."
+    },
+    {
+      "id": "beat-5-9",
+      "scene": 5,
+      "script_beat": "5.9",
+      "audio_file": "audio/voiceover/beat-5-9.aiff",
+      "duration_seconds": 4.18,
+      "narration": "B is now the smallest candidate, so its distance three becomes final."
+    },
+    {
+      "id": "beat-5-10",
+      "scene": 5,
+      "script_beat": "5.10",
+      "audio_file": "audio/voiceover/beat-5-10.aiff",
+      "duration_seconds": 5.642,
+      "narration": "Reaching D through B costs eight, which improves the old value ten. D's predecessor changes to B."
+    },
+    {
+      "id": "beat-5-11",
+      "scene": 5,
+      "script_beat": "5.11",
+      "audio_file": "audio/voiceover/beat-5-11.aiff",
+      "duration_seconds": 4.667,
+      "narration": "B discovers E at distance ten with predecessor B. D remains first in the queue at eight."
+    },
+    {
+      "id": "beat-5-12",
+      "scene": 5,
+      "script_beat": "5.12",
+      "audio_file": "audio/voiceover/beat-5-12.aiff",
+      "duration_seconds": 4.389,
+      "narration": "Eight is the smallest tentative value, so D is finalized and becomes current."
+    },
+    {
+      "id": "beat-5-13",
+      "scene": 5,
+      "script_beat": "5.13",
+      "audio_file": "audio/voiceover/beat-5-13.aiff",
+      "duration_seconds": 5.944,
+      "narration": "Through D, the candidate for E is also ten. It is not smaller, so E's state does not change."
+    },
+    {
+      "id": "beat-5-14",
+      "scene": 5,
+      "script_beat": "5.14",
+      "audio_file": "audio/voiceover/beat-5-14.aiff",
+      "duration_seconds": 6.177,
+      "narration": "D discovers the target F at distance fourteen. But F is only tentative, so the search is not finished."
+    },
+    {
+      "id": "beat-5-15",
+      "scene": 5,
+      "script_beat": "5.15",
+      "audio_file": "audio/voiceover/beat-5-15.aiff",
+      "duration_seconds": 4.714,
+      "narration": "E's distance ten is smaller than F's fourteen, so E must be finalized first."
+    },
+    {
+      "id": "beat-5-16",
+      "scene": 5,
+      "script_beat": "5.16",
+      "audio_file": "audio/voiceover/beat-5-16.aiff",
+      "duration_seconds": 5.968,
+      "narration": "Through E, F costs thirteen, which improves fourteen. F's predecessor changes from D to E."
+    },
+    {
+      "id": "beat-5-17",
+      "scene": 5,
+      "script_beat": "5.17",
+      "audio_file": "audio/voiceover/beat-5-17.aiff",
+      "duration_seconds": 5.016,
+      "narration": "F is now the minimum. Removing it finalizes thirteen, so the search can stop."
+    },
+    {
+      "id": "beat-6-1",
+      "scene": 6,
+      "script_beat": "6.1",
+      "audio_file": "audio/voiceover/beat-6-1.aiff",
+      "duration_seconds": 3.135,
+      "narration": "The finalized shortest distance from A to F is thirteen."
+    },
+    {
+      "id": "beat-6-2",
+      "scene": 6,
+      "script_beat": "6.2",
+      "audio_file": "audio/voiceover/beat-6-2.aiff",
+      "duration_seconds": 5.55,
+      "narration": "Following predecessors backward leads from F to E, then B, then C, and finally A."
+    },
+    {
+      "id": "beat-6-3",
+      "scene": 6,
+      "script_beat": "6.3",
+      "audio_file": "audio/voiceover/beat-6-3.aiff",
+      "duration_seconds": 7.082,
+      "narration": "Reversing that chain gives A to C to B to E to F. Its weights are two plus one plus seven plus three, for a total of thirteen."
+    },
+    {
+      "id": "beat-6-4",
+      "scene": 6,
+      "script_beat": "6.4",
+      "audio_file": "audio/voiceover/beat-6-4.aiff",
+      "duration_seconds": 6.223,
+      "narration": "Dijkstra repeats three actions: extract the minimum, finalize its distance, and relax its edges."
+    },
+    {
+      "id": "beat-6-5",
+      "scene": 6,
+      "script_beat": "6.5",
+      "audio_file": "audio/voiceover/beat-6-5.aiff",
+      "duration_seconds": 3.553,
+      "narration": "This finalization rule requires every edge weight to be non-negative."
+    }
+  ]
+}
