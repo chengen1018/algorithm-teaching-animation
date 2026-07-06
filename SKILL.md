@@ -44,57 +44,15 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 只有在需求蒐集的完成條件全部成立後，才能進入 `DESIGN_DEVELOPMENT`。
 
 ### 子階段 2：DESIGN_DEVELOPMENT
-此子階段由目前直接與使用者對話的主要 Agent 負責，不另派設計 subagent。開始前，主要 Agent 必須閱讀 `confirmed_requirements.md`、`references/how-to-design-animation.md`，以及唯一一份符合演算法類型的專用參考。
+開始前，主要 Agent 必須閱讀 `confirmed_requirements.md`、`references/how-to-design-animation.md`，以及唯一一份符合演算法類型的專用參考，並完整遵循這些文件完成 DESIGN_DEVELOPMENT。
 
-主要 Agent 每次只處理一個設計決定。只有當某個教學部分確實存在多種有意義的呈現方式時，才提出三個完整方案。每個方案必須同時說明：
-
-- 畫面會出現什麼
-- 解說重點
-- 觀眾實際會看到的動畫動作順序
-- 這種方式如何幫助理解
-- 主要 Agent 推薦哪個方案及理由
-
-使用者可以選擇、混合、修改方案，或提出自己的具體設計。使用者決定後，主要 Agent 直接把結果寫入 `animation_design.md` 並進入下一個設計決定，不在對話中重述答案要求二次確認。
-
-字體大小、方格間距、局部位置、精確秒數與一般淡出時間等實作細節由主要 Agent 自行處理，不詢問使用者。
-
-`animation_design.md` 必須依 `references/how-to-design-animation.md` 設計以下六個獨立 Manim Scene：
-
-1. 問題與目標
-2. 核心觀念
-3. 演算法特有的重要資料與狀態
-4. 示範一次關鍵動作
-5. 完整演示演算法
-6. 最終結果與簡短回顧
-
-每個 Scene 都必須記錄教學目的、解說重點、畫面內容與具體動畫演示順序。若使用者沒有指定其他程度，預設觀眾已理解基本程式設計與常見資料結構；第三個 Scene 只解釋該演算法特有且理解時必要的資料或狀態。
-
-完成六個 Scene 後，派遣獨立的 `animation-design-reviewer`，依 `references/animation-design-review-checklist.md` 建立 `animation_design_review.md`。Reviewer 只檢查內容品質，不參與撰寫或修改設計。
-
-若審查發現的問題不改變使用者選定的教學呈現方式，主要 Agent 直接修正。若修正會改變使用者選定的呈現方式，主要 Agent 必須重新提出修正方案並詢問使用者。每次修正後都重新交給 reviewer，直到 `animation_design_review.md = PASS`。
-
-審查通過後，請使用者檢查完整的 `animation_design.md`。只有使用者明確核准才能進入 `SCRIPT`；沉默、未回覆或只修改檔案都不算核准。使用者修改設計後，必須重新執行內容審查與最終核准。
-
-### 必要輸出
-- `confirmed_requirements.md`
-- `animation_design.md`
-- 由獨立審查者產出的 `animation_design_review.md`，且 verdict 為 `PASS`
-
-### 通過／離開關卡
-僅當下列條件全部成立，才能離開 `ANIMATION_DESIGN` 並開始 `SCRIPT`：
-
-- `confirmed_requirements.md` 存在，且使用者來源已準確保留。
-- `animation_design.md` 存在，且完整設計六個獨立 Scene。
-- `animation_design_review.md = PASS`，且由獨立的 `animation-design-reviewer` 產出。
-- 已取得使用者對完整 `animation_design.md` 的明確核准。
-
-非正式 reviewer 留言、聊天中的口頭意見或協調者自行檢查，都不能取代檔案化的 `animation_design_review.md = PASS`。
+只有當 `references/how-to-design-animation.md` 定義的完成條件全部成立後，才能離開 `ANIMATION_DESIGN` 並開始 `SCRIPT`。
 
 ### 回退規則
 遇到問題時，依下列規則回退：
 
 - 若來源擷取不準確、遺漏使用者原始措辭，或來源標籤錯誤發生在需求蒐集，退回 `COLLECT_REQUIREMENTS` 修正 `confirmed_requirements.md`，再把修正後的來源重新送回設計流程。
-- 若演算法行為、教學呈現、Scene 結構或使用者選定的設計有缺漏或衝突，退回 `DESIGN_DEVELOPMENT`，重新完成共同設計、內容審查與使用者核准。
+- 若演算法行為、教學呈現、Scene 結構或使用者選定的設計有缺漏或衝突，退回 `DESIGN_DEVELOPMENT`，重新執行該子階段。
 
 ## 階段 2：SCRIPT
 
