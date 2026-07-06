@@ -14,7 +14,7 @@
 
 - Modify: `references/animation-design-process.md` — `DESIGN_DEVELOPMENT` 與 canonical `DESIGN_READY` gate 的權威流程文件。
 - Reference only: `docs/superpowers/specs/2026-07-03-animation-design-process-rewrite-design.md` — 已核准的改寫範圍與結構。
-- Reference only: `references/animation-design-review-checklist.md` — 確認 reviewer 對 canonical gate、Full Review、Delta Review 及 `PASS` 的依賴沒有被破壞。
+- Reference only: `references/how-to-review-design.md` — 確認 reviewer 對 canonical gate、Full Review、Delta Review 及 `PASS` 的依賴沒有被破壞。
 
 ### Task 1: 依核准結構改寫流程文件
 
@@ -98,7 +98,7 @@ DESIGN_READY
 
 **Files:**
 - Verify: `references/animation-design-process.md`
-- Reference: `references/animation-design-review-checklist.md`
+- Reference: `references/how-to-review-design.md`
 - Reference: `docs/superpowers/specs/2026-07-03-animation-design-process-rewrite-design.md`
 
 - [x] **Step 1: 執行格式與占位文字檢查**
@@ -124,7 +124,7 @@ rg -n "DESIGN_DEVELOPMENT|DESIGN_READY|Full Review|Delta Review|animation_design
 
 - [x] **Step 3: 逐項核對 reviewer 的權威依賴**
 
-對照 `references/animation-design-review-checklist.md`，確認改寫後文件仍明確要求：
+對照 `references/how-to-review-design.md`，確認改寫後文件仍明確要求：
 
 - reviewer 對每個 canonical `DESIGN_READY` condition 提供證據；
 - 初次審查一律使用 Full Review；

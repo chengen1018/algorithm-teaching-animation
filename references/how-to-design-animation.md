@@ -122,7 +122,7 @@ Queue、stack、搜尋範圍、temporary slot 或其他支援結構只有在它�
 
 ## 完成與審查交接
 
-六個 Scene 都依文件格式完成後，派遣獨立 `animation-design-reviewer`，依 `references/animation-design-review-checklist.md` 進行內容品質審查並建立 `animation_design_review.md`。Reviewer 只檢查內容品質，不參與撰寫或修改設計。
+六個 Scene 都依文件格式完成後，派遣獨立 `animation-design-reviewer`，依 `references/how-to-review-design.md` 進行內容品質審查並建立 `animation_design_review.md`。Reviewer 只檢查內容品質，不參與撰寫或修改設計。
 
 - 不改變使用者選定呈現方式的問題，由主要 Agent 直接修正。
 - 會改變使用者選定呈現方式的問題，必須重新提出修正方案並詢問使用者。

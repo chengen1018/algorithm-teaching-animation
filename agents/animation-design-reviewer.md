@@ -8,7 +8,7 @@
 
 - `confirmed_requirements.md`
 - `animation_design.md`
-- `references/animation-design-review-checklist.md`
+- `references/how-to-review-design.md`
 - 與該演算法相符的教學與類型參考
 
 ## 審查內容

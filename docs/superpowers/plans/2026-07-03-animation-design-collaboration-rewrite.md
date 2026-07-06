@@ -17,7 +17,7 @@
 - Rewrite `references/animation-design-process.md` and `references/animation-design-document.md`: define the interaction loop and six-Scene document.
 - Modify `references/teaching-design.md` and `references/animation-design-search.md`: align supporting guidance with the approved flow.
 - Delete `references/high-impact-clarification.md`.
-- Rewrite `agents/animation-design-reviewer.md` and `references/animation-design-review-checklist.md`: retain only content-quality review.
+- Rewrite `agents/animation-design-reviewer.md` and `references/how-to-review-design.md`: retain only content-quality review.
 - Rewrite `references/pre-build-brief.md`: retain a simple downstream handoff without version governance.
 - Modify downstream files found by scoped searches: remove stale high-impact and design-SHA dependencies while preserving unrelated script, render, and QA rules.
 
@@ -43,7 +43,7 @@ Expected: several matches. This is the RED baseline.
 Run:
 
 ```bash
-rg -n "SHA-256|證據矩陣|Full Review|Delta Review|DESIGN_READY" SKILL.md agents/animation-design-reviewer.md references/animation-design-process.md references/animation-design-document.md references/animation-design-review-checklist.md references/pre-build-brief.md
+rg -n "SHA-256|證據矩陣|Full Review|Delta Review|DESIGN_READY" SKILL.md agents/animation-design-reviewer.md references/animation-design-process.md references/animation-design-document.md references/how-to-review-design.md references/pre-build-brief.md
 ```
 
 Expected: several matches.
@@ -201,7 +201,7 @@ Expected: six matches.
 
 **Files:**
 - Rewrite: `agents/animation-design-reviewer.md`
-- Rewrite: `references/animation-design-review-checklist.md`
+- Rewrite: `references/how-to-review-design.md`
 
 - [ ] **Step 1: Rewrite the reviewer role**
 
@@ -234,7 +234,7 @@ Any failed category produces overall `FAIL`.
 Run:
 
 ```bash
-rg -n "SHA-256|證據矩陣|Full Review|Delta Review|DESIGN_READY|high-impact|高影響|低影響" agents/animation-design-reviewer.md references/animation-design-process.md references/animation-design-document.md references/animation-design-review-checklist.md
+rg -n "SHA-256|證據矩陣|Full Review|Delta Review|DESIGN_READY|high-impact|高影響|低影響" agents/animation-design-reviewer.md references/animation-design-process.md references/animation-design-document.md references/how-to-review-design.md
 ```
 
 Expected: no output.
