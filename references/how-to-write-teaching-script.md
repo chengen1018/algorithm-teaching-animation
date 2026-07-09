@@ -1,4 +1,4 @@
-# Teaching Script 撰寫手冊
+# How to Write Teaching Script
 
 請依照以下順序，把已確認需求與已核准動畫設計整理成 `teaching_script.md`。完成的腳本必須讓後續的 voiceover writer 與 scene writer 不必猜測教學順序、畫面焦點或語意。
 

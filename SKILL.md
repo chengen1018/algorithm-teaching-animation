@@ -65,11 +65,11 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 
 ### 執行事項
 派遣 custom agent `script-writer` 建立教學腳本。
-要求 `script-writer` 在寫作前閱讀 `confirmed_requirements.md`、已核准的 `animation_design.md` 與 `references/teaching-script.md`。
+要求 `script-writer` 在寫作前閱讀 `confirmed_requirements.md`、已核准的 `animation_design.md` 與 `references/how-to-write-teaching-script.md`。
 接著由 `script-writer` 根據已確認需求與已核准設計撰寫可供審查的教學腳本。
 腳本必須清楚說明觀眾應學到什麼、各節拍的順序、教學重點與內容如何逐步推進，而且不得加入上游來源中沒有的新意思。
 完成 `teaching_script.md` 後，派遣獨立的 custom agent `script-reviewer`，依已確認需求與已核准設計審查腳本。
-要求 `script-reviewer` 在審查前閱讀 `confirmed_requirements.md`、已核准的 `animation_design.md`、`teaching_script.md` 與 `references/script-review-checklist.md`。
+要求 `script-reviewer` 在審查前閱讀 `confirmed_requirements.md`、已核准的 `animation_design.md` 與 `teaching_script.md`。
 腳本審查者不得撰寫該腳本。
 
 ### 必要輸出
