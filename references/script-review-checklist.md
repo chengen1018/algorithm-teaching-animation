@@ -10,6 +10,8 @@
 
 `script_review_result.md` 必須由獨立 reviewer 撰寫。script writer 的自我審查無效。
 
+只有當 `script_review_result.md = PASS` 時，`teaching_script.md` 才可供 `VOICEOVER` 與 `RENDER` 使用。若結果為 `FAIL`，必須依 reviewer 指定的修復方向處理，不得繞過問題直接進入下游階段。
+
 ## 審查輸入
 - `confirmed_requirements.md`
 - 已核准的 `animation_design.md`
