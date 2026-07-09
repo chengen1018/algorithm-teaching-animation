@@ -46,11 +46,14 @@ class VisibleItem:
 @dataclass
 class VisibleAuditResult:
     context: str
+    errors: list[str]
     warnings: list[str]
     infos: list[str]
 
     def emit(self) -> None:
         prefix = f"[visible-layout:{self.context}]" if self.context else "[visible-layout]"
+        for message in self.errors:
+            print(f"{prefix} ERROR {message}")
         for message in self.warnings:
             print(f"{prefix} WARNING {message}")
         for message in self.infos:
@@ -66,6 +69,7 @@ def audit_scene_visible_mobjects(
     include_descendants: bool = False,
 ) -> VisibleAuditResult:
     items = collect_visible_items(scene.mobjects, include_descendants=include_descendants)
+    errors: list[str] = []
     warnings: list[str] = []
     infos: list[str] = []
 
@@ -75,13 +79,13 @@ def audit_scene_visible_mobjects(
     for item in items:
         bounds = item.bounds
         if bounds.left < -half_width + frame_margin:
-            warnings.append(f"{item.name}: exceeds left frame ({bounds.format()})")
+            errors.append(f"{item.name}: exceeds left frame ({bounds.format()})")
         if bounds.right > half_width - frame_margin:
-            warnings.append(f"{item.name}: exceeds right frame ({bounds.format()})")
+            errors.append(f"{item.name}: exceeds right frame ({bounds.format()})")
         if bounds.bottom < -half_height + frame_margin:
-            warnings.append(f"{item.name}: exceeds bottom frame ({bounds.format()})")
+            errors.append(f"{item.name}: exceeds bottom frame ({bounds.format()})")
         if bounds.top > half_height - frame_margin:
-            warnings.append(f"{item.name}: exceeds top frame ({bounds.format()})")
+            errors.append(f"{item.name}: exceeds top frame ({bounds.format()})")
 
     for index, first in enumerate(items):
         for second in items[index + 1 :]:
@@ -93,7 +97,7 @@ def audit_scene_visible_mobjects(
             elif relation == "overlap":
                 warnings.append(f"{first.name}: overlaps {second.name} ({first.bounds.format()}; {second.bounds.format()})")
 
-    return VisibleAuditResult(context=context, warnings=warnings, infos=infos)
+    return VisibleAuditResult(context=context, errors=errors, warnings=warnings, infos=infos)
 
 
 def collect_visible_items(mobjects: Iterable[object], include_descendants: bool = False) -> list[VisibleItem]:

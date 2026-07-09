@@ -11,6 +11,7 @@ from types import ModuleType
 
 
 ACTIVE_VISIBLE_AUDITOR = None
+VISIBLE_LEVEL_ORDER = {"error": 3, "warning": 2, "info": 1}
 
 
 def parse_args() -> argparse.Namespace:
@@ -61,13 +62,13 @@ def parse_args() -> argparse.Namespace:
         "--visible-max-reports",
         type=int,
         default=250,
-        help="Maximum number of unique visible-audit messages to print. Warnings still affect exit status.",
+        help="Maximum number of unique visible-audit messages to print. Errors and warnings still affect exit status.",
     )
     parser.add_argument(
         "--visible-report-level",
-        choices=("warning", "info"),
-        default="info",
-        help="Minimum visible-audit report level to print. Use 'warning' to suppress strict-containment info logs.",
+        choices=("error", "warning", "info"),
+        default="warning",
+        help="Minimum visible-audit report level to print. Defaults to warning, which suppresses strict-containment info logs.",
     )
     parser.add_argument(
         "--traceback",
@@ -82,6 +83,7 @@ class VisibleAuditAccumulator:
         self.args = args
         self.scene_class_name = scene_class_name
         self.play_index = 0
+        self.error_count = 0
         self.warning_count = 0
         self.info_count = 0
         self.printed_count = 0
@@ -110,24 +112,28 @@ class VisibleAuditAccumulator:
             include_descendants=self.args.visible_include_descendants,
         )
 
+        for message in result.errors:
+            self._record("ERROR", result.context, message)
         for message in result.warnings:
             self._record("WARNING", result.context, message)
         for message in result.infos:
             self._record("INFO", result.context, message)
 
     def _record(self, level: str, context: str, message: str) -> None:
-        if level == "INFO" and self.args.visible_report_level == "warning":
-            return
-
         key = (level, self._dedupe_signature(message))
         if key in self.seen_messages:
             return
 
         self.seen_messages.add(key)
-        if level == "WARNING":
+        if level == "ERROR":
+            self.error_count += 1
+        elif level == "WARNING":
             self.warning_count += 1
         else:
             self.info_count += 1
+
+        if not self._should_print(level):
+            return
 
         if self.printed_count < self.args.visible_max_reports:
             prefix = f"[visible-layout:{context}]"
@@ -141,6 +147,11 @@ class VisibleAuditAccumulator:
                 f"visible report limit reached ({self.args.visible_max_reports}); suppressing further unique messages"
             )
             self.limit_notice_printed = True
+
+    def _should_print(self, level: str) -> bool:
+        current = VISIBLE_LEVEL_ORDER[level.lower()]
+        minimum = VISIBLE_LEVEL_ORDER[self.args.visible_report_level]
+        return current >= minimum
 
     def _dedupe_signature(self, message: str) -> str:
         if "overlaps" in message:
@@ -300,7 +311,11 @@ def main() -> int:
         return 1
 
     print(f"[layout-runner] completed dry-run for {scene_class.__name__}")
-    if args.fail_on_warning and visible_auditor is not None and visible_auditor.warning_count:
+    if (
+        args.fail_on_warning
+        and visible_auditor is not None
+        and (visible_auditor.error_count or visible_auditor.warning_count)
+    ):
         return 1
     return 0
 

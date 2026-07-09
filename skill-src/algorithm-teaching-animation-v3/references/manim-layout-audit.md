@@ -77,7 +77,7 @@ Prefer a dry-run before rendering video:
 python path/to/skill/scripts/run_manim_layout_audit.py generated_algo_scene.py AlgorithmScene
 ```
 
-The runner imports the scene, patches `Scene.play()` so animations jump to their final state, skips `wait()` and sound playback, and lets layout audit checkpoints print warnings. It still creates Manim mobjects, so text metrics and `arrange()` / `next_to()` geometry are real, but it does not write frames or MP4 output.
+The runner imports the scene, patches `Scene.play()` so animations jump to their final state, skips `wait()` and sound playback, and lets layout audit checkpoints print findings. It still creates Manim mobjects, so text metrics and `arrange()` / `next_to()` geometry are real, but it does not write frames or MP4 output.
 
 Use `--fail-on-warning` for CI-like checks:
 
@@ -99,11 +99,11 @@ python path/to/skill/scripts/run_manim_layout_audit.py generated_algo_scene.py A
 
 This pass scans visible scene mobjects after every patched `Scene.play()` and once again after `construct()`:
 
-- warning if a visible mobject exceeds the frame
+- error if a visible mobject exceeds the frame
 - warning if two visible mobjects partially overlap or fully cover each other
 - info if one mobject is strictly inside another smaller-than-outer bounds without touching the outer boundary
 
-Use this pass as a broad safety net. It is deterministic and does not require hand-written groups, but it can be noisier than a scene adapter because some intentional visual relationships, such as labels inside nodes or highlight boxes around targets, are valid containment. Messages are deduplicated by level and object/bounds text so repeated stable issues do not flood the log.
+Use this pass as a broad safety net. It is deterministic and does not require hand-written groups. By default it prints errors and warnings, while suppressing strict-containment info logs. Messages are deduplicated by level and object/bounds text so repeated stable issues do not flood the log.
 
 Useful controls:
 
@@ -111,10 +111,16 @@ Useful controls:
 # only scan the final construct() state
 python path/to/skill/scripts/run_manim_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible --visible-final-only
 
-# cap printed unique messages; warnings still count for --fail-on-warning
+# cap printed unique messages; errors and warnings still count for --fail-on-warning
 python path/to/skill/scripts/run_manim_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible --visible-max-reports 80
 
-# print only warnings; suppress strict-containment info logs
+# print only errors
+python path/to/skill/scripts/run_manim_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible --visible-report-level error
+
+# include strict-containment info logs
+python path/to/skill/scripts/run_manim_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible --visible-report-level info
+
+# explicit default: print errors and warnings, suppress strict-containment info logs
 python path/to/skill/scripts/run_manim_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible --visible-report-level warning
 ```
 
