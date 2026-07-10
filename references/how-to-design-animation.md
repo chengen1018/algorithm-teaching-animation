@@ -10,9 +10,9 @@
 
 | 演算法類型 | 必讀的專用參考 |
 | --- | --- |
-| Array sorting | `references/animation-design-array-sorting.md` |
-| Graph traversal | `references/animation-design-graph-traversal.md` |
-| 區間或候選區域收縮型 search | `references/animation-design-search.md` |
+| Array sorting | `references/how-to-design-array-sorting-animation.md` |
+| Graph traversal | `references/how-to-design-graph-traversal-animation.md` |
+| 區間或候選區域收縮型 search | `references/how-to-design-narrowing-search-animation.md` |
 | 其他演算法類型 | 無；只使用本指南。 |
 
 不得同時套用多份專用參考。若沒有相符類型，不得自行套用 sorting、traversal 或 interval 的專用語意。
