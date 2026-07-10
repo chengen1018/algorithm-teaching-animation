@@ -4,6 +4,19 @@
 
 `DESIGN_DEVELOPMENT` 的工作是讓主要 Agent 與使用者共同決定演算法要如何被解釋與演示，並持續更新 `animation_design.md`。主要 Agent 負責設計思考與面向使用者的互動，不把這項工作委派給其他 Agent。
 
+## 專用參考選擇
+
+開始前，主要 Agent 必須閱讀 `confirmed_requirements.md` 與本指南，然後依演算法類型讀取下表中唯一一份相符的專用參考：
+
+| 演算法類型 | 必讀的專用參考 |
+| --- | --- |
+| Array sorting | `references/animation-design-array-sorting.md` |
+| Graph traversal | `references/animation-design-graph-traversal.md` |
+| 區間或候選區域收縮型 search | `references/animation-design-search.md` |
+| 其他演算法類型 | 無；只使用本指南。 |
+
+不得同時套用多份專用參考。若沒有相符類型，不得自行套用 sorting、traversal 或 interval 的專用語意。
+
 ## 六個固定 Scene 與文件格式
 
 `animation_design.md` 必須依序設計六個獨立 Manim `Scene`：
