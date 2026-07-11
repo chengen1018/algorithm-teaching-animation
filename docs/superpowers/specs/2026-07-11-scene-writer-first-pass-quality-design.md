@@ -11,7 +11,7 @@
 
 ## 目標
 
-讓 `scene-writer` 僅靠上游文件與 `generated_algo_scene.py` 的靜態推理，就能在首次送檢前主動避免或修正常見的 overflow、collision、遮擋與物件生命週期錯誤。
+讓 `scene-writer` 依上游文件、`generated_algo_scene.py` 的靜態推理，以及 generated file 自有且會實際執行的輕量 layout guards，在首次送檢前主動避免或修正常見的 overflow、collision、遮擋與物件生命週期錯誤。
 
 首次工作流程為：
 
@@ -19,7 +19,8 @@
 2. 先規劃每個 Scene 的 layout，再撰寫動畫程式。
 3. 完成 `generated_algo_scene.py` 後，重新從頭閱讀整支檔案。
 4. 逐 Scene、逐穩定 beat 進行靜態 audit 並自行修正。
-5. 完成後才進入既有 render preflight、layout/collision 檢查與獨立 review。
+5. 對實際定位後的 mobjects 執行 generated-code layout guards，失敗即重排並停止交付。
+6. 完成後才進入既有 render preflight、layout/collision 檢查與獨立 review。
 
 本次不要求 scene writer 在首次送檢前觀看 preview render。
 
@@ -206,7 +207,7 @@ Scene writer 完成 `generated_algo_scene.py` 後，必須重新從頭閱讀完�
 
 ## 不在本次範圍
 
-- 重做既有 frame overflow 或 collision 檢查工具。
+- 重做既有 frame overflow 或 collision 檢查工具，或新增 shared repository linter；本次擴充只由每支 generated file 自有的輕量 guards 負責。
 - 要求首次送檢前觀看 preview render。
 - 修改已核准動畫的教學語意、scene 結構或 beat 順序。
 - 強迫所有演算法使用單一固定視覺模板。
@@ -216,6 +217,7 @@ Scene writer 完成 `generated_algo_scene.py` 後，必須重新從頭閱讀完�
 
 - `manim-guidelines.md` 已依新架構完整重寫，沒有互相衝突或重複的舊規則。
 - `scene-writer.toml` 強制首次 layout planning 與寫後靜態 audit。
+- Fresh behavioral samples 的 raw generated code 會定義或匯入並實際呼叫 guards，涵蓋所有 panel 候選內容、穩定/peak states、最低可讀門檻、safe-frame 與可建構的碰撞/共址狀態；guard failure 會停止交付並觸發重排。
 - 必要時已對 preflight/review 文字做最小一致性調整。
 - 結構驗證全部通過。
 - 行為壓力案例顯示 agent 能在不看 render 的情況下，從程式碼主動辨識代表性的 overflow、collision 與生命週期風險。

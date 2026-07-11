@@ -115,6 +115,44 @@ class SceneWriterGuidanceContractTests(unittest.TestCase):
             with self.subTest(phrase=phrase):
                 self.assertIn(phrase, self.instructions)
 
+    def test_guidelines_require_executable_generated_code_layout_guards(self) -> None:
+        self.assertIn("## Generated-code 輕量 Layout Guards", self.guidelines)
+        section = self.guidelines.split(
+            "## Generated-code 輕量 Layout Guards", 1
+        )[1].split("\n## ", 1)[0]
+        required = (
+            "定義或匯入",
+            "實際呼叫",
+            "所有候選動態替換字串",
+            "每個穩定 beat 與 peak state",
+            "padding",
+            "safe frame",
+            "最低可讀",
+            "碰撞或共址",
+            "停止交付",
+            "重新設計 layout",
+        )
+        for phrase in required:
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, section)
+
+    def test_agent_gates_delivery_on_called_layout_guards(self) -> None:
+        self.assertIn("Generated-code layout guard 交付 gate", self.instructions)
+        section = self.instructions.split("Generated-code layout guard 交付 gate", 1)[1]
+        required = (
+            "定義或匯入",
+            "實際呼叫",
+            "所有候選動態替換字串",
+            "穩定 beat 與 peak state",
+            "最低可讀",
+            "碰撞或共址",
+            "不得交付",
+            "重新設計 layout",
+        )
+        for phrase in required:
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, section)
+
     def test_guidelines_do_not_own_review_process(self) -> None:
         forbidden = (
             "Delta Review",

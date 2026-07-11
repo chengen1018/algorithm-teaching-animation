@@ -121,6 +121,19 @@ Overlays 關閉時不預留只供 overlay 使用的空間；啟用時放在 layo
 - 規劃 node labels、frontier、pointer/highlight 同時出現的 peak state；helper 共址不得遮住 node label。
 - 只有 traversal order 是教學重點時才加入 neighbor-order cues。
 
+## Generated-code 輕量 Layout Guards
+
+每支 `generated_algo_scene.py` 必須自行定義或匯入輕量 layout guards，並在實際建立、完成該檢查狀態的最終定位後實際呼叫；helper 只有定義、註解說明、固定大框或人工目測都不算完成。這些 guards 是 generated file 的交付契約，不取代 repository 既有 checker，也不要求共用 helper、固定函式簽名或單一視覺模板。
+
+Guard calls 至少必須覆蓋：
+
+- 每張 card/panel 的實際文字或公式 mobject bounds 對扣除 padding 的內部 bounds，並逐一建構及檢查所有候選動態替換字串。
+- 每個穩定 beat 與 peak state 可靜態建構的所有必要物件實際 bounds 對 safe frame；不能只呼叫在開場或稀疏狀態。
+- fitting 的最低可讀字級或等價的命名 scale 門檻；只能縮放到該最低可讀門檻，仍不合格就 raise/fail。
+- 可靜態建構之穩定狀態中，獨立定位的必要 labels、pointers 或 markers 的碰撞或共址檢查。
+
+所有 guard 都要在 rendering/handoff 前執行。任一 guard 失敗必須停止交付，先重新設計 layout、重新建立受影響狀態並再次執行；不得把失敗降為 warning 或留給既有 checker 首次發現。
+
 ## 寫完 Python 後：強制靜態 Audit
 
 完成 `generated_algo_scene.py` 後，必須重新從頭閱讀完整檔案，為每個 Scene 建立物件狀態時間線。對每個穩定 beat 至少回答：
@@ -149,3 +162,4 @@ Overlays 關閉時不預留只供 overlay 使用的空間；啟用時放在 layo
 - 每個 helper 的首次出現、持續、更新、Transform 前後狀態及移除時點已複查。
 - 所有 positioning chains 已按群組最終尺寸複查，沒有依賴未驗證的 magic shifts。
 - 上游語意、voiceover/overlay coding constraints、visual continuity 與 final cleanup 均保持可追溯。
+- Generated file 已定義或匯入並實際呼叫上述 layout guards，且所有 dynamic 與 peak-state calls 均通過。

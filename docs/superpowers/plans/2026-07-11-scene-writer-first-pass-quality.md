@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 重構 Manim 實作指南並強制 scene writer 在首次送檢前完成 layout planning、完整程式重讀與逐 beat 靜態 audit，以降低 overflow、collision、遮擋和生命週期錯誤。
+**Goal:** 重構 Manim 實作指南並強制 scene writer 在首次送檢前完成 layout planning、完整程式重讀、逐 beat 靜態 audit 與 generated-code 輕量 layout guards，以降低 overflow、collision、遮擋和生命週期錯誤。
 
 **Architecture:** `references/manim-guidelines.md` 是 Manim coding knowledge 與首次靜態驗證的唯一權威來源；`.codex/agents/scene-writer.toml` 只強制 plan → implement → reread → audit → fix → handoff 的流程，不複製指南細節。既有 render/preflight/reviewer 工具維持最後防線，除非實作時發現明確責任衝突，否則不修改。
 
@@ -346,9 +346,11 @@ PASS  能指出 peak state，不只檢查開場畫面
 PASS  能追蹤 Transform/FadeOut 後仍存在的 objects
 PASS  沒有以連續 magic shifts 取代 layout strategy
 PASS  沒有強迫所有畫面套用單一模板
+PASS  raw generated code 定義或匯入並實際呼叫 guards，涵蓋 panel 所有候選內容與穩定/peak states
+PASS  guards 以命名最低可讀門檻、safe-frame bounds 與可建構碰撞/共址為 gate，失敗會停止交付並重排
 ```
 
-Expected: 每個新版指南樣本七項全 PASS；若某項 FAIL，保留 agent 的原始理由作為 loophole evidence。
+Expected: 每個新版指南樣本九項全 PASS；其中 guard 定義而未呼叫、只檢查稀疏狀態、固定大框或 prose rationale 一律 FAIL。若某項 FAIL，保留 agent 的原始理由作為 loophole evidence；最多執行兩個 fresh behavioral waves，不弱化 rubric。
 
 - [ ] **Step 2: 只針對實際 loophole 做最小修訂**
 
