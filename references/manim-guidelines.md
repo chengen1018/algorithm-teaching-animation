@@ -1,6 +1,6 @@
 # Manim 實作與首次靜態驗證指南
 
-本指南定義 `generated_algo_scene.py` 的實作與首次送檢前可由程式碼證明的安全條件。它不取代既有 render preflight 或獨立審查。
+本指南定義 `generated_algo_scene.py` 的實作方法與首次送檢前的靜態推理。它以 construction patterns 降低第一版 layout 失誤機率，不取代既有 render preflight、layout checker 或獨立審查。
 
 ## 實作責任與不可改變事項
 
@@ -21,7 +21,7 @@ Scene layer 負責 layout execution、styling、timing、beat staging，以及 a
 - **peak state**：同時物件最多、文字最長、pointer 最密集或最容易越界的穩定 beat。
 - **collision policy**：空間不足時要採縮放、換區、上下分流、合併標籤或合法分階段顯示中的哪一種策略。
 
-先排 peak state，再讓較簡單的 beats 沿用同一空間骨架。不得先排稀疏開場，再用連續 `shift()` 把後續資訊塞入殘餘空間。layout plan 不要求額外文件，但必須反映在 layout constants、zones、builders、groups 與 helper interfaces，使程式本身可稽核。
+layout plan 不要求額外文件，但必須反映在 layout constants、zones、builders、groups 與 helper interfaces，使程式本身可稽核。建立順序採用下方 **Peak-first scene skeleton** 與 **Stable-zone composition**。
 
 ## Manim Frame、座標與尺寸推理
 
@@ -51,11 +51,7 @@ Manim frame 的水平範圍是 `[-config.frame_x_radius, config.frame_x_radius]`
 
 ## 文字、卡片、公式與 Panel 容量
 
-Panel 必須依所有穩定 beats 中的最長內容設計，而不是依第一段或最短內容設計。動態文字使用固定 anchor 與明確最大寬度；替換後重新檢查文字、padding、panel border 與 safe frame。卡片、公式與主結構組合後才算 fit。
-
-Panel 的靜態 fit 證明必須比較定位後的實際 mobject bounds 與扣除 padding 的容器 bounds；若採自動縮放，還要設定最低可讀字級或等價的 scale 下限，超過下限時改用換行、擴大容器或移至其他 zone。單純指定固定大框或目測「應該夠寬」不能算容量證明。
-
-這項證明必須落在 scene code 的可執行的條件比較中：先建立最長候選文字，再比較它的四邊界或 width/height 與可用內容區；不合格時調整 layout，若仍無法在可讀下限內 fit 就拒絕交付。註解或末尾風險說明不能取代這個檢查。
+Panel 的容量決策必須涵蓋所有穩定 beats 的內容，動態文字使用固定 anchor 與明確最大寬度；具體建立方式見 **Content-first containers**。替換後仍要推理文字、padding、panel border、主結構與 safe frame 的組合。
 
 長內容優先縮短措辭、合理換行、增加 panel 容量或移至專屬 zone，不能靠縮到不可讀來處理過載。結構差異大的多行文字不用 morph-style transform，改用直接 replacement、短 fade swap 或穩定 panel sections；單字元 labels、row/column headers 不得被實心 highlight 遮住，應使用顏色、底線、相鄰 marker 或可讀的 outline treatment。
 
@@ -63,9 +59,7 @@ Panel 的靜態 fit 證明必須比較定位後的實際 mobject bounds 與扣�
 
 ## Pointer、Label 與共址衝突
 
-每次 pointer 移動前，必須檢查目的 index 的現有或已存在 pointers，而不只計算自身目的位置。固定 anchor 加固定 `label_shift` 在共址時不是安全策略。
-
-多個 pointers 共址時，依 layout plan 使用垂直分層並維持一致間距、上下分流、共享 marker 加 legend、語意等價合併，或在不隱藏 script 要求之同時狀態的前提下分階段顯示。例如語意允許時可顯示 `left = mid = right = 5`，而非把三個 labels 疊在 index 5。
+每次 pointer 移動前，必須檢查目的 index 的現有或已存在 pointers，而不只計算自身目的位置。共址策略與 builder 方式見 **State-first pointer layout**；語意允許時可顯示 `left = mid = right = 5`。
 
 Pointer 的起點與終點都要可辨，label 使用實際演算法名稱並維持一致空間語意。目的地改變後，重新檢查 arrows、labels、cell contents、相鄰 pointers 與 panel 是否共同 fit，而不是只檢查 marker center。
 
@@ -75,9 +69,97 @@ Pointer 的起點與終點都要可辨，label 使用實際演算法名稱並維
 
 靜態推理必須區分物件是仍在 `scene.mobjects`、只是透明、被其他物件遮擋，或真正移除。尚不該存在的物件應延後建立/加入；已加入的透明物件必須有明確且可驗證的 reveal path。不要假設 `FadeIn` 必然修復既存透明物件。
 
-`Transform()` 可能改變既有 reference 的幾何與語意，但不會自動清除其他 references 或 helpers；逐一確認 source、target、labels、arrows 與鄰接物件的後續所有權。需要替換所有權時明確使用適當的 `ReplacementTransform`，需要結束生命週期時使用 `FadeOut`、`remove()` 或集中 cleanup。
+`Transform()` 可能改變既有 reference 的幾何與語意，但不會自動清除其他 references 或 helpers；需要替換所有權時依 **Current-object replacement ownership** 維持 current reference，需要結束生命週期時使用 `FadeOut`、`remove()` 或集中 cleanup。Helper 的建立時機見 **Phase-owned helper construction**。
 
 Intro 不得洩漏 future-iteration、traceback 或 finalization helpers；fill/update helpers 不得無理由殘留到 reconstruction/final result。最後畫面要移除、淡化或安靜化過期 labels、helper marks、暫時公式與中介指示，只保留最終結果及 script 核准且仍具教學價值的脈絡。
+
+## Construction Patterns：以構造降低失敗機率
+
+以下 patterns 是建立 Scene 的方式，不是固定視覺模板。依演算法選擇 zones、形狀與風格，但讓容量、共址和生命週期在建立物件時就被一起考慮。
+
+### Peak-first scene skeleton
+
+先找出資訊最密、文字最長、pointer 最集中的穩定狀態，為它的完整內容預留 zones，再實作較簡單 beats。較簡單狀態沿用骨架，不從稀疏開場向外追加物件。
+
+### Group-first zone fitting
+
+先完成一個 zone 的完整 semantic group（例如 array、indices、pointers 與該區 labels），再用 `arrange()`、`scale_to_fit_width()` 和 `move_to()` 把 group 當整體放進 zone。不要以連續 `next_to()`／`shift()` 從 anchor 向外生長，因為後加入的元素沒有被納入前面的空間決策。
+
+### Content-first containers
+
+先建立所有候選動態文字或公式，決定最大可讀 line plan，再由最大候選推導 card/panel 尺寸。候選可以先建構供規劃，但只有 current candidate 加入 Scene。
+
+Bad：第一個短字串決定固定框，後續才向內塞。
+
+```python
+body = Text(messages[0], font_size=28)
+panel = RoundedRectangle(width=body.width + 0.5, height=1.0)
+```
+
+Good：先為所有候選決定可讀的分行版本，用固定字級建構，container 再取最大尺寸。
+
+```python
+line_plans = [
+    "搜尋中",
+    "目標較大\n移動左界",
+    "left = mid = right\n只剩一個候選",
+]
+candidates = [Text(text, font_size=28) for text in line_plans]
+max_width = max(item.width for item in candidates)
+max_height = max(item.height for item in candidates)
+panel = RoundedRectangle(width=max_width + 0.6, height=max_height + 0.4)
+current_body = candidates[0].move_to(panel)
+```
+
+若最大候選仍超出預留 zone，回頭調整 wording、line plan、zone allocation 或 staging；不要以無下限縮放補救。
+
+### State-first pointer layout
+
+把當下所有 active pointer roles 與 destinations 一次傳給同一 builder／placement decision，再建立完整 pointer groups。builder 先按 destination 分組；共享 index 時選 lanes、上下兩側、共享 marker 加 legend，或在語意等價時合併，而不是各 label 獨立定位後才修補。
+
+Bad：每個 pointer 各自使用相同偏移。
+
+```python
+pointers = [make_pointer(role, cells[index], DOWN) for role, index in state.items()]
+```
+
+Good：完整 state 共同決定 lane 與方向。
+
+```python
+def build_pointers(state, cells):
+    by_index = group_roles_by_destination(state)
+    return VGroup(*(make_pointer_group(roles, cells[index])
+                    for index, roles in by_index.items()))
+
+pointer_group = build_pointers({"left": left, "mid": mid, "right": right}, cells)
+```
+
+### Current-object replacement ownership
+
+對可替換文字或 helper group 保留恰好一個 current reference。`ReplacementTransform` 後立即重新綁定；規劃用 future candidates 不提早加入 Scene。
+
+Bad：動畫完成後仍把舊 reference 當作 current。
+
+```python
+self.play(ReplacementTransform(current_body, next_body))
+self.play(current_body.animate.set_color(YELLOW))
+```
+
+Good：replacement 後 ownership 與 Scene 中的物件一致。
+
+```python
+next_body.move_to(panel)
+self.play(ReplacementTransform(current_body, next_body))
+current_body = next_body
+```
+
+### Phase-owned helper construction
+
+Helper 在擁有它的 beat／phase 才建立，或由 builder 只回傳 current phase set。不要預先加入 future helpers 再藏起來；只有確實需要且已有明確 reveal path 時才保留隱藏物件。
+
+### Stable-zone composition
+
+title、status、primary、transient regions 在相鄰 beats 維持穩定意思。空間不足時調整 zone allocation、grouping、wording 或 staging；不要累積 magic shifts，讓同一位置在不同 beat 無故改變語意。
 
 ## Beat Staging 與教學呈現
 
@@ -121,20 +203,6 @@ Overlays 關閉時不預留只供 overlay 使用的空間；啟用時放在 layo
 - 規劃 node labels、frontier、pointer/highlight 同時出現的 peak state；helper 共址不得遮住 node label。
 - 只有 traversal order 是教學重點時才加入 neighbor-order cues。
 
-## Generated-code 輕量 Layout Guards
-
-每支 `generated_algo_scene.py` 必須自行定義或匯入輕量 layout guards，並在實際建立、完成該檢查狀態的最終定位後實際呼叫；helper 只有定義、註解說明、固定大框或人工目測都不算完成。這些 guards 是 generated file 的交付契約，不取代 repository 既有 checker，也不要求共用 helper、固定函式簽名或單一視覺模板。
-
-Guard calls 至少必須覆蓋：
-
-- 每張 card/panel 的實際文字或公式 mobject bounds 對扣除 padding 的內部 bounds，必須逐邊比較 positioned `left/right/top/bottom`，並逐一建構及檢查所有候選動態替換字串；只比較 width/height 不足以證明 containment。
-- 每個可建構的穩定 beat 與 peak state 都要組成當下的完整 required visible set（包含 title、cards/panels、dynamic texts、主結構與 helpers），而且必須是該 beat 的 exact actual visible set；不得把已被替換的舊 body 與新 candidate 同時塞入驗證群組。再以實際 bounds 對 safe frame；不能只檢查部分群組、開場或稀疏狀態。
-- fitting 的最低可讀字級或等價的命名 scale 門檻；只能縮放到該最低可讀門檻，仍不合格就 raise/fail。
-- 可靜態建構之每個穩定/peak state 中，獨立定位的 labels、arrows 與 pointer groups 必須以完整 pointer geometry 做 pairwise collision/clearance checks，不能只比較 labels。若 arrows 指向同一 cell 等語意共址是有意允許的，guard 必須以明確 permitted relation 或 clearance policy 驗證允許範圍，同時拒絕其他重疊。
-- 每個 stable/peak state 也必須呼叫 cross-zone collision checks，至少涵蓋 pointers/labels 與當下 cards、panels、dynamic texts、主結構等獨立定位的 required objects；整體 group 在 safe frame 內不能取代物件間 collision calls。
-
-所有 guard 都要在 rendering/handoff 前執行。任一 guard 失敗必須停止交付，先重新設計 layout、重新建立受影響狀態並再次執行；不得把失敗降為 warning 或留給既有 checker 首次發現。
-
 ## 寫完 Python 後：強制靜態 Audit
 
 完成 `generated_algo_scene.py` 後，必須重新從頭閱讀完整檔案，為每個 Scene 建立物件狀態時間線。對每個穩定 beat 至少回答：
@@ -163,4 +231,3 @@ Guard calls 至少必須覆蓋：
 - 每個 helper 的首次出現、持續、更新、Transform 前後狀態及移除時點已複查。
 - 所有 positioning chains 已按群組最終尺寸複查，沒有依賴未驗證的 magic shifts。
 - 上游語意、voiceover/overlay coding constraints、visual continuity 與 final cleanup 均保持可追溯。
-- Generated file 已定義或匯入並實際呼叫上述 layout guards，且所有 dynamic 與 peak-state calls 均通過。

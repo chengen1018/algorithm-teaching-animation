@@ -9,6 +9,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 GUIDELINES = ROOT / "references" / "manim-guidelines.md"
 SCENE_WRITER = ROOT / ".codex" / "agents" / "scene-writer.toml"
+DESIGN = ROOT / "docs" / "superpowers" / "specs" / "2026-07-11-scene-writer-first-pass-quality-design.md"
+PLAN = ROOT / "docs" / "superpowers" / "plans" / "2026-07-11-scene-writer-first-pass-quality.md"
 
 
 class SceneWriterGuidanceContractTests(unittest.TestCase):
@@ -17,6 +19,8 @@ class SceneWriterGuidanceContractTests(unittest.TestCase):
         cls.guidelines = GUIDELINES.read_text(encoding="utf-8")
         cls.agent = tomllib.loads(SCENE_WRITER.read_text(encoding="utf-8"))
         cls.instructions = cls.agent["developer_instructions"]
+        cls.design = DESIGN.read_text(encoding="utf-8")
+        cls.plan = PLAN.read_text(encoding="utf-8")
 
     def test_agent_toml_has_required_fields(self) -> None:
         self.assertEqual(self.agent["name"], "scene-writer")
@@ -32,6 +36,7 @@ class SceneWriterGuidanceContractTests(unittest.TestCase):
             "## 文字、卡片、公式與 Panel 容量",
             "## Pointer、Label 與共址衝突",
             "## Phase Ownership、Transform 與物件生命週期",
+            "## Construction Patterns：以構造降低失敗機率",
             "## Beat Staging 與教學呈現",
             "## 寫完 Python 後：強制靜態 Audit",
             "## 送交既有檢查流程前的完成條件",
@@ -60,18 +65,6 @@ class SceneWriterGuidanceContractTests(unittest.TestCase):
             re.compile(r"pointer.*目的.*(?:已存在|現有).*pointer", re.IGNORECASE | re.DOTALL),
         )
         self.assertIn("left = mid = right = 5", self.guidelines)
-
-    def test_guidelines_require_provable_panel_capacity(self) -> None:
-        for phrase in (
-            "實際 mobject bounds",
-            "容器 bounds",
-            "最低可讀字級",
-            "固定大框或目測",
-            "可執行的條件比較",
-            "拒絕交付",
-        ):
-            with self.subTest(phrase=phrase):
-                self.assertIn(phrase, self.guidelines)
 
     def test_guidelines_require_full_static_audit(self) -> None:
         for phrase in (
@@ -104,61 +97,68 @@ class SceneWriterGuidanceContractTests(unittest.TestCase):
         positions = [self.instructions.index(phrase) for phrase in ordered_phrases]
         self.assertEqual(positions, sorted(positions))
 
-    def test_agent_requires_panel_capacity_evidence(self) -> None:
-        for phrase in (
-            "實際 mobject bounds",
-            "容器 bounds",
-            "最低可讀字級",
-            "可執行的 bounds check",
-            "不得交付",
+    def test_construction_patterns_cover_known_failure_modes(self) -> None:
+        heading = "## Construction Patterns：以構造降低失敗機率"
+        self.assertIn(heading, self.guidelines)
+        section = self.guidelines.partition(heading)[2].split("\n## ", 1)[0]
+        required = (
+            "### Peak-first scene skeleton",
+            "### Group-first zone fitting",
+            "### Content-first containers",
+            "### State-first pointer layout",
+            "### Current-object replacement ownership",
+            "### Phase-owned helper construction",
+            "### Stable-zone composition",
+            "所有候選",
+            "active pointer roles",
+            "立即重新綁定",
+        )
+        for phrase in required:
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, section)
+
+    def test_construction_examples_teach_creation_not_checkers(self) -> None:
+        heading = "## Construction Patterns：以構造降低失敗機率"
+        self.assertIn(heading, self.guidelines)
+        section = self.guidelines.partition(heading)[2].split("\n## ", 1)[0]
+        subsections = (
+            "### Content-first containers",
+            "### State-first pointer layout",
+            "### Current-object replacement ownership",
+        )
+        for subsection_heading in subsections:
+            with self.subTest(subsection=subsection_heading):
+                subsection = section.partition(subsection_heading)[2].split("\n### ", 1)[0]
+                self.assertIn("Bad", subsection)
+                self.assertIn("Good", subsection)
+        for forbidden in ("assert ", "layout guard", "audit schema"):
+            with self.subTest(forbidden=forbidden):
+                self.assertNotIn(forbidden, section.lower())
+
+    def test_content_first_example_preserves_readable_line_plan(self) -> None:
+        heading = "### Content-first containers"
+        subsection = self.guidelines.partition(heading)[2].split("\n### ", 1)[0]
+        self.assertIn("line_plans", subsection)
+        self.assertNotIn("scale_to_fit_width", subsection)
+
+    def test_agent_delegates_pattern_detail_to_guide(self) -> None:
+        self.assertIn("construction patterns", self.instructions.lower())
+        self.assertIn("references/manim-guidelines.md", self.instructions)
+        for detail in ("Content-first containers", "State-first pointer layout", "Current-object replacement ownership"):
+            with self.subTest(detail=detail):
+                self.assertNotIn(detail, self.instructions)
+
+    def test_guidance_does_not_require_generated_guard_artifacts(self) -> None:
+        combined = self.guidelines + self.instructions + self.design + self.plan
+        for forbidden in (
+            "## Generated-code 輕量 Layout Guards",
+            "Generated-code layout guard 交付 gate",
+            "每支 `generated_algo_scene.py` 必須定義或匯入",
+            "raw generated code 定義或匯入並實際呼叫 guards",
+            "canonical audit interface",
         ):
-            with self.subTest(phrase=phrase):
-                self.assertIn(phrase, self.instructions)
-
-    def test_guidelines_require_executable_generated_code_layout_guards(self) -> None:
-        self.assertIn("## Generated-code 輕量 Layout Guards", self.guidelines)
-        section = self.guidelines.split(
-            "## Generated-code 輕量 Layout Guards", 1
-        )[1].split("\n## ", 1)[0]
-        required = (
-            "定義或匯入",
-            "實際呼叫",
-            "所有候選動態替換字串",
-            "每個可建構的穩定 beat 與 peak state",
-            "padding",
-            "left/right/top/bottom",
-            "safe frame",
-            "完整 required visible set",
-            "exact actual visible set",
-            "最低可讀",
-            "pairwise collision/clearance",
-            "完整 pointer geometry",
-            "permitted relation",
-            "cross-zone collision",
-            "停止交付",
-            "重新設計 layout",
-        )
-        for phrase in required:
-            with self.subTest(phrase=phrase):
-                self.assertIn(phrase, section)
-
-    def test_agent_gates_delivery_on_called_layout_guards(self) -> None:
-        self.assertIn("Generated-code layout guard 交付 gate", self.instructions)
-        section = self.instructions.split(
-            "### Generated-code layout guard 交付 gate", 1
-        )[1].split("\n## ", 1)[0]
-        required = (
-            "references/manim-guidelines.md",
-            "定義或匯入",
-            "實際呼叫",
-            "所有候選動態替換字串",
-            "穩定 beat 與 peak state",
-            "不得交付",
-            "重新設計 layout",
-        )
-        for phrase in required:
-            with self.subTest(phrase=phrase):
-                self.assertIn(phrase, section)
+            with self.subTest(forbidden=forbidden):
+                self.assertNotIn(forbidden, combined)
 
     def test_guidelines_do_not_own_review_process(self) -> None:
         forbidden = (

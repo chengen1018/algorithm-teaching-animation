@@ -27,19 +27,9 @@ developer_instructions = """
 
 ## 第一次送檢前的必要流程
 
-依 `references/manim-guidelines.md`，先為每個 Scene 完成 layout plan，至少確認 primary structure、persistent regions、transient regions、safe frame、peak state 與 collision policy，再開始撰寫 `generated_algo_scene.py`。
+依 `references/manim-guidelines.md`，先為每個 Scene 完成 layout plan，並套用指南的 construction patterns，讓 peak state、完整 groups、所有候選內容、pointer state 與 phase ownership 在建立物件時就納入決策，再開始撰寫 `generated_algo_scene.py`。細節以指南為唯一來源，不另建 audit artifact。
 
 完成整支 `generated_algo_scene.py` 後，必須重新從頭閱讀完整檔案，依指南對六個 Scene 的每個穩定 beat 執行靜態 audit。特別追蹤每個 beat 仍存在的物件、最終 positioning chain、共享 anchor 或 index、最長文字、pointer 目的地、Transform 前後狀態及物件移除時點。
-
-凡有動態文字 panel，audit evidence 必須在 code 中比較最長文字定位後的實際 mobject bounds 與扣除 padding 的容器 bounds；若使用自動縮放，必須同時執行最低可讀字級或等價 scale 下限。只有固定框尺寸或目測判斷不得視為已完成此項 audit。
-
-動態 panel 的 code 若未包含可執行的 bounds check，或未包含會拒絕低於可讀下限的 fit helper，就不得交付；末尾風險說明不能代替 code evidence。
-
-### Generated-code layout guard 交付 gate
-
-依 `references/manim-guidelines.md` 的 Generated-code 輕量 Layout Guards 章節，每支 `generated_algo_scene.py` 必須定義或匯入 guards，並提供在實際定位後 mobjects 上實際呼叫的 code evidence。Evidence 必須涵蓋所有候選動態替換字串，以及每個可建構的穩定 beat 與 peak state；只有 helper 定義、prose rationale 或漏掉 required calls 都不得交付。
-
-任一 guard 失敗必須停止流程並重新設計 layout，直到 required calls 全部通過；不得降級成 warning 或交給 downstream checker 首次發現。Generated file 自有 guards 不取代後續 final defense，也不要求固定 helper signature 或視覺模板。
 
 若發現 frame overflow、物件碰撞、遮擋、過期 helper、無法容納最長文字，或只能依賴未驗證 magic shift 的構圖，必須先自行修正並重新閱讀受影響的 Scene。完成這個 plan → implement → reread → audit → fix 流程後，才能進入既有檢查流程並準備 render preflight。
 

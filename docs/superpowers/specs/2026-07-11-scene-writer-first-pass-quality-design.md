@@ -11,7 +11,7 @@
 
 ## 目標
 
-讓 `scene-writer` 依上游文件、`generated_algo_scene.py` 的靜態推理，以及 generated file 自有且會實際執行的輕量 layout guards，在首次送檢前主動避免或修正常見的 overflow、collision、遮擋與物件生命週期錯誤。
+讓 `scene-writer` 依上游文件、construction patterns 與 `generated_algo_scene.py` 的靜態推理，在首次送檢前降低 overflow、collision、遮擋與物件生命週期錯誤的出現頻率。
 
 首次工作流程為：
 
@@ -19,8 +19,8 @@
 2. 先規劃每個 Scene 的 layout，再撰寫動畫程式。
 3. 完成 `generated_algo_scene.py` 後，重新從頭閱讀整支檔案。
 4. 逐 Scene、逐穩定 beat 進行靜態 audit 並自行修正。
-5. 對實際定位後的 mobjects 執行 generated-code layout guards，失敗即重排並停止交付。
-6. 完成後才進入既有 render preflight、layout/collision 檢查與獨立 review。
+5. 發現明顯風險時調整構造並重讀受影響 Scene。
+6. 完成後才進入既有 render preflight、layout/collision 檢查與獨立 review；既有 checker 保持最後防線。
 
 本次不要求 scene writer 在首次送檢前觀看 preview render。
 
@@ -40,6 +40,7 @@
 - Manim frame、座標、尺寸與 positioning API 的推理方式。
 - Layout zones、安全邊界、文字容量與物件衝突策略。
 - Pointer 共址、Transform、phase ownership 與物件生命週期。
+- 不綁定單一視覺模板的 construction patterns。
 - Beat staging 與高品質教學動畫原則。
 - 常見演算法視覺結構模式。
 - 寫完 `generated_algo_scene.py` 後的強制靜態 audit。
@@ -84,10 +85,15 @@ TOML 不複製 Manim 指南的詳細規則。
 6. 文字、卡片、公式與 panel 容量。
 7. Pointer、label 與共址衝突策略。
 8. Phase ownership、Transform 與物件生命週期。
-9. Beat staging 與教學呈現原則。
-10. 演算法常見結構模式。
-11. 寫完 Python 後的強制靜態 audit。
-12. 送交既有檢查流程前的完成條件。
+9. Construction patterns。
+10. Beat staging 與教學呈現原則。
+11. 演算法常見結構模式。
+12. 寫完 Python 後的強制靜態 audit。
+13. 送交既有檢查流程前的完成條件。
+
+## Construction Patterns
+
+指南將既有 layout、panel、pointer 與 lifecycle 知識整合成七個正向構造模式：peak-first scene skeleton、group-first zone fitting、content-first containers、state-first pointer layout、current-object replacement ownership、phase-owned helper construction、stable-zone composition。至少為 content-first containers、state-first pointers 與 current-object replacement 提供 concise good/bad Manim code；examples 只教物件如何建立與擁有，不導入 assertions、audit schema 或 checker interface。
 
 ## 寫 code 前的 Layout Planning
 
@@ -178,7 +184,7 @@ Scene writer 完成 `generated_algo_scene.py` 後，必須重新從頭閱讀完�
 9. 動態文字替換後，最長內容是否仍位於 panel 與 safe frame 內？
 10. 個別合法的 objects 組合後是否可能越界或碰撞？
 
-發現高風險定位或無法從程式證明安全時，scene writer 必須先修改 layout，再進入既有檢查流程；不能把已知疑點留給 reviewer 首次發現。
+發現高風險定位或明顯無法容納的狀態時，scene writer 必須先修改 layout，再進入既有檢查流程；靜態推理降低首次錯誤，但不宣稱零缺陷或取代 checker。
 
 ## 驗證策略
 
@@ -201,13 +207,13 @@ Scene writer 完成 `generated_algo_scene.py` 後，必須重新從頭閱讀完�
 5. 多個物件分別 `to_edge()`，個別合法但組合後碰撞。
 6. 早期 beat 稀疏、後期 peak state 過載。
 
-評估重點為 agent 是否會主動辨識 peak state、避開高風險定位、提出 zone 或衝突策略，並在重讀 code 時找出潛在 overflow、collision 與生命週期問題。驗證不得把預期修正答案洩漏給受測 agent。
+評估重點為 fresh samples 是否實際採用 construction-first decisions：從 peak state 保留 zones、把完整 semantic groups 一起 fitting、以所有候選內容決定 containers、共同規劃 active pointers，並維持 current references 與 phase ownership。程式碼與末尾 rationale 足以評估，不要求 render 或 generated assertions；驗證不得把預期修正答案洩漏給受測 agent。
 
 若 agent 仍依賴大量 magic shifts，收緊不變條件與 audit 問題；若所有輸出變得模板化，則保留安全不變條件並放寬可接受的實作模式。
 
 ## 不在本次範圍
 
-- 重做既有 frame overflow 或 collision 檢查工具，或新增 shared repository linter；本次擴充只由每支 generated file 自有的輕量 guards 負責。
+- 重做既有 frame overflow 或 collision 檢查工具，新增 checker，或要求 generated file 定義 assertions、audit interface/schema。
 - 要求首次送檢前觀看 preview render。
 - 修改已核准動畫的教學語意、scene 結構或 beat 順序。
 - 強迫所有演算法使用單一固定視覺模板。
@@ -217,7 +223,7 @@ Scene writer 完成 `generated_algo_scene.py` 後，必須重新從頭閱讀完�
 
 - `manim-guidelines.md` 已依新架構完整重寫，沒有互相衝突或重複的舊規則。
 - `scene-writer.toml` 強制首次 layout planning 與寫後靜態 audit。
-- Fresh behavioral samples 的 raw generated code 會定義或匯入並實際呼叫 guards：panel 以 positioned 四邊對 padded inner bounds；每個 stable/peak 使用 exact actual required visible set 對 safe frame並執行 cross-zone collisions；完整 pointer geometry 具 pairwise checks 或明確 permitted co-location relation；並涵蓋所有候選內容與最低可讀門檻。Guard failure 會停止交付並觸發重排。
+- Fresh behavioral samples 能展示 construction patterns 對已知 overflow、pointer 共址與 lifecycle 風險的改善；這是降低 first-pass error frequency 的現實驗收標準，不要求每個樣本零缺陷。
 - 必要時已對 preflight/review 文字做最小一致性調整。
 - 結構驗證全部通過。
 - 行為壓力案例顯示 agent 能在不看 render 的情況下，從程式碼主動辨識代表性的 overflow、collision 與生命週期風險。
