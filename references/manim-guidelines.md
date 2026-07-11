@@ -53,6 +53,10 @@ Manim frame 的水平範圍是 `[-config.frame_x_radius, config.frame_x_radius]`
 
 Panel 必須依所有穩定 beats 中的最長內容設計，而不是依第一段或最短內容設計。動態文字使用固定 anchor 與明確最大寬度；替換後重新檢查文字、padding、panel border 與 safe frame。卡片、公式與主結構組合後才算 fit。
 
+Panel 的靜態 fit 證明必須比較定位後的實際 mobject bounds 與扣除 padding 的容器 bounds；若採自動縮放，還要設定最低可讀字級或等價的 scale 下限，超過下限時改用換行、擴大容器或移至其他 zone。單純指定固定大框或目測「應該夠寬」不能算容量證明。
+
+這項證明必須落在 scene code 的可執行的條件比較中：先建立最長候選文字，再比較它的四邊界或 width/height 與可用內容區；不合格時調整 layout，若仍無法在可讀下限內 fit 就拒絕交付。註解或末尾風險說明不能取代這個檢查。
+
 長內容優先縮短措辭、合理換行、增加 panel 容量或移至專屬 zone，不能靠縮到不可讀來處理過載。結構差異大的多行文字不用 morph-style transform，改用直接 replacement、短 fade swap 或穩定 panel sections；單字元 labels、row/column headers 不得被實心 highlight 遮住，應使用顏色、底線、相鄰 marker 或可讀的 outline treatment。
 
 畫面文字應說明當前規則或觀察，而非逐字重複旁白。穩定 beat 的文字必須可讀，不能以過渡中的短暫狀態當作清晰度依據。

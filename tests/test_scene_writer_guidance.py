@@ -61,6 +61,18 @@ class SceneWriterGuidanceContractTests(unittest.TestCase):
         )
         self.assertIn("left = mid = right = 5", self.guidelines)
 
+    def test_guidelines_require_provable_panel_capacity(self) -> None:
+        for phrase in (
+            "實際 mobject bounds",
+            "容器 bounds",
+            "最低可讀字級",
+            "固定大框或目測",
+            "可執行的條件比較",
+            "拒絕交付",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, self.guidelines)
+
     def test_guidelines_require_full_static_audit(self) -> None:
         for phrase in (
             "重新從頭閱讀",
@@ -91,6 +103,17 @@ class SceneWriterGuidanceContractTests(unittest.TestCase):
             return
         positions = [self.instructions.index(phrase) for phrase in ordered_phrases]
         self.assertEqual(positions, sorted(positions))
+
+    def test_agent_requires_panel_capacity_evidence(self) -> None:
+        for phrase in (
+            "實際 mobject bounds",
+            "容器 bounds",
+            "最低可讀字級",
+            "可執行的 bounds check",
+            "不得交付",
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, self.instructions)
 
     def test_guidelines_do_not_own_review_process(self) -> None:
         forbidden = (
