@@ -124,11 +124,17 @@ class SceneWriterGuidanceContractTests(unittest.TestCase):
             "定義或匯入",
             "實際呼叫",
             "所有候選動態替換字串",
-            "每個穩定 beat 與 peak state",
+            "每個可建構的穩定 beat 與 peak state",
             "padding",
+            "left/right/top/bottom",
             "safe frame",
+            "完整 required visible set",
+            "exact actual visible set",
             "最低可讀",
-            "碰撞或共址",
+            "pairwise collision/clearance",
+            "完整 pointer geometry",
+            "permitted relation",
+            "cross-zone collision",
             "停止交付",
             "重新設計 layout",
         )
@@ -138,14 +144,15 @@ class SceneWriterGuidanceContractTests(unittest.TestCase):
 
     def test_agent_gates_delivery_on_called_layout_guards(self) -> None:
         self.assertIn("Generated-code layout guard 交付 gate", self.instructions)
-        section = self.instructions.split("Generated-code layout guard 交付 gate", 1)[1]
+        section = self.instructions.split(
+            "### Generated-code layout guard 交付 gate", 1
+        )[1].split("\n## ", 1)[0]
         required = (
+            "references/manim-guidelines.md",
             "定義或匯入",
             "實際呼叫",
             "所有候選動態替換字串",
             "穩定 beat 與 peak state",
-            "最低可讀",
-            "碰撞或共址",
             "不得交付",
             "重新設計 layout",
         )

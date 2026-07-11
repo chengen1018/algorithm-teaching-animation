@@ -217,7 +217,7 @@ Scene writer 完成 `generated_algo_scene.py` 後，必須重新從頭閱讀完�
 
 - `manim-guidelines.md` 已依新架構完整重寫，沒有互相衝突或重複的舊規則。
 - `scene-writer.toml` 強制首次 layout planning 與寫後靜態 audit。
-- Fresh behavioral samples 的 raw generated code 會定義或匯入並實際呼叫 guards，涵蓋所有 panel 候選內容、穩定/peak states、最低可讀門檻、safe-frame 與可建構的碰撞/共址狀態；guard failure 會停止交付並觸發重排。
+- Fresh behavioral samples 的 raw generated code 會定義或匯入並實際呼叫 guards：panel 以 positioned 四邊對 padded inner bounds；每個 stable/peak 使用 exact actual required visible set 對 safe frame並執行 cross-zone collisions；完整 pointer geometry 具 pairwise checks 或明確 permitted co-location relation；並涵蓋所有候選內容與最低可讀門檻。Guard failure 會停止交付並觸發重排。
 - 必要時已對 preflight/review 文字做最小一致性調整。
 - 結構驗證全部通過。
 - 行為壓力案例顯示 agent 能在不看 render 的情況下，從程式碼主動辨識代表性的 overflow、collision 與生命週期風險。

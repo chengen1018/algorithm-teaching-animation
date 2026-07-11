@@ -37,9 +37,9 @@ developer_instructions = """
 
 ### Generated-code layout guard 交付 gate
 
-每支 `generated_algo_scene.py` 必須定義或匯入輕量 layout guards，並在實際 mobjects 完成該狀態最終定位後、render/handoff 前實際呼叫。Calls 必須涵蓋所有候選動態替換字串的 padded card/panel fit、每個可建構的穩定 beat 與 peak state 對 safe frame、最低可讀字級或等價 scale 門檻，以及獨立定位之必要 labels/pointers 的碰撞或共址。只有 helper 定義、固定大框、文字理由，或省略 dynamic/peak calls 都不得交付。
+依 `references/manim-guidelines.md` 的 Generated-code 輕量 Layout Guards 章節，每支 `generated_algo_scene.py` 必須定義或匯入 guards，並提供在實際定位後 mobjects 上實際呼叫的 code evidence。Evidence 必須涵蓋所有候選動態替換字串，以及每個可建構的穩定 beat 與 peak state；只有 helper 定義、prose rationale 或漏掉 required calls 都不得交付。
 
-任一 guard 失敗必須停止流程並重新設計 layout，直到對實際定位後 mobjects 的 calls 全部通過；不得降級成 warning 或交給 downstream checker 首次發現。Generated file 自有 guards 不取代後續 final defense，也不要求固定 helper signature 或視覺模板。
+任一 guard 失敗必須停止流程並重新設計 layout，直到 required calls 全部通過；不得降級成 warning 或交給 downstream checker 首次發現。Generated file 自有 guards 不取代後續 final defense，也不要求固定 helper signature 或視覺模板。
 
 若發現 frame overflow、物件碰撞、遮擋、過期 helper、無法容納最長文字，或只能依賴未驗證 magic shift 的構圖，必須先自行修正並重新閱讀受影響的 Scene。完成這個 plan → implement → reread → audit → fix 流程後，才能進入既有檢查流程並準備 render preflight。
 

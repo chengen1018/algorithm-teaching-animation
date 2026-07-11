@@ -346,11 +346,13 @@ PASS  能指出 peak state，不只檢查開場畫面
 PASS  能追蹤 Transform/FadeOut 後仍存在的 objects
 PASS  沒有以連續 magic shifts 取代 layout strategy
 PASS  沒有強迫所有畫面套用單一模板
-PASS  raw generated code 定義或匯入並實際呼叫 guards，涵蓋 panel 所有候選內容與穩定/peak states
-PASS  guards 以命名最低可讀門檻、safe-frame bounds 與可建構碰撞/共址為 gate，失敗會停止交付並重排
+PASS  raw generated code 定義或匯入並實際呼叫 guards，panel 所有候選內容逐邊對 padded inner bounds
+PASS  每個 constructible stable/peak state 以 exact actual required visible set 對 safe frame，並呼叫 cross-zone collisions
+PASS  完整 pointer geometry 有 pairwise collision/clearance，語意共址有明確 permitted relation/policy
+PASS  guards 以命名最低可讀門檻為 gate，失敗會停止交付並重排
 ```
 
-Expected: 每個新版指南樣本九項全 PASS；其中 guard 定義而未呼叫、只檢查稀疏狀態、固定大框或 prose rationale 一律 FAIL。若某項 FAIL，保留 agent 的原始理由作為 loophole evidence；最多執行兩個 fresh behavioral waves，不弱化 rubric。
+Expected: 每個新版指南樣本十一項全 PASS；其中只比 width/height、partial/superset stable group、漏 cross-zone collisions、只檢 labels、guard 定義而未呼叫、只檢查稀疏狀態、固定大框或 prose rationale 一律 FAIL。若某項 FAIL，保留 agent 的原始理由作為 loophole evidence；最多執行兩個 fresh behavioral waves，不弱化 rubric。
 
 - [ ] **Step 2: 只針對實際 loophole 做最小修訂**
 

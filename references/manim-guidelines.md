@@ -127,10 +127,11 @@ Overlays 關閉時不預留只供 overlay 使用的空間；啟用時放在 layo
 
 Guard calls 至少必須覆蓋：
 
-- 每張 card/panel 的實際文字或公式 mobject bounds 對扣除 padding 的內部 bounds，並逐一建構及檢查所有候選動態替換字串。
-- 每個穩定 beat 與 peak state 可靜態建構的所有必要物件實際 bounds 對 safe frame；不能只呼叫在開場或稀疏狀態。
+- 每張 card/panel 的實際文字或公式 mobject bounds 對扣除 padding 的內部 bounds，必須逐邊比較 positioned `left/right/top/bottom`，並逐一建構及檢查所有候選動態替換字串；只比較 width/height 不足以證明 containment。
+- 每個可建構的穩定 beat 與 peak state 都要組成當下的完整 required visible set（包含 title、cards/panels、dynamic texts、主結構與 helpers），而且必須是該 beat 的 exact actual visible set；不得把已被替換的舊 body 與新 candidate 同時塞入驗證群組。再以實際 bounds 對 safe frame；不能只檢查部分群組、開場或稀疏狀態。
 - fitting 的最低可讀字級或等價的命名 scale 門檻；只能縮放到該最低可讀門檻，仍不合格就 raise/fail。
-- 可靜態建構之穩定狀態中，獨立定位的必要 labels、pointers 或 markers 的碰撞或共址檢查。
+- 可靜態建構之每個穩定/peak state 中，獨立定位的 labels、arrows 與 pointer groups 必須以完整 pointer geometry 做 pairwise collision/clearance checks，不能只比較 labels。若 arrows 指向同一 cell 等語意共址是有意允許的，guard 必須以明確 permitted relation 或 clearance policy 驗證允許範圍，同時拒絕其他重疊。
+- 每個 stable/peak state 也必須呼叫 cross-zone collision checks，至少涵蓋 pointers/labels 與當下 cards、panels、dynamic texts、主結構等獨立定位的 required objects；整體 group 在 safe frame 內不能取代物件間 collision calls。
 
 所有 guard 都要在 rendering/handoff 前執行。任一 guard 失敗必須停止交付，先重新設計 layout、重新建立受影響狀態並再次執行；不得把失敗降為 warning 或留給既有 checker 首次發現。
 
