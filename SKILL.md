@@ -89,38 +89,21 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 ## 階段 3：VOICEOVER
 
 ### 目標
-製作符合已確認需求、已核准動畫設計與已通過審查之教學腳本的旁白產物。
-旁白是正式流程的一個階段，不是最後才視情況加入的潤飾。
+根據已通過審查的教學腳本，產生每個 beat 的旁白文字與實際音訊。
 
-### 委派
-此階段必須使用 `voiceover-manifest` subagent。
-此階段不需要另外安排獨立審查者。
+### 由誰執行
+此階段交給 `voiceover-generator` custom agent 處理，詳細工作規則以 `.codex/agents/voiceover-generator.toml` 為準。
+協調者只負責安排流程與確認關卡，不得更改其規則。
 
-### 行動前須閱讀
-`voiceover-manifest` subagent 必須閱讀 `confirmed_requirements.md`、已核准的 `animation_design.md`、`teaching_script.md`、`script_review_result.md` 與 `references/voiceover.md`。
-如果旁白內容似乎與已審查的腳本不一致，協調者應閱讀 `script_review_result.md`。
+### 這個階段要產出什麼
+- `voiceover.md`：每個 beat 的旁白文字稿。
+- `narration_manifest.json`：包含每個 beat 的音訊驗證數據。
+- `audio/voiceover/` 資料夾：每個 beat 已通過驗證的旁白音訊。
 
-### 不得開始直到
-`confirmed_requirements.md` 已明確記錄配音語言。
-`teaching_script.md` 已存在。
-`script_review_result.md = PASS`。
-目前的 `animation_design.md` 已通過內容審查並取得使用者明確核准。
-不得使用尚未審查或未通過審查的腳本。
-
-### 執行事項
-派遣 `voiceover-manifest` 製作符合已確認需求、已核准設計與已審查腳本的旁白文字、旁白清單資料及可直接使用的配音檔案。
-
-### 必要輸出
-建立 `voiceover.md`、`narration_manifest.json`，以及 `audio/voiceover/` 下可直接使用的旁白音訊。
-
-### 通過／離開關卡
-只有在 `voiceover.md`、`narration_manifest.json` 與可直接使用的旁白音訊都已完成，且能交給後續渲染與 QA 使用時，才能前進。
-
-### 發生問題時退回
-若需修正旁白用詞或節奏，退回 `VOICEOVER`。
-若動畫節拍結構不符，退回 `SCRIPT`。
-若配音語言等使用者需求記錄不準確，退回 `COLLECT_REQUIREMENTS` 修正後重新送入設計流程。
-若核心意思或教學設計本身未決、衝突或不完整，退回 `DESIGN_DEVELOPMENT`，完成共同設計、獨立內容審查與使用者重新核准後再繼續。
+### 什麼時候才算完成
+以上三樣產物都存在，且每個音檔都已通過驗證，才能進入下一個階段。
+若有任何音檔生成失敗或驗證不通過，必須在此階段修正，不能以靜音或其他替代方案過關，直到所有音檔都已通過驗證，本階段才算完成。
+  
 
 ## 階段 4：RENDER
 
@@ -128,43 +111,22 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 將已確認需求、已核准動畫設計、已審查腳本與旁白資料實作成場景程式碼與渲染證據。
 此階段只能實作已核准的上游內容，不得自行加入新的內容或意思。
 
-### 委派
-此階段必須由 `scene-writer` subagent 實作場景並產生渲染證據。
-完成 `render_preflight.md` 後，再派遣獨立的 `scene-reviewer` subagent 審查場景。
-場景審查者不得撰寫該場景。
-
-### 行動前須閱讀
-`scene-writer` 必須閱讀：
-
-- `confirmed_requirements.md`
-- 已核准的 `animation_design.md`
-- `teaching_script.md`
-- `voiceover.md`、`narration_manifest.json` 與 `audio/voiceover/` 下可直接使用的音訊
-- `references/manim-guidelines.md`
-- `references/render-preflight.md`
-
-只有當渲染結果可能有問題、無法順利安排審查，或不確定問題應退回哪個階段處理時，協調者才閱讀 `references/scene-review-checklist.md` 或 `script_review_result.md`。
-
 ### 不得開始直到
 `teaching_script.md` 存在且 `script_review_result.md = PASS`。
 目前的 `animation_design.md` 已通過內容審查並取得使用者明確核准。
 必要的旁白文件與可直接使用的音訊都已存在。
 只有在已取得使用 subagent 的明確授權後，才能開始此階段。
 
-### 執行事項
-派遣 `scene-writer`，依已確認需求、已核准設計與已審查腳本實作 Manim 場景。
-必須實作六個獨立 Manim `Scene` 類別並分別渲染，不得以 `Section` 代替。每個 Scene 結尾淡出至空白，下一個 Scene 再淡入；最後依核准順序合併成一支完整影片。
-除非使用者明確要求，場景不得加入上游來源中沒有的新意思、額外的畫面解說、程式碼面板或註解層。
-產生最新的渲染結果與對應證據。
-使用可確認來自最新 MP4 的證據建立 `render_preflight.md`。
-每次重新渲染都會使先前所有最新渲染證據、`render_preflight.md` 與 `scene_review_result.md` 失效。進入 `QA` 前，必須為同一個最新 MP4／版本重新產生證據與預檢，並由獨立的 `scene-reviewer` 重新產出 `PASS`。
-準備場景審查所需的交接資訊，包括程式碼與渲染畫面的對應說明、預檢證據，以及受影響的影格資訊。
-在 `render_preflight.md` 存在後，派遣 `scene-reviewer` 進行獨立審查。
-對於某個 scene/render 的第一次獨立場景審查交接，一律使用 `Full`。
-只有範圍明確且局限於 `RENDER` 的變更，並具備有效的受影響影格證據時，才允許差異審查。
-受影響影格證據只有在仍適用於受審的明確範圍變更時才有效。
-若修正變更已核准語意、腳本節拍順序、全場景結構、全場景版面、渲染對應關係，或以其他方式使受影響影格的證據失效，則退回完整審查。
-若受影響影格的範圍擴大或影響不確定，視為受影響影格證據失效，並要求完整的獨立場景審查。
+### 委派與執行
+本階段依序交給兩個 custom agent 處理：`scene-writer` 負責製作與渲染，`scene-reviewer` 負責獨立審查。兩者的詳細工作規則以 `.codex/agents/scene-writer.toml` 與 `.codex/agents/scene-reviewer.toml` 為準；協調者只負責安排流程與確認關卡，不得更改其規則。
+
+1. 先交由 `scene-writer` 製作場景、渲染影片，並準備送審資料。
+2. `scene-writer` 將已通過 gate 的上游產物視為可執行契約；可合理解讀的細節以最小、保守方式實作，並記錄在 `render_preflight.md` 的 `Render Assumptions`。
+3. 只有在最新渲染證據、`render_preflight.md` 與審查交接資料都已完成後，才能交由獨立的 `scene-reviewer` 審查。
+4. 若 `scene_review_result.md` 為 `FAIL`，協調者必須將每一項阻塞問題送回 `RENDER` 修正。本機檢查或預檢都不能取代獨立審查。
+5. 每次重新渲染後，舊的渲染證據、`render_preflight.md` 與 `scene_review_result.md` 都不再有效。進入 `QA` 前，必須針對同一個最新 MP4／版本重新準備這些資料，並重新取得獨立審查的 `PASS`。
+
+只有在渲染結果有問題、無法安排審查，或不確定應退回哪個階段時，協調者才閱讀 `references/scene-review-checklist.md` 或 `script_review_result.md`。
 
 ### 必要輸出
 建立：
@@ -181,10 +143,7 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 成功完成渲染、本機自行檢查或預檢，都不代表場景已通過審查。
 
 ### 發生問題時退回
-如果已確認需求、已核准設計與腳本已經寫得很清楚，但場景在樣式、間距、時間、版面或實作內容上未遵守它們，退回 `RENDER`。
-如果動畫節拍不符，或腳本不夠完整，導致場景實作者必須自行猜測結構、順序或強調重點，退回 `SCRIPT`。
-如果使用者需求記錄不準確，退回 `COLLECT_REQUIREMENTS` 修正後重新送入設計流程。
-如果演算法行為、教學呈現、Scene 結構或使用者選定的設計有缺口，退回 `DESIGN_DEVELOPMENT`，完成共同設計、獨立內容審查與使用者重新核准後再繼續。不得在 `RENDER` 直接修補設計。
+所有渲染、證據、版面、時序、實作忠實性或已記錄 assumptions 的問題，都退回 `RENDER` 修正。`RENDER` 不會因上游產物的可合理解讀細節、歧義或衝突而重新啟動上游流程。
 
 ## 階段 5：QA
 
