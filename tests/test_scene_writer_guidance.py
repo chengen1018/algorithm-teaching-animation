@@ -81,6 +81,14 @@ class SceneWriterGuidanceContractTests(unittest.TestCase):
             "自行修正",
             "既有檢查流程",
         )
+        missing_phrases = []
+        for phrase in ordered_phrases:
+            with self.subTest(phrase=phrase):
+                if phrase not in self.instructions:
+                    missing_phrases.append(phrase)
+                self.assertIn(phrase, self.instructions)
+        if missing_phrases:
+            return
         positions = [self.instructions.index(phrase) for phrase in ordered_phrases]
         self.assertEqual(positions, sorted(positions))
 
