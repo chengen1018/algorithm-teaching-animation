@@ -1,242 +1,233 @@
-# Manim 指引
+# Manim 實作與首次靜態驗證指南
 
-本文件定義 `generated_algo_scene.py` 應如何實作 `v4` 教學設計。
+本指南定義 `generated_algo_scene.py` 的實作方法與首次送檢前的靜態推理。它以 construction patterns 降低第一版 layout 失誤機率，不取代既有 render preflight、layout checker 或獨立審查。
 
-scene 是已確認需求、已核准動畫設計與已審查 teaching script 的渲染器。它可以自由選擇實作結構，但不能發明新語意。
+## 實作責任與不可改變事項
 
-## 六個獨立 Scene
+依 `animation_design.md` 實作六個獨立 Manim `Scene` 類別，不以 `Section` 代替。六個 Scene 分別對應問題與目標、核心觀念、演算法特有的重要資料與狀態、一次關鍵動作、完整演示，以及結果回顧。每個 Scene 獨立建立及清理畫面，結尾淡出至空白，下一幕再從空白淡入；六幕分別渲染後依核准順序合併。
 
-依 `animation_design.md` 實作六個獨立 Manim `Scene` 類別，不使用 `Section` 代替。六個 Scene 分別對應問題與目標、核心觀念、演算法特有的重要資料與狀態、一次關鍵動作、完整演示，以及結果回顧。
+Scene layer 負責 layout execution、styling、timing、beat staging，以及 audio/overlay synchronization。實作必須忠於 `confirmed_requirements.md`、`animation_design.md`、`teaching_script.md`、需要維持執行忠實性時使用的 algorithm code/pseudocode、`voiceover.md`、`narration_manifest.json` 與音訊資產；不得新增演算法步驟、教學目標、support-structure 語意，或改變 movement semantics、pointer meaning、visited timing、beat 順序與已核准的 active support structure。
 
-每個 Scene 必須獨立建立並清理自己的畫面。Scene 結尾淡出至空白，下一個 Scene 再淡入。分別渲染六個 Scene，確認每段都可單獨檢查後，再依核准順序合併成一支完整影片。
+可以依演算法採不同程式結構，但 style roles、layout setup、beat execution、visibility ownership 與 final cleanup 必須容易稽核。使用 `ROLE_BASE`、`ROLE_FOCUS`、`ROLE_SETTLED`、`ROLE_SUPPORT`、`POINTER_LABEL_BUFF` 等語意常數，避免散落且無法解釋的數值。
 
-## 核心原則
+## 寫 code 前：先完成 Layout Planning
 
-scene layer 負責：
+每個 Scene 寫 code 前都要有 layout plan，至少定義：
 
-- layout execution
-- styling
-- timing
-- beat staging
-- audio 與 overlay synchronization
+- **primary structure**：陣列、圖、樹或表格等主視覺。
+- **persistent regions**：標題、狀態 panel、公式或核准的 overlay 等持續區域。
+- **transient regions**：比較卡片、pointer labels、臨時公式與說明。
+- **safe frame**：所有必要內容都必須落入的內縮邊界。
+- **peak state**：同時物件最多、文字最長、pointer 最密集或最容易越界的穩定 beat。
+- **collision policy**：空間不足時要採縮放、換區、上下分流、合併標籤或合法分階段顯示中的哪一種策略。
 
-scene layer 不負責：
+layout plan 不要求額外文件，但必須反映在 layout constants、zones、builders、groups 與 helper interfaces，使程式本身可稽核。建立順序採用下方 **Peak-first scene skeleton** 與 **Stable-zone composition**。
 
-- semantic fork 決策
-- 新的 support-structure 需求
-- 對 teaching goal 的重新詮釋
+## Manim Frame、座標與尺寸推理
 
-## 必要輸入
+Manim frame 的水平範圍是 `[-config.frame_x_radius, config.frame_x_radius]`，垂直範圍是 `[-config.frame_y_radius, config.frame_y_radius]`。safe frame 應在四邊保留一致的內縮 margin，而不是讓內容剛好貼住 frame。
 
-scene 必須以下列內容為基礎：
+安全性要依定位完成後的最終 bounding box 判斷：`get_left()[0]`、`get_right()[0]`、`get_top()[1]`、`get_bottom()[1]` 都必須落在對應 safe frame 邊界內。不能只看 object center、單一 width/height 或動畫起點；縮放、文字替換及群組變更後都要重新推理最終邊界。
 
-- `confirmed_requirements.md`
-- 已核准的 `animation_design.md`
-- 已審查的 `teaching_script.md`
-- 當需要維持執行忠實性時使用的 algorithm code 或 pseudocode
-- 已核准的 `voiceover.md`、`narration_manifest.json` 與所需音訊資產
+## Layout Zones 與安全邊界
 
-若 scene 無法說明自己正在實作哪個已凍結決策，就代表它還沒準備好 render。
+先把 primary structure、side panel、標題/公式與 transient content 分配到不重疊 zones，再在各 zone 內定位。主結構與 side panel 必須先共同做寬度預算；寬主結構禁止在未預留 zone 時直接向右 `next_to()` 串接 target、output 或說明卡片。
 
-## 建議檔案結構
+若組合超過 safe frame，應重分雙欄或上下 zones、整體縮放可縮放群組、縮短 label，或依 script 合法分 beat 揭露。多個物件各自位於 frame 內，不代表它們組合後不碰撞；標題、狀態、主視覺與 transient 說明也不能各自 `to_edge()` 後就假設安全。
 
-讓 scene code 保持明確且可檢視，不要強迫所有演算法都套同一個模板。
+主要結構的位置與 zone 語意應跨 beats 穩定。除非消失本身是教學內容，resolved regions 應淡化而非任意搬移或刪除；語意必要的 support structure 必須持續存在。
 
-建議區段：
+## 物件定位與群組排版
 
-1. constants 與 styling roles
-2. scene-state structures
-3. layout builders
-4. beat helpers
-5. `construct()`
+下列 API 都只處理局部幾何，不是整體自動排版：
 
-建議 helper 群組：
+- `next_to()` 只相對另一物件定位，不保證新物件仍在 safe frame，也不替第三個物件留位。
+- `to_edge()` 只把被呼叫的物件靠向 frame edge，不知道其他 zones 或物件的空間需求。
+- `move_to()` 對齊位置，不會處理來源與目標的寬高差異或周邊碰撞。
+- `arrange()` 只安排群組內部間距，不代表完成後群組適合所分配的 zone。
+- `Transform()` 只描述來源到目標的局部變化；仍須考慮來源、目標和未移除相鄰物件在穩定狀態中的整體幾何與語意。
 
-- `build_primary_layout()`
-- `build_support_layout()`
-- `apply_role_style()`
-- `play_beat()`
-- `sync_voiceover()`
-- `show_overlay_if_enabled()`
+每條 positioning chain（例如 `.to_edge(...).shift(...).next_to(...)`）完成後，都要依最終 bounding box 重新推理整個 group 的寬高與四邊界。若定位只靠無語意的連續位移數值才能成立，將 magic shift 改為 zone、anchor、group arrangement 或明確 layout constant。元素抬起、比較、交換或重新排列時，也要保留可讀間距並檢查群組 peak state。
 
-這些是組織期待，不是填空模板。只要 style roles、layout setup、beat execution、visibility ownership 與 final cleanup 仍然容易稽核，scene writer 就可以依演算法需要採用不同結構。
+## 文字、卡片、公式與 Panel 容量
 
-## 狀態管理
+Panel 的容量決策必須涵蓋所有穩定 beats 的內容，動態文字使用固定 anchor 與明確最大寬度；具體建立方式見 **Content-first containers**。替換後仍要推理文字、padding、panel border、主結構與 safe frame 的組合。
 
-維持明確的語意狀態，而不是從目前外觀去推論含義。
+長內容優先縮短措辭、合理換行、增加 panel 容量或移至專屬 zone，不能靠縮到不可讀來處理過載。結構差異大的多行文字不用 morph-style transform，改用直接 replacement、短 fade swap 或穩定 panel sections；單字元 labels、row/column headers 不得被實心 highlight 遮住，應使用顏色、底線、相鄰 marker 或可讀的 outline treatment。
 
-典型狀態結構：
+畫面文字應說明當前規則或觀察，而非逐字重複旁白。穩定 beat 的文字必須可讀，不能以過渡中的短暫狀態當作清晰度依據。
+
+## Pointer、Label 與共址衝突
+
+每次 pointer 移動前，必須檢查目的 index 的現有或已存在 pointers，而不只計算自身目的位置。共址策略與 builder 方式見 **State-first pointer layout**；語意允許時可顯示 `left = mid = right = 5`。
+
+Pointer 的起點與終點都要可辨，label 使用實際演算法名稱並維持一致空間語意。目的地改變後，重新檢查 arrows、labels、cell contents、相鄰 pointers 與 panel 是否共同 fit，而不是只檢查 marker center。
+
+## Phase Ownership、Transform 與物件生命週期
+
+每個 helper、label、highlight 與 support structure 都要定義：首次出現的 phase/beat、持續哪些 beats、如何更新，以及何時移除。程式應維持明確的 role、pointer、layout 與 beat state，不從當前外觀反推語意。
+
+靜態推理必須區分物件是仍在 `scene.mobjects`、只是透明、被其他物件遮擋，或真正移除。尚不該存在的物件應延後建立/加入；已加入的透明物件必須有明確且可驗證的 reveal path。不要假設 `FadeIn` 必然修復既存透明物件。
+
+`Transform()` 可能改變既有 reference 的幾何與語意，但不會自動清除其他 references 或 helpers；需要替換所有權時依 **Current-object replacement ownership** 維持 current reference，需要結束生命週期時使用 `FadeOut`、`remove()` 或集中 cleanup。Helper 的建立時機見 **Phase-owned helper construction**。
+
+Intro 不得洩漏 future-iteration、traceback 或 finalization helpers；fill/update helpers 不得無理由殘留到 reconstruction/final result。最後畫面要移除、淡化或安靜化過期 labels、helper marks、暫時公式與中介指示，只保留最終結果及 script 核准且仍具教學價值的脈絡。
+
+## Construction Patterns：以構造降低失敗機率
+
+以下 patterns 是建立 Scene 的方式，不是固定視覺模板。依演算法選擇 zones、形狀與風格，但讓容量、共址和生命週期在建立物件時就被一起考慮。
+
+### Peak-first scene skeleton
+
+先找出資訊最密、文字最長、pointer 最集中的穩定狀態，為它的完整內容預留 zones，再實作較簡單 beats。較簡單狀態沿用骨架，不從稀疏開場向外追加物件。
+
+### Group-first zone fitting
+
+先完成一個 zone 的完整 semantic group（例如 array、indices、pointers 與該區 labels），再用 `arrange()`、`scale_to_fit_width()` 和 `move_to()` 把 group 當整體放進 zone。不要以連續 `next_to()`／`shift()` 從 anchor 向外生長，因為後加入的元素沒有被納入前面的空間決策。
+
+### Content-first containers
+
+先建立所有候選動態文字或公式，決定最大可讀 line plan，再由最大候選推導 card/panel 尺寸。候選可以先建構供規劃，但只有 current candidate 加入 Scene。
+
+Bad：第一個短字串決定固定框，後續才向內塞。
 
 ```python
-self.role_state = {}
-self.pointer_state = {}
-self.layout_state = {}
-self.beat_state = {}
+body = Text(messages[0], font_size=28)
+panel = RoundedRectangle(width=body.width + 0.5, height=1.0)
 ```
 
-至少要追蹤：
+Good：先為所有候選決定可讀的分行版本，用固定字級建構，container 再取最大尺寸。
 
-- 每個可見物件的語意角色
-- active pointers 及其含義
-- support-structure visibility
-- 目前 beat id
+```python
+line_plans = [
+    "搜尋中",
+    "目標較大\n移動左界",
+    "left = mid = right\n只剩一個候選",
+]
+candidates = [Text(text, font_size=28) for text in line_plans]
+max_width = max(item.width for item in candidates)
+max_height = max(item.height for item in candidates)
+panel = RoundedRectangle(width=max_width + 0.6, height=max_height + 0.4)
+current_body = candidates[0].move_to(panel)
+```
 
-這能讓修復工作具決定性，並避免樣式改變時意外漂移。
+若最大候選仍超出預留 zone，回頭調整 wording、line plan、zone allocation 或 staging；不要以無下限縮放補救。
 
-## Manim 可見性防線
+### State-first pointer layout
 
-以下規則針對 render layer 常見失敗，同時保留視覺設計自由度。
+把當下所有 active pointer roles 與 destinations 一次傳給同一 builder／placement decision，再建立完整 pointer groups。builder 先按 destination 分組；共享 index 時選 lanes、上下兩側、共享 marker 加 legend，或在語意等價時合併，而不是各 label 獨立定位後才修補。
 
-### Hidden Objects
+Bad：每個 pointer 各自使用相同偏移。
 
-- 除非有明確 reveal path，否則避免預先把重要物件以 `opacity=0` 加進場景。
-- 對於還不該存在的物件，優先使用延後建立 / 加入。
-- 若物件已存在但被隱藏，應透過明確狀態變化揭露，例如 `mobject.animate.set_opacity(1)`。
-- 不要假設 `FadeIn` 一定能恢復已存在且隱藏物件的可見性，除非你已驗證最後穩定畫面。
+```python
+pointers = [make_pointer(role, cells[index], DOWN) for role, index in state.items()]
+```
 
-### Phase Ownership
+Good：完整 state 共同決定 lane 與方向。
 
-- 每個 helper object 都應屬於某個具名 phase、beat 或 mode。
-- Intro 畫面不得出現 traceback、future-iteration 或 finalization helpers。
-- Fill / update helpers 不得滲入 reconstruction 或 final-result 畫面，除非 script 說它們仍有意義。
-- Traceback、path 或 reconstruction helpers 不得早於對應 mode 被引入時出現。
+```python
+def build_pointers(state, cells):
+    by_index = group_roles_by_destination(state)
+    return VGroup(*(make_pointer_group(roles, cells[index])
+                    for index, roles in by_index.items()))
 
-### Label Highlighting
+pointer_group = build_pointers({"left": left, "mid": mid, "right": right}, cells)
+```
 
-- 不要在單字元 labels、prefix labels、row headers 或 column headers 上覆蓋實心 highlight box。
-- 優先使用文字顏色變化、底線、相鄰標記，或已驗證透明填色的 outline-only shapes。
-- 證據至少要包含一個穩定影格，能證明 active row / column、pointer 或 state labels 在 highlight 下仍可讀。
+### Current-object replacement ownership
 
-### Explanatory Text
+對可替換文字或 helper group 保留恰好一個 current reference。`ReplacementTransform` 後立即重新綁定；規劃用 future candidates 不提早加入 Scene。
 
-- 當多行說明文字的行長或措辭差異很大時，避免使用 morph-style transforms。
-- 優先使用直接替換、短 fade swap，或穩定 panel sections。
-- 不要用 transition frames 當作文字清晰度的審查證據；應截取文字穩定後的影格。
+Bad：動畫完成後仍把舊 reference 當作 current。
 
-### Final Cleanup
+```python
+self.play(ReplacementTransform(current_body, next_body))
+self.play(current_body.animate.set_color(YELLOW))
+```
 
-- 最終畫面應有意識地移除、淡化或安靜化過期 labels、helper marks、暫時公式文字與中介指示。
-- 只保留最終結果呈現，以及已核准 script 要求保留的脈絡。
-- 若某個 support structure 留在最終畫面，它必須仍具教學價值，而不是單純殘留的實作狀態。
+Good：replacement 後 ownership 與 Scene 中的物件一致。
 
-## 以 Beat 為核心的實作
+```python
+next_body.move_to(panel)
+self.play(ReplacementTransform(current_body, next_body))
+current_body = next_body
+```
 
-`v4` scenes 應以教學 beats 組織，而不只是原始 loop mechanics。
+### Phase-owned helper construction
 
-每個 beat 實作都應讓以下問題容易回答：
+Helper 在擁有它的 beat／phase 才建立，或由 builder 只回傳 current phase set。不要預先加入 future helpers 再藏起來；只有確實需要且已有明確 reveal path 時才保留隱藏物件。
 
-- 觀眾應該看哪裡
-- 哪些物件承載焦點
-- beat 結束後保留了哪個進度線索
+### Stable-zone composition
 
-用 loop 為中心的 code 可以接受，但最終動作仍必須讀起來像以 beat 為中心的教學。
+title、status、primary、transient regions 在相鄰 beats 維持穩定意思。空間不足時調整 zone allocation、grouping、wording 或 staging；不要累積 magic shifts，讓同一位置在不同 beat 無故改變語意。
 
-## 視覺穩定規則
+## Beat Staging 與教學呈現
 
-- 保持主要結構空間穩定
-- 只移動觀眾需要追蹤的東西
-- 讓 pointer 的起點與終點都清楚可辨
-- 除非消失本身是課程的一部分，否則應淡化 resolved regions，而不是刪除它們
-- 當已核准設計說 support structures 在語意上重要時，就要讓它們持續存在
+每個 beat 只提出 **one visual question at a time**，保留一個主要焦點群組，並能回答觀眾應看哪裡、哪些物件承載焦點、beat 結束後留下何種進度線索。實作遵循：
 
-## Render-Layer 修復政策
+- **visual continuity**：同一概念盡量由同一物件延續，避免無理由換位或重建。
+- **spatial meaning**：同一位置與 zone 維持穩定語意。
+- **progressive disclosure**：物件只在需要時出現，避免預先塞滿畫面。
+- **meaningful transformation**：移動表示狀態變化，不做裝飾性繞路。
+- **visual economy**：刪減重複文字與無教學作用的裝飾，不把所有內容縮小硬塞。
+- **peak-state composition**：先確保資訊最密集的穩定畫面清楚。
+- **pause on resolved states**：在已解決狀態留下足以辨識的 hold。
 
-允許在 `RENDER` 中修復：
+引入新焦點前先移除或淡化舊焦點。Loop-oriented code 可以接受，但可見動作仍須讀成 teaching beats，且不以 animation polish 犧牲焦點清晰度。
 
-- color styling
-- label micro-placement
-- spacing
-- safe-margin tuning
-- animation pacing
-- 不改變已凍結語意的 implementation-fidelity 修復
+## Voiceover 與 Overlay 的實作約束
 
-不允許在 `RENDER` 中修復：
+每個核准 beat 對應一個 voiceover segment；narration 開始前先建立 visual focus，segment 期間維持一致，結束前呈現或停留在 resolved state。旁白較長時以 pacing、staging 或有意義的 hold 配合，不用無意義空白，也不改變核准語意。
 
-- 改變 movement semantics
-- 改變 pointer meaning
-- 改變 visited timing
-- 改變課程中的 active support structure
+Overlays 關閉時不預留只供 overlay 使用的空間；啟用時放在 layout plan 的穩定 persistent region，納入 peak-state bounding box 與 collision audit，不得遮住主要教學結構。
 
-若實作暴露 script 不完整或 beat-structure mismatch，就停止並回到 `SCRIPT`。
-
-若實作暴露使用者需求記錄不準確，就停止並回到 `COLLECT_REQUIREMENTS` 修正後重新送入設計流程。
-
-若實作暴露已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍或使用者選定設計上有缺漏或衝突，就停止並回到 `DESIGN_DEVELOPMENT`；要求設計修復、重新審查與重新核准。
-
-## Voiceover 與 Overlay 同步
-
-旁白同步必須符合：
-
-- 每個已核准 beat 對應一個 voiceover segment
-- 對應 narration 開始前，visual focus 必須先建立
-- 該 beat 必須在 segment 結束前保持視覺一致
-- 若 narration 太長，應縮短 narration 或在上游拆分 beats，而不是用空白時間掩蓋
-
-當 overlays 關閉時：
-
-- 不要預設保留只給 overlay 用的版面空間
-
-當 overlays 啟用時：
-
-- 把它們放在穩定且不碰撞的區域
-- 避免蓋住主要教學結構
-
-## Constants 與 Styling
-
-優先使用清楚的語意名稱，而不是臨時 style values。
-
-範例：
-
-- `ROLE_BASE`
-- `ROLE_FOCUS`
-- `ROLE_CANDIDATE`
-- `ROLE_SETTLED`
-- `ROLE_EXCLUDED`
-- `ROLE_SUPPORT`
-- `MIN_BEAT_HOLD`
-- `POINTER_LABEL_BUFF`
-
-具體數值可依專案調整，但語意命名應保持穩定。
-
-## 常見場景模式
+## 演算法常見結構模式
 
 ### Arrays
 
-- 隔離 active compare 或 update 區域
-- 保持整列其餘部分可讀
-- 標記 settled progress，但不要搶走 active operation 的焦點
+- 先以最大元素數、最長 cell content、所有 index labels 與 compare/update 動作計算 peak-state group。
+- 隔離 active operation，保持其餘陣列與元素間距可讀；settled progress 不搶走主要焦點。
+- Side cards 必須使用已預留 zone，不得在寬陣列右側臨時串接。
+- 多 pointers 的目的 index 可能重合，逐次移動都套用共址 collision policy。
 
 ### Search Windows
 
-- 將 active window 顯示成一致的整體區域
-- 區分 boundary pointers 與 current probe
-- 在 elimination 後保留更新後的 window
+- Active window 是持續且一致的整體區域；區分 boundary pointers 與 current probe。
+- Elimination 後保留更新後 window，並在相關 beat 全程維持必要 boundary pointers。
+- 先規劃邊界與 probe 全部共址、window 最窄且 labels 最密集的 peak state，更新後留下可辨識的 resolved hold。
 
 ### Graph Traversal
 
-- 保持 node layout 固定
-- 在視覺上區分目前擴展與已發現結構
-- 當 queue 或 stack 是已核准設計的一部分時，保持它可讀
+- Node layout 固定，清楚區分目前擴展、已發現結構與 frontier；edge styling 非焦點時保持安靜。
+- Queue/stack 若是核准設計的一部分，需配置 persistent zone 並按最長 frontier 內容計算容量。
+- 規劃 node labels、frontier、pointer/highlight 同時出現的 peak state；helper 共址不得遮住 node label。
+- 只有 traversal order 是教學重點時才加入 neighbor-order cues。
 
-## 審查準備度
+## 寫完 Python 後：強制靜態 Audit
 
-在把 scene 交給審查前，請確認：
+完成 `generated_algo_scene.py` 後，必須重新從頭閱讀完整檔案，為每個 Scene 建立物件狀態時間線。對每個穩定 beat 至少回答：
 
-- 每個主要 beat 都能追溯到已核准設計與 script
-- 沒有任何語意含義依賴未陳述的 styling convention
-- support structures 只在已核准設計有正當理由時才出現
-- audio 行為與所需 voiceover 產物一致
-- overlay 行為符合已核准設計，或符合明確使用者 opt-in
-- `render_preflight.md` 已存在，且引用從最新 render 抽出的證據
-- 代表性的穩定影格能證明可見性、label 可讀性、phase isolation 與 final cleanup
+1. 當下有哪些物件仍存在？
+2. 每個物件的最終 positioning chain 是什麼？
+3. 哪些物件共享 anchor、cell、edge、index 或 zone？
+4. 此 Scene 的寬度、高度、文字長度與物件數量 peak state 在哪個 beat？
+5. 舊物件是否確實被替換、淡出或清理？
+6. 是否有過期物件仍占空間、遮擋內容或分散焦點？
+7. 是否存在只能依賴未驗證 magic shift 才可能成立的構圖？
+8. 每次 pointer 移動後，目的地的所有 arrows 與 labels 是否仍可共存？
+9. 動態文字替換後，最長內容是否仍在 panel 與 safe frame 內？
+10. 個別合法的 objects 組合後是否可能越界或碰撞？
 
-## 常見失敗
+若高風險定位無法由最終 bounding box、zone 容量及生命週期證明安全，先修改 layout，再重新閱讀受影響 Scene；不能把已知疑點留給後續流程首次發現。
 
-- 為了讓版面更乾淨而刪除語意上必要的 support structure。
-- 因需求或設計模糊，就在 scene code 內自行決定語意。
-- 讓動畫 polish 蓋過焦點清晰度。
-- 把實作方便性當成重新詮釋課程的理由。
-- 已加入但隱藏的物件沒有可靠的 opacity 或 creation path 就被揭露。
-- helper objects 太早出現在它們的教學 phase 前。
-- 用實心 highlight shapes 蓋住 labels。
-- 用不可讀的 transition frame 來判斷 explanatory text。
+## 送交既有檢查流程前的完成條件
+
+只有在下列條件都完成後，才能送交既有檢查流程：
+
+- 六個 Scenes 均符合核准結構、獨立建立/清理並可分別渲染。
+- 每個 Scene、每個穩定 beat 與所有 peak states 已靜態複查。
+- 最長文字、panel 容量、公式與 overlay 已按最終 bounding box 複查。
+- 所有 pointer destinations、共享 anchors/indexes 與共址策略已複查。
+- 每個 helper 的首次出現、持續、更新、Transform 前後狀態及移除時點已複查。
+- 所有 positioning chains 已按群組最終尺寸複查，沒有依賴未驗證的 magic shifts。
+- 上游語意、voiceover/overlay coding constraints、visual continuity 與 final cleanup 均保持可追溯。

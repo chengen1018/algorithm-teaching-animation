@@ -2,7 +2,7 @@
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 
-**Goal:** 重構 Manim 實作指南並強制 scene writer 在首次送檢前完成 layout planning、完整程式重讀與逐 beat 靜態 audit，以降低 overflow、collision、遮擋和生命週期錯誤。
+**Goal:** 重構 Manim 實作指南，以 construction patterns 與 plan → implement → reread → reason → self-correct 流程降低首次產出的 overflow、collision、遮擋和生命週期錯誤頻率。
 
 **Architecture:** `references/manim-guidelines.md` 是 Manim coding knowledge 與首次靜態驗證的唯一權威來源；`.codex/agents/scene-writer.toml` 只強制 plan → implement → reread → audit → fix → handoff 的流程，不複製指南細節。既有 render/preflight/reviewer 工具維持最後防線，除非實作時發現明確責任衝突，否則不修改。
 
@@ -241,6 +241,7 @@ Constants 與 Styling        -> 合併至 layout roles/zones 的可稽核性
 ## 文字、卡片、公式與 Panel 容量
 ## Pointer、Label 與共址衝突
 ## Phase Ownership、Transform 與物件生命週期
+## Construction Patterns：以構造降低失敗機率
 ## Beat Staging 與教學呈現
 ## Voiceover 與 Overlay 的實作約束
 ## 演算法常見結構模式
@@ -258,7 +259,8 @@ Constants 與 Styling        -> 合併至 layout roles/zones 的可稽核性
 - Pointers：移動前檢查目的 index 的現有 pointers；共址時使用垂直分層、上下分流、共享 marker/legend、語意等價合併或合法的分階段顯示。
 - Lifecycle：為每個 helper 定義首次出現、持續 beats、更新方式與移除時點；區分透明、遮擋、仍存在及真正移除。
 - Teaching quality：納入 visual continuity、one visual question at a time、spatial meaning、progressive disclosure、meaningful transformation、visual economy、peak-state composition、pause on resolved states。
-- Static audit：要求重新從頭閱讀完整 Python，逐 Scene、逐穩定 beat 回答設計規格列出的十個 audit 問題，發現無法證明安全的高風險定位時先改 layout。
+- Construction patterns：把 peak-first skeleton、group-first fitting、content-first containers、state-first pointers、current-object replacement、phase-owned helpers 與 stable-zone composition 整合進既有章節責任；至少三個指定模式包含 concise good/bad Manim code。
+- Static audit：要求重新從頭閱讀完整 Python，逐 Scene、逐穩定 beat回答設計規格列出的十個問題，發現明顯高風險定位時先改 layout。
 - Completion：確認六個 Scenes、peak states、最長文字、pointer destinations、物件生命週期與 positioning chains 都已靜態複查，然後才交給既有檢查流程。
 
 - [ ] **Step 3: 修改 `.codex/agents/scene-writer.toml`，加入強制首次流程**
@@ -268,7 +270,7 @@ Constants 與 Styling        -> 合併至 layout roles/zones 的可稽核性
 ```markdown
 ## 第一次送檢前的必要流程
 
-依 `references/manim-guidelines.md`，先為每個 Scene 完成 layout plan，至少確認 primary structure、persistent regions、transient regions、safe frame、peak state 與 collision policy，再開始撰寫 `generated_algo_scene.py`。
+依 `references/manim-guidelines.md`，先為每個 Scene 完成 layout plan，並套用指南的 construction patterns，讓 peak state、完整 groups、所有候選內容、pointer state 與 phase ownership 在建立物件時就納入決策，再開始撰寫 `generated_algo_scene.py`。細節以指南為唯一來源，不另建 audit artifact。
 
 完成整支 `generated_algo_scene.py` 後，必須重新從頭閱讀完整檔案，依指南對六個 Scene 的每個穩定 beat 執行靜態 audit。特別追蹤每個 beat 仍存在的物件、最終 positioning chain、共享 anchor 或 index、最長文字、pointer 目的地、Transform 前後狀態及物件移除時點。
 
@@ -283,7 +285,7 @@ Run:
 python3 -m unittest tests/test_scene_writer_guidance.py -v
 ```
 
-Expected: `Ran 7 tests` 且全部 `OK`。
+Expected: 目前所有 contract tests 均執行且全部 `OK`，沒有 failure 或 error。
 
 - [ ] **Step 5: 檢查責任邊界與重複內容**
 
@@ -341,14 +343,18 @@ Expected: commit 只包含上述兩個 files；Task 1 test 已在前一個 commi
 ```text
 PASS  wide structure 與 side information 有預先 zones 或整體 fit 推理
 PASS  pointer 移動會檢查目的 index 並採用明確共址策略
-PASS  panel 依最長內容設計或有可證明的容量策略
+PASS  panel 由所有候選內容共同決定容量、換行或 line plan
 PASS  能指出 peak state，不只檢查開場畫面
 PASS  能追蹤 Transform/FadeOut 後仍存在的 objects
 PASS  沒有以連續 magic shifts 取代 layout strategy
 PASS  沒有強迫所有畫面套用單一模板
+PASS  densest stable state 先保留 zones，完整 semantic groups 作為單位 fitting
+PASS  active pointer roles 與 destinations 共同進入一次 placement decision
+PASS  replaceable content 只有一個 current reference，replacement 後立即 rebind
+PASS  helpers 由 owning phase 建立，future helpers 不會預先加入後隱藏
 ```
 
-Expected: 每個新版指南樣本七項全 PASS；若某項 FAIL，保留 agent 的原始理由作為 loophole evidence。
+Expected: fresh samples 能明顯採用 construction-first decisions 並減少已知 overflow、pointer 與 lifecycle 風險。程式碼與 rationale 足以評估，不要求 render、generated assertions 或零缺陷；若某項 FAIL，誠實保存結果。只執行一個 fresh behavioral wave。
 
 - [ ] **Step 2: 只針對實際 loophole 做最小修訂**
 
@@ -372,7 +378,7 @@ python3 -c 'import pathlib,tomllib; tomllib.loads(pathlib.Path(".codex/agents/sc
 git diff --check
 ```
 
-Expected: `Ran 7 tests`（若 Task 3 新增 regression test，數量相應增加）且 `OK`；`TOML OK`；`git diff --check` 無輸出。
+Expected: 所有 tests 均 `OK`；`TOML OK`；`git diff --check` 無輸出。
 
 - [ ] **Step 4: 人工核對規格覆蓋與文件整體性**
 
