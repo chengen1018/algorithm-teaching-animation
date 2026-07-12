@@ -6,7 +6,7 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 # 演算法教學動畫 v4
 
 ## 概述
-此 skill 用來把使用者的演算法需求製作成完整的 Manim 教學動畫。整個製作過程包含動畫設計、撰寫教學腳本、製作旁白、實作動畫、獨立檢查、QA 及交付成果。
+此 skill 用來把使用者的演算法需求製作成完整的 Manim 教學動畫。整個製作過程包含動畫設計、撰寫教學腳本、製作旁白、實作動畫，並在 `RENDER` 階段結束。
 主要負責的 agent 必須確保所有步驟依序完成，並確認每個階段都符合要求。
 
 ## 必要授權
@@ -14,7 +14,7 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 若目前對話中尚未取得明確授權，必須詢問：
 
 ```text
-此任務會在動畫設計完成後使用 `animation-design-reviewer` 執行獨立內容審查，並在後續階段使用 subagent 處理腳本、旁白、動畫實作及品質驗證。你是否同意我在此任務中使用 subagent？請明確回答「同意」或「不同意」(若不同意則無法開始此任務)。
+此任務會在動畫設計完成後使用 `animation-design-reviewer` 執行獨立內容審查，並在後續階段使用 subagent 處理腳本、旁白、動畫實作及場景審查。你是否同意我在此任務中使用 subagent？請明確回答「同意」或「不同意」(若不同意則無法開始此任務)。
 ```
 
 只有當使用者明確回答「同意」時，才能開始後續工作。
@@ -27,11 +27,9 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 2. `SCRIPT`
 3. `VOICEOVER`
 4. `RENDER`
-5. `QA`
-6. `DELIVERY`
 
 開始每個階段前確實閱讀完成目前階段需要的參考資料，不得跳過任何階段，也不得合併、提前或補做後續階段的工作來取代目前階段。
-請照各階段的描述完成工作，且該階段規定的必要產物、審查與通過條件都已滿足後，才能進入下一個階段。
+請照各階段的描述完成工作，且該階段規定的必要產物、審查與通過條件都已滿足後，才能進入下一個階段；`RENDER` 是最後一個階段。
 
 ## 階段 1：ANIMATION_DESIGN
 
@@ -124,7 +122,7 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 2. `scene-writer` 將已通過 gate 的上游產物視為可執行契約；可合理解讀的細節以最小、保守方式實作，並記錄在 `render_review_handoff.md` 的 `Render Assumptions`。
 3. 只有在 `generated_algo_scene.py`、`render_review_handoff.md` 與程式碼審查交接資料都已完成後，才能交由獨立的 `scene-reviewer` 審查。
 4. 若 `scene_review_result.md` 為 `FAIL`，協調者必須將每一項阻塞問題送回 `RENDER` 修正。本機檢查或預檢都不能取代獨立審查。
-5. 每次重新渲染後，舊的 `render_review_handoff.md` 與 `scene_review_result.md` 都不再有效。進入 `QA` 前，必須針對同一個最新 MP4／版本重新準備這些資料，並重新取得獨立審查的 `PASS`。
+5. 每次重新渲染後，舊的 `render_review_handoff.md` 與 `scene_review_result.md` 都不再有效。必須針對同一個最新 MP4／版本重新準備這些資料，並重新取得獨立審查的 `PASS`，才能完成 `RENDER`。
 
 只有在程式碼審查無法安排或不確定應退回哪個階段時，協調者才閱讀 `references/how-to-review-manim-scene-code.md` 或 `script_review_result.md`。
 
@@ -138,98 +136,12 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 - 由獨立審查者產出的 `scene_review_result.md`
 
 ### 通過／離開關卡
-僅當 `generated_algo_scene.py`、最新 MP4、`render_review_handoff.md` 均存在，且 `scene_review_result.md = PASS` 時，才能前進。
+僅當 `generated_algo_scene.py`、最新 MP4、`render_review_handoff.md` 均存在，且 `scene_review_result.md = PASS` 時，才算完成工作流程。
 `scene_review_result.md` 必須由 `scene-reviewer` 產出，而非 `scene-writer`。
 成功完成渲染、本機自行檢查或預檢，都不代表場景已通過審查。
 
 ### 發生問題時退回
 所有程式碼、MP4 產物存在性、實作忠實性或已記錄 assumptions 的問題，都退回 `RENDER` 修正。`RENDER` 不會因上游產物的可合理解讀細節、歧義或衝突而重新啟動上游流程。
-
-## 階段 5：QA
-
-### 目標
-由獨立審查者確認成品是否符合已確認需求、已核准動畫設計、已審查腳本、畫面附加資訊規則與旁白要求。
-QA 不只確認影片能否播放，也要確認成品符合上游來源並具備交付條件。
-
-### 委派
-此階段必須使用獨立的 `qa-verifier` subagent。
-`qa-verifier` 不得參與受審成品的製作。
-
-### 行動前須閱讀
-`qa-verifier` 必須閱讀：
-
-- `confirmed_requirements.md`
-- 已核准的 `animation_design.md`
-- `teaching_script.md`
-- 已渲染的媒體輸出
-- `render_review_handoff.md`
-- `scene_review_result.md`
-- `voiceover.md`、`narration_manifest.json` 與 `audio/voiceover/` 下可直接使用的音訊
-- `references/render-qa-checklist.md`
-
-只有當 QA 無法繼續、不同審查結果互相衝突，或不確定問題應退回哪個階段時，協調者才閱讀 `scene_review_result.md` 與 `references/how-to-review-manim-scene-code.md`。
-
-### 不得開始直到
-`scene_review_result.md = PASS` 已存在，並且是正式的檔案審查結果。
-目前的 `animation_design.md` 已通過內容審查並取得使用者明確核准。
-QA 必須由未參與受審成品製作的獨立審查者執行。
-若 `scene_review_result.md` 缺失或不是 `PASS`，QA 不得開始，也不得產出 `qa_result.md`。
-
-若完全沒有 `scene_review_result.md`，應退回 `RENDER` 完成場景審查。
-若 `scene_review_result.md` 存在且結果為 `FAIL`，應依該檔案指定的階段處理，不得由 QA 另外決定新的處理路線。
-
-### 執行事項
-派遣 `qa-verifier`，依已確認需求、已核准設計與已審查腳本檢查實際渲染成品與所有必要產物。
-QA 必須檢查內容意思、視覺清晰度、時間安排、版面、交付內容是否完整、畫面附加資訊是否符合規則、旁白要求與音訊同步。
-不得用基本渲染測試、播放檢查或協調者自行檢查取代正式 QA。
-
-### 必要輸出
-建立 `qa_result.md`。
-
-### 通過／離開關卡
-僅當 `qa_result.md = PASS` 時，才能前進。
-沒有 `scene_review_result.md = PASS`，QA 就不能開始。
-
-### 發生問題時退回
-若問題出在視覺、時間安排、版面或場景未正確實作上游內容，退回 `RENDER`。
-若問題是缺少音訊、旁白語言錯誤、旁白文字偏離腳本，或音訊同步問題來自旁白產物，退回 `VOICEOVER`。
-若動畫節拍結構不符，退回 `SCRIPT`。
-若成品暴露使用者需求記錄不準確，退回 `COLLECT_REQUIREMENTS` 修正後重新送入設計流程。
-若成品暴露核心語意、主要心智模型、核心視覺語意、教學弧線或其他核心設計缺口，退回 `DESIGN_DEVELOPMENT`，完成重新審查與重新核准後再繼續。
-
-## 階段 6：DELIVERY
-
-### 目標
-提供實際完成的產物與摘要，不得誇大已完成或已通過的項目。
-所有交付聲明都必須有已通過的正式關卡檔案作為依據。
-
-### 委派
-此階段由協調者處理。
-不需交給任何 subagent，也不需安排獨立審查者。
-
-### 行動前須閱讀
-閱讀 `qa_result.md`、`scene_review_result.md`、`confirmed_requirements.md` 與已核准的 `animation_design.md`。
-只有當交付證據不足時，才閱讀 `references/render-qa-checklist.md`。
-
-### 不得開始直到
-`qa_result.md = PASS`。
-目前的 `animation_design.md` 已通過內容審查並取得使用者明確核准。
-
-### 執行事項
-只回報實際存在的產物，以及有正式檔案佐證的關卡狀態。
-交付摘要應與實際完成且已通過關卡的產物相符。
-
-### 必要輸出
-產出與實際產物相符的交付摘要。
-
-### 通過／離開關卡
-只有當必要產物存在，且有已通過的正式關卡檔案作為依據時，才算完成交付。
-若沒有 `qa_result.md = PASS`，不得開始 `DELIVERY`。
-
-### 發生問題時退回
-若缺少交付證據或必要產物，退回 `QA`。
-若交付摘要顯示使用者需求記錄不準確，退回 `COLLECT_REQUIREMENTS` 修正後重新送入設計流程。
-若交付摘要顯示成品偏離源自核心設計缺口，退回 `DESIGN_DEVELOPMENT`，完成重新審查與重新核准後再繼續。
 
 ## 不可接受的捷徑
 遇到下列說法時，必須視為違反流程，不能當成可以省略步驟的理由：
@@ -241,7 +153,6 @@ QA 必須檢查內容意思、視覺清晰度、時間安排、版面、交付�
 | 「`animation_design.md` 已經夠詳細，所以可以略過 `SCRIPT`。」 | 仍須執行 `SCRIPT`；場景程式碼不能取代 `teaching_script.md`。 |
 | 「渲染能執行，所以等於已經完成審查。」 | 仍須由獨立審查者產出正式的 `scene_review_result.md`。 |
 | 「交接檔已建立，因此獨立場景審查是選用的。」 | 在 `render_review_handoff.md` 存在後執行場景審查。 |
-| 「QA 可以由基本渲染測試取代。」 | 仍須執行獨立 QA 並產出 `qa_result.md`。 |
 | 「再做一次本機修補，比追查反覆發生的畫面問題更省事。」 | 如果問題顯示前面階段仍有歧義，應退回對應階段處理。 |
 | 「為求保險，我現在應該閱讀所有參考資料。」 | 只讀取目前階段要求的資料；遇到指定情況時，再讀取額外參考資料。 |
 | 「我已委派這個階段，所以不再負責該關卡。」 | 協調者仍負責階段順序、產物是否存在與通過條件。 |
@@ -262,5 +173,3 @@ QA 必須檢查內容意思、視覺清晰度、時間安排、版面、交付�
 - 最新渲染證據存在，且確實來自最新 MP4。
 - `render_review_handoff.md` 存在，且其 Source Evidence 指向最新 MP4。
 - `scene_review_result.md = PASS`。
-- `qa_result.md = PASS`。
-- 交付摘要符合實際產物，且沒有把尚未通過的關卡說成已完成。
