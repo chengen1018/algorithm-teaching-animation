@@ -122,28 +122,28 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 
 1. 先交由 `scene-writer` 製作場景、渲染影片，並準備送審資料。
 2. `scene-writer` 將已通過 gate 的上游產物視為可執行契約；可合理解讀的細節以最小、保守方式實作，並記錄在 `render_review_handoff.md` 的 `Render Assumptions`。
-3. 只有在最新渲染證據、`render_review_handoff.md` 與審查交接資料都已完成後，才能交由獨立的 `scene-reviewer` 審查。
+3. 只有在 `generated_algo_scene.py`、`render_review_handoff.md` 與程式碼審查交接資料都已完成後，才能交由獨立的 `scene-reviewer` 審查。
 4. 若 `scene_review_result.md` 為 `FAIL`，協調者必須將每一項阻塞問題送回 `RENDER` 修正。本機檢查或預檢都不能取代獨立審查。
-5. 每次重新渲染後，舊的渲染證據、`render_review_handoff.md` 與 `scene_review_result.md` 都不再有效。進入 `QA` 前，必須針對同一個最新 MP4／版本重新準備這些資料，並重新取得獨立審查的 `PASS`。
+5. 每次重新渲染後，舊的 `render_review_handoff.md` 與 `scene_review_result.md` 都不再有效。進入 `QA` 前，必須針對同一個最新 MP4／版本重新準備這些資料，並重新取得獨立審查的 `PASS`。
 
-只有在渲染結果有問題、無法安排審查，或不確定應退回哪個階段時，協調者才閱讀 `references/scene-review-checklist.md` 或 `script_review_result.md`。
+只有在程式碼審查無法安排或不確定應退回哪個階段時，協調者才閱讀 `references/how-to-review-manim-scene-code.md` 或 `script_review_result.md`。
 
 ### 必要輸出
 建立：
 
 - `generated_algo_scene.py`
-- 由最新 MP4 重新產生的渲染證據
+- 最新 MP4
 - `render_review_handoff.md`
-- 程式碼與渲染畫面的對應說明，或其他足以進行場景審查的交接資訊
+- 程式碼與上游文件的對應說明，或其他足以進行程式碼審查的交接資訊
 - 由獨立審查者產出的 `scene_review_result.md`
 
 ### 通過／離開關卡
-僅當 `generated_algo_scene.py`、最新渲染證據、`render_review_handoff.md` 均存在，且 `scene_review_result.md = PASS` 時，才能前進。
+僅當 `generated_algo_scene.py`、最新 MP4、`render_review_handoff.md` 均存在，且 `scene_review_result.md = PASS` 時，才能前進。
 `scene_review_result.md` 必須由 `scene-reviewer` 產出，而非 `scene-writer`。
 成功完成渲染、本機自行檢查或預檢，都不代表場景已通過審查。
 
 ### 發生問題時退回
-所有渲染、證據、版面、時序、實作忠實性或已記錄 assumptions 的問題，都退回 `RENDER` 修正。`RENDER` 不會因上游產物的可合理解讀細節、歧義或衝突而重新啟動上游流程。
+所有程式碼、MP4 產物存在性、實作忠實性或已記錄 assumptions 的問題，都退回 `RENDER` 修正。`RENDER` 不會因上游產物的可合理解讀細節、歧義或衝突而重新啟動上游流程。
 
 ## 階段 5：QA
 
@@ -167,7 +167,7 @@ QA 不只確認影片能否播放，也要確認成品符合上游來源並具�
 - `voiceover.md`、`narration_manifest.json` 與 `audio/voiceover/` 下可直接使用的音訊
 - `references/render-qa-checklist.md`
 
-只有當 QA 無法繼續、不同審查結果互相衝突，或不確定問題應退回哪個階段時，協調者才閱讀 `scene_review_result.md` 與 `references/scene-review-checklist.md`。
+只有當 QA 無法繼續、不同審查結果互相衝突，或不確定問題應退回哪個階段時，協調者才閱讀 `scene_review_result.md` 與 `references/how-to-review-manim-scene-code.md`。
 
 ### 不得開始直到
 `scene_review_result.md = PASS` 已存在，並且是正式的檔案審查結果。

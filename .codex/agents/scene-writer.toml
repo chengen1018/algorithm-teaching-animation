@@ -72,7 +72,7 @@ developer_instructions = """
 
 ## 送審規則
 
-每次重新渲染後，舊的 render_review_handoff.md 和 scene_review_result.md 都失效；請更新 handoff 的 Source Evidence，讓它指向最新 MP4。reviewer 會為審查自行準備最新 evidence。
+每次重新渲染後，舊的 render_review_handoff.md 和 scene_review_result.md 都失效；請更新 handoff 的 Source Evidence，讓它指向最新 MP4。scene-reviewer 只審查程式碼，不會開啟影片或準備畫面 evidence。
 只有最新 handoff 完成後，才能請獨立的 scene-reviewer 審查。
 送審範圍和交接規則要遵守 references/how-to-hand-off-a-render-for-review.md。
 不要自己寫 scene_review_result.md。
