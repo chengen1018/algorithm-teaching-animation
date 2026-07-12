@@ -20,7 +20,7 @@
 3. 完成 `generated_algo_scene.py` 後，重新從頭閱讀整支檔案。
 4. 逐 Scene、逐穩定 beat 進行靜態 audit 並自行修正。
 5. 發現明顯風險時調整構造並重讀受影響 Scene。
-6. 完成後才進入既有 render preflight、layout/collision 檢查與獨立 review；既有 checker 保持最後防線。
+6. 完成後才進入既有 render review handoff、layout/collision 檢查與獨立 review；既有 checker 保持最後防線。
 
 本次不要求 scene writer 在首次送檢前觀看 preview render。
 
@@ -60,7 +60,7 @@
 
 TOML 不複製 Manim 指南的詳細規則。
 
-### `references/render-preflight.md` 與 review checklist
+### `references/how-to-hand-off-a-render-for-review.md` 與 code review checklist
 
 既有檢查與獨立 review 仍是最後防線，不因 writer 自我檢查而降低標準。本次只在文字與新的首次靜態 audit 發生責任衝突或重複時進行最小一致性調整，不重新設計既有檢查工具。
 

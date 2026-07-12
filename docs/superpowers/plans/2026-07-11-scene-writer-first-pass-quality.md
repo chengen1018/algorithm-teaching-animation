@@ -25,8 +25,8 @@
 - `references/manim-guidelines.md`：Manim layout planning、定位推理、衝突策略、物件生命週期、教學呈現與寫後靜態 audit 的唯一權威指南。
 - `.codex/agents/scene-writer.toml`：scene writer 的角色、必要輸入、強制執行順序、交付物與送審條件。
 - `tests/test_scene_writer_guidance.py`：以結構契約驗證指南章節、首次靜態流程、TOML 可解析性及文件責任邊界。
-- `references/render-preflight.md`：既有 render 後檢查；預設不修改。
-- `references/scene-review-checklist.md`：既有獨立 review；預設不修改。
+- `references/how-to-hand-off-a-render-for-review.md`：既有 render 交接指南；預設不修改。
+- `references/how-to-review-manim-scene-code.md`：既有獨立程式碼 review；預設不修改。
 
 ### Task 1: 建立首次品質的 RED baseline 與失敗契約測試
 
@@ -196,8 +196,8 @@ Expected: commit 只包含 `tests/test_scene_writer_guidance.py`。
 - Modify: `references/manim-guidelines.md`
 - Modify: `.codex/agents/scene-writer.toml`
 - Test: `tests/test_scene_writer_guidance.py`
-- Read only unless a concrete conflict is found: `references/render-preflight.md`
-- Read only unless a concrete conflict is found: `references/scene-review-checklist.md`
+- Read only unless a concrete conflict is found: `references/how-to-hand-off-a-render-for-review.md`
+- Read only unless a concrete conflict is found: `references/how-to-review-manim-scene-code.md`
 
 **Interfaces:**
 - Consumes: Task 1 的 `SceneWriterGuidanceContractTests` 與已核准設計規格。
@@ -274,7 +274,7 @@ Constants 與 Styling        -> 合併至 layout roles/zones 的可稽核性
 
 完成整支 `generated_algo_scene.py` 後，必須重新從頭閱讀完整檔案，依指南對六個 Scene 的每個穩定 beat 執行靜態 audit。特別追蹤每個 beat 仍存在的物件、最終 positioning chain、共享 anchor 或 index、最長文字、pointer 目的地、Transform 前後狀態及物件移除時點。
 
-若發現 frame overflow、物件碰撞、遮擋、過期 helper、無法容納最長文字，或只能依賴未驗證 magic shift 的構圖，必須先自行修正並重新閱讀受影響的 Scene。完成這個 plan → implement → reread → audit → fix 流程後，才能進入既有檢查流程並準備 render preflight。
+若發現 frame overflow、物件碰撞、遮擋、過期 helper、無法容納最長文字，或只能依賴未驗證 magic shift 的構圖，必須先自行修正並重新閱讀受影響的 Scene。完成這個 plan → implement → reread → audit → fix 流程後，才能進入既有檢查流程並準備 render review handoff。
 ```
 
 - [ ] **Step 4: 執行 contract tests 並確認 GREEN**

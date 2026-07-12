@@ -18,7 +18,7 @@
 - Modify: `agents/voiceover-manifest.md` — always produce the required narration package.
 - Modify: `agents/scene-writer.md`, `agents/scene-reviewer.md`, `agents/qa-verifier.md`, `agents/layout-checker.md` — remove brief and delivery-tier routing.
 - Modify: `references/teaching-script.md`, `references/script-review-checklist.md`, `references/voiceover.md` — define script and narration inputs without a brief.
-- Modify: `references/manim-guidelines.md`, `references/render-preflight.md`, `references/scene-review-checklist.md`, `references/render-qa-checklist.md`, `references/default-visual-semantics.md` — update render and QA contracts.
+- Modify: `references/manim-guidelines.md`, `references/how-to-hand-off-a-render-for-review.md`, `references/how-to-review-manim-scene-code.md`, `references/render-qa-checklist.md`, `references/default-visual-semantics.md` — update render and QA contracts.
 - Modify: `references/how-to-design-animation.md` — transition directly from approved design to `SCRIPT`.
 - Modify where applicable: current uncommitted workflow rewrite specs/plans — remove statements that describe the obsolete target workflow, while retaining historical committed documents that only record earlier decisions.
 
@@ -154,8 +154,8 @@ Expected: the first command has no matches; the second confirms all required nar
 - Modify: `agents/qa-verifier.md`
 - Modify: `references/default-visual-semantics.md`
 - Modify: `references/manim-guidelines.md`
-- Modify: `references/render-preflight.md`
-- Modify: `references/scene-review-checklist.md`
+- Modify: `references/how-to-hand-off-a-render-for-review.md`
+- Modify: `references/how-to-review-manim-scene-code.md`
 - Modify: `references/render-qa-checklist.md`
 
 - [x] **Step 1: Replace render and review inputs**

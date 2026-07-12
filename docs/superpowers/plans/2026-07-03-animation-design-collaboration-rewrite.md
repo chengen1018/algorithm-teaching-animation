@@ -244,7 +244,7 @@ Expected: no output.
 **Files:**
 - Rewrite: `references/pre-build-brief.md`
 - Modify: `SKILL.md`
-- Modify scoped matches in: `agents/qa-verifier.md`, `agents/scene-reviewer.md`, `agents/scene-writer.md`, `agents/script-reviewer.md`, `agents/script-writer.md`, `agents/voiceover-manifest.md`, `references/manim-guidelines.md`, `references/render-preflight.md`, `references/render-qa-checklist.md`, `references/scene-review-checklist.md`, `references/script-review-checklist.md`, `references/teaching-script.md`, `references/voiceover.md`
+- Modify scoped matches in: `agents/qa-verifier.md`, `agents/scene-reviewer.md`, `agents/scene-writer.md`, `agents/script-reviewer.md`, `agents/script-writer.md`, `agents/voiceover-manifest.md`, `references/manim-guidelines.md`, `references/how-to-hand-off-a-render-for-review.md`, `references/render-qa-checklist.md`, `references/how-to-review-manim-scene-code.md`, `references/script-review-checklist.md`, `references/teaching-script.md`, `references/voiceover.md`
 
 - [ ] **Step 1: Rewrite the brief as a mechanical handoff**
 
