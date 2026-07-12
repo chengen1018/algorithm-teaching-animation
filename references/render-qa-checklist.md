@@ -33,7 +33,7 @@ scene review 要回答的是 scene implementation 是否忠實表達已確認需
 - 已核准的 `voiceover.md`、`narration_manifest.json` 與可用音訊資產
 - 當 overlays 啟用時，對應的 overlay output
 
-只有當 rendered media 是最新最終 render，且 latest-render evidence、`render_preflight.md` 與 `scene_review_result.md = PASS` 都綁定到同一個最新 MP4/版本時，QA 才能審查並通過。任何 rerender 都會使先前所有 latest-render evidence、`render_preflight.md` 與 `scene_review_result.md` 失效；在 QA 開始前，必須回到 `RENDER` 重新產生證據與 preflight，並讓獨立 scene reviewer 對新 MP4/版本給出新的 `PASS`。
+只有當 rendered media 是最新最終 render、`render_preflight.md` 的 Source Evidence 指向該 MP4，且 latest-render evidence 與 `scene_review_result.md = PASS` 也都對應該版本時，QA 才能審查並通過。任何 rerender 都會使先前的 preflight、latest-render evidence 與 `scene_review_result.md` 失效；在 QA 開始前，必須更新 preflight、重新準備 reviewer evidence，並讓獨立 scene reviewer 對新 MP4/版本給出新的 `PASS`。
 
 ## Narration 檢查
 
@@ -75,7 +75,7 @@ scene review 要回答的是 scene implementation 是否忠實表達已確認需
 - 每個 Scene 邊界皆先淡出至空白，再淡入下一幕
 - 所需檔案存在且可用
 - 不會把 draft-quality narration 誤標為 final
-- rendered media 是最新最終 render，且 latest-render evidence、`render_preflight.md` 與 `scene_review_result.md = PASS` 都綁定到同一個最新 MP4/版本
+- rendered media 是最新最終 render，`render_preflight.md` 的 Source Evidence 指向該 MP4，且 latest-render evidence 與 `scene_review_result.md = PASS` 也都對應該版本
 
 ## 修復方向
 
@@ -96,7 +96,7 @@ QA 不可透過自行給出通過，或把同一個被阻塞的工作改標成�
 只有在以下條件都成立時才能通過：
 
 - `scene_review_result.md = PASS` 以明確檔案形式存在
-- rendered media 是最新最終 render，且 latest-render evidence、`render_preflight.md` 與 `scene_review_result.md = PASS` 都綁定到同一個最新 MP4/版本
+- rendered media 是最新最終 render，`render_preflight.md` 的 Source Evidence 指向該 MP4，且 latest-render evidence 與 `scene_review_result.md = PASS` 也都對應該版本
 - narration 與其他必要產物皆存在且可用
 - render 可讀
 - 已確認需求、已核准設計與已審查 script 被忠實實作

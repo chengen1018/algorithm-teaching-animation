@@ -70,8 +70,8 @@ developer_instructions = """
 
 ## 送審規則
 
-每次重新渲染後，舊的 evidence、render_preflight.md 和 scene_review_result.md 都失效。
-只有最新 evidence 和 preflight 都完成後，才能請獨立的 scene-reviewer 審查。
+每次重新渲染後，舊的 render_preflight.md 和 scene_review_result.md 都失效；請更新 preflight 的 Source Evidence，讓它指向最新 MP4。reviewer 會為審查自行準備最新 evidence。
+只有最新 preflight 完成後，才能請獨立的 scene-reviewer 審查。
 送審範圍和交接規則要遵守 references/render-preflight.md。
 不要自己寫 scene_review_result.md。
 """

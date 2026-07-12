@@ -13,7 +13,7 @@ reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不�
 - reviewer 負責 `RENDER` gate
 - 分類好的阻塞性 findings
 - evidence references
-- 修復方向：`RENDER`、`SCRIPT`、`COLLECT_REQUIREMENTS` 或 `DESIGN_DEVELOPMENT`
+- 修復方向：`RENDER`
 
 使用以下 finding 類別：
 
@@ -33,7 +33,9 @@ reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不�
 - `render_preflight.md`
 - rendered output 或 render evidence
 
-在判斷視覺品質前，先確認 `render_preflight.md` 與 latest-render evidence 存在、彼此一致，且是在最新 MP4 之後重新產生。若 preflight 或 latest-render evidence 缺失、過期、不完整或互不一致，這屬於被阻塞或無效的 review handoff，以及應送回 `RENDER` 的 evidence / process defect，而不是 `layout` finding。未重新產生符合最新 MP4 的 evidence 與 preflight 前，不得繼續審查或回傳 `PASS`。真正的視覺版面問題則分類為 `layout`。
+已通過 gate 的上游產物是可執行契約。審查 `render_preflight.md` 的 `Render Assumptions`：每一項非平凡解讀都必須最小、保守、可追溯至其負責的來源範圍，且不得新增演算法步驟或教學目標。
+
+在判斷視覺品質前，先確認 `render_preflight.md` 的 Source Evidence 指向最新 MP4，並由 reviewer 為該 MP4 準備最新 render evidence。若 preflight、MP4 或 reviewer evidence 缺失、過期、不完整或互不一致，這屬於被阻塞或無效的 review handoff，以及應送回 `RENDER` 的 evidence / process defect，而不是 `layout` finding。未準備符合最新 MP4 的 preflight 與 reviewer evidence 前，不得繼續審查或回傳 `PASS`。真正的視覺版面問題則分類為 `layout`。
 
 ## 審查問題
 
@@ -63,55 +65,17 @@ reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不�
 
 - 是否有任何 styling 選擇迫使觀眾推論需求或設計從未定義的規則？
 - 是否有任何實作方便性改變了觀眾學到的內容？
-- 是否有任何不匹配暴露了未解決的語意歧義、語意不匹配，或缺失的上游決策？
+- 是否有任何 assumptions 不是最小、保守或可追溯的解讀？
 
 ## 修復路由
 
-### 留在 RENDER
-
-當問題只限於以下情況時，使用此路徑：
-
-- styling
-- spacing
-- layout execution
-- 沒有語意歧義的 implementation fidelity
-
-修復後的 scene 必須保留相同的已確認語意。
-
-### 回到 SCRIPT
-
-當：
-
-- scene 暴露出相對於已核准 script 的 beat-structure mismatch
-- 已核准設計很清楚，但 script 沒有提供足夠忠實的 beat 指引給 scene work
-- 已核准設計很清楚，但 script 層的不完整迫使 scene 自行猜測結構、順序或重點
-
-不要因為實作已經開始，就在 `RENDER` 內本地修補 beat logic。
-
-### 回到 DESIGN_DEVELOPMENT
-
-當問題是：
-
-- 已核准設計本身在演算法語意上有缺漏或衝突
-- 已核准設計本身在主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線或高層節拍上有缺漏或衝突
-- 已核准設計本身在新發現的使用者選定設計問題上有缺漏或衝突
-
-此時必須先設計修復、重新審查並重新核准，之後才能恢復 scene 工作。
-
-### 回到 COLLECT_REQUIREMENTS
-
-當使用者需求遺漏、來源擷取不準確或語言記錄錯誤時，使用此路徑。修正後重新送入設計流程。
+所有 findings 一律回到 `RENDER`。包括 styling、spacing、layout execution、implementation fidelity、evidence／process defect，以及 assumptions 過度延伸、不可追溯或未能忠實實作上游契約的問題。修復時必須保留已確認語意；可合理解讀的細節改以更小、更保守且有明確來源依據的 assumptions 實作，不得重新啟動上游流程。
 
 ## Source Mismatch 規則
 
 當 scene 與已確認需求、已核准設計或已審查 script 衝突時，使用 `source mismatch`。
 
-預設處理方式：
-
-- 若需求、設計與 script 都清楚，而 scene 只是違反了它們，就留在 `RENDER`
-- 若設計清楚，但已審查 script 才是節拍結構錯配的來源，或使 scene work 受 script 層不完整所迫，則回到 `SCRIPT`
-- 若不匹配來自使用者需求記錄錯誤，則回到 `COLLECT_REQUIREMENTS`
-- 若不匹配證明已核准設計本身在演算法語意、主要心智模型、核心視覺語意、場景結構、資訊層級、教學弧線、高層節拍或使用者選定設計上有缺漏或衝突，則回到 `DESIGN_DEVELOPMENT`；必須先修設計、重新審查並重新核准
+不匹配一律由 `RENDER` 修正：先依需求、設計、script 與旁白產物各自的負責範圍選擇最小、保守解讀，再更新程式、畫面與 `Render Assumptions`。不得因來源存在可合理解讀的細節、歧義或衝突而路由上游。
 
 ## Delta Review
 
@@ -130,7 +94,7 @@ delta review 只檢查：
 
 若受影響影格範圍擴大或影響不確定，就視為受影響影格證據失效，必須使用完整獨立 scene review。
 
-若連續兩次失敗屬於同一類 Manim visual-state 問題，必須要求 scene writer 在再次送審前重寫 phase ownership 或 visibility planning。若在重寫後第三次仍失敗，則依失敗產物的 repair target 路由，而不是繼續本地 patch 迴圈。
+若連續兩次失敗屬於同一類 Manim visual-state 問題，必須要求 scene writer 在再次送審前重寫 phase ownership 或 visibility planning。若在重寫後第三次仍失敗，則在 `RENDER` 內升級為架構層級修正，而不是繼續局部 patch 迴圈。
 
 ## PASS 標準
 
@@ -139,7 +103,8 @@ delta review 只檢查：
 - scene 忠實於已確認需求、已核准設計與已審查 script
 - scene 在視覺上可讀
 - 版面安全
-- `render_preflight.md` 已存在，且引用 latest-render evidence
+- `render_preflight.md` 已存在，且其 Source Evidence 指向最新 MP4
+- 每個非平凡 Render Assumption 都最小、保守且可追溯
 - reviewer 看不到任何仍未解決的語意問題
 - `scene_review_result.md` 由獨立 reviewer 撰寫，而非 render executor
 - `scene_review_result.md` 以明確 review artifact 存在；隱含通過、豁免或未記錄的替代品都不算
@@ -147,7 +112,7 @@ delta review 只檢查：
 ## 常見失敗
 
 - 因 scene 可以執行就通過，即使它發明了語意。
-- 把語意問題誤標成 styling，以避免回退。
+- 把 assumptions 過度延伸、不可追溯或新增教學內容的問題誤標成 styling。
 - 回傳 `FAIL` 卻沒有證據或沒有指出修復層級。
 - 把移除 support structure 當成無害清理，明明它改變了課程。
 - rerender 後仍拿過期影格來審查。

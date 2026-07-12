@@ -260,7 +260,7 @@ QA 必須檢查內容意思、視覺清晰度、時間安排、版面、交付�
 - `voiceover.md`、`narration_manifest.json` 與可直接使用的旁白音訊都已完成。
 - `generated_algo_scene.py` 存在。
 - 最新渲染證據存在，且確實來自最新 MP4。
-- `render_preflight.md` 存在且引用最新渲染證據。
+- `render_preflight.md` 存在，且其 Source Evidence 指向最新 MP4。
 - `scene_review_result.md = PASS`。
 - `qa_result.md = PASS`。
 - 交付摘要符合實際產物，且沒有把尚未通過的關卡說成已完成。
