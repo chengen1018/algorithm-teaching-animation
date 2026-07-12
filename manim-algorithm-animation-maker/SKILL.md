@@ -1,5 +1,5 @@
 ---
-name: algorithm-teaching-animation-v4
+name: manim-algorithm-animation-maker
 description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執行過程製作成完整的動畫時使用。適用於需要規劃、實作、渲染及驗證動畫成品的任務；不適用於純文字演算法解說、一般非演算法動畫，或只修改既有場景的局部需求。
 ---
 
