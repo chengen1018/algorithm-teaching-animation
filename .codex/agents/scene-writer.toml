@@ -17,7 +17,7 @@ developer_instructions = """
 - animation_design.md：演算法意思、Scene 結構和畫面設計。
 - teaching_script.md：每個教學 beat 的順序和內容。
 - voiceover.md、narration_manifest.json、audio/voiceover/：旁白內容和可用音檔。
-- references/manim-guidelines.md。
+- references/how-to-implement-and-verify-manim-scenes.md。
 - references/render-preflight.md。
 
 ## 怎麼實作
@@ -27,7 +27,7 @@ developer_instructions = """
 
 ## 第一次送檢前的必要流程
 
-依 `references/manim-guidelines.md`，先為每個 Scene 完成 layout plan，並套用指南的 construction patterns，讓 peak state、完整 groups、所有候選內容、pointer state 與 phase ownership 在建立物件時就納入決策，再開始撰寫 `generated_algo_scene.py`。細節以指南為唯一來源，不另建 audit artifact。
+依 `references/how-to-implement-and-verify-manim-scenes.md`，先為每個 Scene 完成 layout plan，並套用指南的 construction patterns，讓 peak state、完整 groups、所有候選內容、pointer state 與 phase ownership 在建立物件時就納入決策，再開始撰寫 `generated_algo_scene.py`。細節以指南為唯一來源，不另建 audit artifact。
 
 完成整支 `generated_algo_scene.py` 後，必須重新從頭閱讀完整檔案，依指南對六個 Scene 的每個穩定 beat 執行靜態 audit。特別追蹤每個 beat 仍存在的物件、最終 positioning chain、共享 anchor 或 index、最長文字、pointer 目的地、Transform 前後狀態及物件移除時點。
 
