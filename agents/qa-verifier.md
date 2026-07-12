@@ -15,12 +15,12 @@
 
 ## 規則
 
-- 審查前閱讀 `confirmed_requirements.md`、已核准的 `animation_design.md`、已審查的 `teaching_script.md`、旁白產物、`render_preflight.md`、`scene_review_result.md` 與最新渲染證據。
+- 審查前閱讀 `confirmed_requirements.md`、已核准的 `animation_design.md`、已審查的 `teaching_script.md`、旁白產物、`render_review_handoff.md`、`scene_review_result.md` 與最新渲染證據。
 - 你是獨立審查者。不得驗證自己撰寫或共同撰寫的工作；render 執行者、scene reviewer 或任何其他參與作者的自我驗證都無效。
 - 除非存在 `scene_review_result.md = PASS` 作為明確的檔案型 scene-review 結果，否則不得開始 `QA`。
 - 若 `scene_review_result.md` 缺失或為 `FAIL`，必須遵守上游阻塞，並透過其中指定的修復目標回退，而不是把問題轉成一般 `QA` 判定。若該產物完全缺失，則使用 `RENDER` 作為預設修復目標，因為 scene-review gate 根本尚未完成。
-- 只有在 rendered media 是最新最終 render、`render_preflight.md` 的 Source Evidence 指向該 MP4，且 latest-render evidence 與 `scene_review_result.md = PASS` 也都對應該版本時，才能審查並通過。
-- 任何 rerender 都會使先前的 `render_preflight.md`、latest-render evidence 與 `scene_review_result.md` 失效。在 QA 前，必須回到 `RENDER` 更新 preflight、重新準備 reviewer evidence，並由獨立 scene reviewer 對 rerender 後的 MP4/版本給出新的 `PASS`。
+- 只有在 rendered media 是最新最終 render、`render_review_handoff.md` 的 Source Evidence 指向該 MP4，且 latest-render evidence 與 `scene_review_result.md = PASS` 也都對應該版本時，才能審查並通過。
+- 任何 rerender 都會使先前的 `render_review_handoff.md`、latest-render evidence 與 `scene_review_result.md` 失效。在 QA 前，必須回到 `RENDER` 更新 handoff、重新準備 reviewer evidence，並由獨立 scene reviewer 對 rerender 後的 MP4/版本給出新的 `PASS`。
 - 先把最終輸出與已確認需求及已核准設計比較，再對照已審查 script 與旁白產物。
 - 區分樣式 / 版面缺陷與語意偏移。
 - 驗證 optional overlays 仍然是 opt-in。

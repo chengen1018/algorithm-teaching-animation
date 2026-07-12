@@ -27,15 +27,17 @@ reviewer 的工作是檢查 scene 忠實性與觀眾可理解性。reviewer 不�
 審查時應對照：
 
 - `confirmed_requirements.md`
-- 已核准的 `animation_design.md`
-- 已審查的 `teaching_script.md`
+- `animation_design.md`
+- `teaching_script.md`
 - `generated_algo_scene.py`
-- `render_preflight.md`
+- `render_review_handoff.md`
 - rendered output 或 render evidence
 
-已通過 gate 的上游產物是可執行契約。審查 `render_preflight.md` 的 `Render Assumptions`：每一項非平凡解讀都必須最小、保守、可追溯至其負責的來源範圍，且不得新增演算法步驟或教學目標。
+`render_review_handoff.md` 是 scene-writer 的交接紀錄，不是畫面或程式碼的自我審查報告。它只用 Source Evidence 標示送審 MP4 的版本，並用 Render Assumptions 記錄必要的非平凡實作解讀；reviewer 必須自行準備並審查實際影片與影格 evidence。
 
-在判斷視覺品質前，先確認 `render_preflight.md` 的 Source Evidence 指向最新 MP4，並由 reviewer 為該 MP4 準備最新 render evidence。若 preflight、MP4 或 reviewer evidence 缺失、過期、不完整或互不一致，這屬於被阻塞或無效的 review handoff，以及應送回 `RENDER` 的 evidence / process defect，而不是 `layout` finding。未準備符合最新 MP4 的 preflight 與 reviewer evidence 前，不得繼續審查或回傳 `PASS`。真正的視覺版面問題則分類為 `layout`。
+已通過 gate 的上游產物是可執行契約。審查 `render_review_handoff.md` 的 `Render Assumptions`：每一項非平凡解讀都必須最小、保守、可追溯至其負責的來源範圍，且不得新增演算法步驟或教學目標。
+
+在判斷視覺品質前，先確認 `render_review_handoff.md` 的 Source Evidence 指向最新 MP4，並由 reviewer 為該 MP4 準備最新 render evidence。若 handoff、MP4 或 reviewer evidence 缺失、過期、不完整或互不一致，這屬於被阻塞或無效的 review handoff，以及應送回 `RENDER` 的 evidence / process defect，而不是 `layout` finding。未準備符合最新 MP4 的 handoff 與 reviewer evidence 前，不得繼續審查或回傳 `PASS`。真正的視覺版面問題則分類為 `layout`。
 
 ## 審查問題
 
@@ -103,7 +105,7 @@ delta review 只檢查：
 - scene 忠實於已確認需求、已核准設計與已審查 script
 - scene 在視覺上可讀
 - 版面安全
-- `render_preflight.md` 已存在，且其 Source Evidence 指向最新 MP4
+- `render_review_handoff.md` 已存在，且其 Source Evidence 指向最新 MP4
 - 每個非平凡 Render Assumption 都最小、保守且可追溯
 - reviewer 看不到任何仍未解決的語意問題
 - `scene_review_result.md` 由獨立 reviewer 撰寫，而非 render executor

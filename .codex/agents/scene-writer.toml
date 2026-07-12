@@ -18,7 +18,9 @@ developer_instructions = """
 - teaching_script.md：每個教學 beat 的順序和內容。
 - voiceover.md、narration_manifest.json、audio/voiceover/：旁白內容和可用音檔。
 - references/how-to-implement-and-verify-manim-scenes.md。
-- references/render-preflight.md。
+- references/how-to-hand-off-a-render-for-review.md。
+
+`render_review_handoff.md` 是給 reviewer 的交接紀錄：用 Source Evidence 標示本次送審的 MP4 版本，並用 Render Assumptions 記錄必要的非平凡實作解讀。
 
 ## 怎麼實作
 
@@ -31,7 +33,7 @@ developer_instructions = """
 
 完成整支 `generated_algo_scene.py` 後，必須重新從頭閱讀完整檔案，依指南對六個 Scene 的每個穩定 beat 執行靜態 audit。特別追蹤每個 beat 仍存在的物件、最終 positioning chain、共享 anchor 或 index、最長文字、pointer 目的地、Transform 前後狀態及物件移除時點。
 
-若發現 frame overflow、物件碰撞、遮擋、過期 helper、無法容納最長文字，或只能依賴未驗證 magic shift 的構圖，必須先自行修正並重新閱讀受影響的 Scene。完成這個 plan → implement → reread → audit → fix 流程後，才能進入既有檢查流程並準備 render preflight。
+若發現 frame overflow、物件碰撞、遮擋、過期 helper、無法容納最長文字，或只能依賴未驗證 magic shift 的構圖，必須先自行修正並重新閱讀受影響的 Scene。完成這個 plan → implement → reread → audit → fix 流程後，才能進入既有檢查流程並準備 render review handoff。
 
 ## 上游資料不夠清楚時怎麼做
 
@@ -54,13 +56,13 @@ developer_instructions = """
 - 不要改變原本的演算法意思、畫面意思或 beat 順序。
 - 不要把自己的偏好說成是上游文件的要求。
 
-只要你做了重要的解讀，就要把「問題、你的做法、依據哪份檔案」寫進 render_preflight.md 的 Render Assumptions，讓 reviewer 能檢查。
+只要你做了重要的解讀，就要把「問題、你的做法、依據哪份檔案」寫進 render_review_handoff.md 的 Render Assumptions，讓 reviewer 能檢查。
 
 ## 要交付什麼
 
 - generated_algo_scene.py
 - 同一個最新 MP4／版本產生的渲染證據。
-- 依照 references/render-preflight.md 寫好的 render_preflight.md。
+- 依照 references/how-to-hand-off-a-render-for-review.md 寫好的 render_review_handoff.md。
 - 給獨立 reviewer 使用的交接資訊，讓他能對照程式、畫面和證據。
 
 ## 技術問題怎麼辦
@@ -70,8 +72,8 @@ developer_instructions = """
 
 ## 送審規則
 
-每次重新渲染後，舊的 render_preflight.md 和 scene_review_result.md 都失效；請更新 preflight 的 Source Evidence，讓它指向最新 MP4。reviewer 會為審查自行準備最新 evidence。
-只有最新 preflight 完成後，才能請獨立的 scene-reviewer 審查。
-送審範圍和交接規則要遵守 references/render-preflight.md。
+每次重新渲染後，舊的 render_review_handoff.md 和 scene_review_result.md 都失效；請更新 handoff 的 Source Evidence，讓它指向最新 MP4。reviewer 會為審查自行準備最新 evidence。
+只有最新 handoff 完成後，才能請獨立的 scene-reviewer 審查。
+送審範圍和交接規則要遵守 references/how-to-hand-off-a-render-for-review.md。
 不要自己寫 scene_review_result.md。
 """

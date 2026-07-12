@@ -1,6 +1,6 @@
 # Manim 實作與首次靜態驗證指南
 
-本指南定義 `generated_algo_scene.py` 的實作方法與首次送檢前的靜態推理。它以 construction patterns 降低第一版 layout 失誤機率；`render_preflight.md` 只記錄交接版本與實作解讀，獨立 scene reviewer 則負責檢查實際影片。
+本指南定義 `generated_algo_scene.py` 的實作方法與首次送檢前的靜態推理。它以 construction patterns 降低第一版 layout 失誤機率；`render_review_handoff.md` 只記錄交接版本與實作解讀，獨立 scene reviewer 則負責檢查實際影片。
 
 ## 實作責任與不可改變事項
 

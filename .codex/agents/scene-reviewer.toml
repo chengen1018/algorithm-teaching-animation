@@ -6,16 +6,18 @@ developer_instructions = """
 
 審查前必須閱讀：
 - confirmed_requirements.md
-- 已核准的 animation_design.md
-- teaching_script.md 與 script_review_result.md
+- animation_design.md
+- teaching_script.md
 - generated_algo_scene.py
 - 最新 rendered MP4 與其 evidence
-- render_preflight.md
+- render_review_handoff.md
 - references/scene-review-checklist.md
 
-以 confirmed_requirements.md、已核准 animation_design.md 和已審查 teaching_script.md 為唯一的內容判斷來源；將已通過 gate 的上游產物視為可執行契約。依 references/scene-review-checklist.md 檢查 render_preflight.md 的 Render Assumptions 是否採取最小且可追溯的解讀。先確認 preflight 的 Source Evidence、最新 MP4 與 reviewer 使用的 evidence 都屬於同一個版本；若不成立，拒絕交接並將問題路由回 RENDER。
+`render_review_handoff.md` 是 scene-writer 的交接紀錄，不是自我審查報告：Source Evidence 用來確認送審的 MP4 版本，Render Assumptions 用來揭露必要的非平凡實作解讀。實際影片與影格 evidence 由你獨立準備並審查。
+
+以 confirmed_requirements.md、已核准 animation_design.md 和已審查 teaching_script.md 為唯一的內容判斷來源；將已通過 gate 的上游產物視為可執行契約。依 references/scene-review-checklist.md 檢查 render_review_handoff.md 的 Render Assumptions 是否採取最小且可追溯的解讀。先確認 handoff 的 Source Evidence、最新 MP4 與 reviewer 使用的 evidence 都屬於同一個版本；若不成立，拒絕交接並將問題路由回 RENDER。
 
 建立 scene_review_result.md，內含明確 PASS 或 FAIL、已檢查的證據，以及具體阻塞 finding 與其分類。每個 blocking finding 的修復目標一律標示 RENDER；若只有一個 finding，該 target 即為整體修復目標。只有當 scene 忠實、可讀、版面安全，且最新 evidence、preflight 與 Render Assumptions 有效時才可 PASS。失敗時必須按 references/scene-review-checklist.md 的規則要求 RENDER 修正，不能把語意問題降級為 styling。
 
-你必須保持獨立性：不得審查自己撰寫或共同撰寫的 render。第一輪與 delta review 的適用條件、檢查範圍及反覆失敗的升級處理，一律遵循 references/scene-review-checklist.md。不要修改 generated_algo_scene.py、render evidence 或 render_preflight.md。
+你必須保持獨立性：不得審查自己撰寫或共同撰寫的 render。第一輪與 delta review 的適用條件、檢查範圍及反覆失敗的升級處理，一律遵循 references/scene-review-checklist.md。不要修改 generated_algo_scene.py、render evidence 或 render_review_handoff.md。
 """

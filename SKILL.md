@@ -121,10 +121,10 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 本階段依序交給兩個 custom agent 處理：`scene-writer` 負責製作與渲染，`scene-reviewer` 負責獨立審查。兩者的詳細工作規則以 `.codex/agents/scene-writer.toml` 與 `.codex/agents/scene-reviewer.toml` 為準；協調者只負責安排流程與確認關卡，不得更改其規則。
 
 1. 先交由 `scene-writer` 製作場景、渲染影片，並準備送審資料。
-2. `scene-writer` 將已通過 gate 的上游產物視為可執行契約；可合理解讀的細節以最小、保守方式實作，並記錄在 `render_preflight.md` 的 `Render Assumptions`。
-3. 只有在最新渲染證據、`render_preflight.md` 與審查交接資料都已完成後，才能交由獨立的 `scene-reviewer` 審查。
+2. `scene-writer` 將已通過 gate 的上游產物視為可執行契約；可合理解讀的細節以最小、保守方式實作，並記錄在 `render_review_handoff.md` 的 `Render Assumptions`。
+3. 只有在最新渲染證據、`render_review_handoff.md` 與審查交接資料都已完成後，才能交由獨立的 `scene-reviewer` 審查。
 4. 若 `scene_review_result.md` 為 `FAIL`，協調者必須將每一項阻塞問題送回 `RENDER` 修正。本機檢查或預檢都不能取代獨立審查。
-5. 每次重新渲染後，舊的渲染證據、`render_preflight.md` 與 `scene_review_result.md` 都不再有效。進入 `QA` 前，必須針對同一個最新 MP4／版本重新準備這些資料，並重新取得獨立審查的 `PASS`。
+5. 每次重新渲染後，舊的渲染證據、`render_review_handoff.md` 與 `scene_review_result.md` 都不再有效。進入 `QA` 前，必須針對同一個最新 MP4／版本重新準備這些資料，並重新取得獨立審查的 `PASS`。
 
 只有在渲染結果有問題、無法安排審查，或不確定應退回哪個階段時，協調者才閱讀 `references/scene-review-checklist.md` 或 `script_review_result.md`。
 
@@ -133,12 +133,12 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 
 - `generated_algo_scene.py`
 - 由最新 MP4 重新產生的渲染證據
-- `render_preflight.md`
+- `render_review_handoff.md`
 - 程式碼與渲染畫面的對應說明，或其他足以進行場景審查的交接資訊
 - 由獨立審查者產出的 `scene_review_result.md`
 
 ### 通過／離開關卡
-僅當 `generated_algo_scene.py`、最新渲染證據、`render_preflight.md` 均存在，且 `scene_review_result.md = PASS` 時，才能前進。
+僅當 `generated_algo_scene.py`、最新渲染證據、`render_review_handoff.md` 均存在，且 `scene_review_result.md = PASS` 時，才能前進。
 `scene_review_result.md` 必須由 `scene-reviewer` 產出，而非 `scene-writer`。
 成功完成渲染、本機自行檢查或預檢，都不代表場景已通過審查。
 
@@ -162,7 +162,7 @@ QA 不只確認影片能否播放，也要確認成品符合上游來源並具�
 - 已核准的 `animation_design.md`
 - `teaching_script.md`
 - 已渲染的媒體輸出
-- `render_preflight.md`
+- `render_review_handoff.md`
 - `scene_review_result.md`
 - `voiceover.md`、`narration_manifest.json` 與 `audio/voiceover/` 下可直接使用的音訊
 - `references/render-qa-checklist.md`
@@ -240,7 +240,7 @@ QA 必須檢查內容意思、視覺清晰度、時間安排、版面、交付�
 | 「reviewer 在聊天中說沒問題，所以不用建立審查檔。」 | 非正式意見不能取代由獨立 `animation-design-reviewer` 產出的 `animation_design_review.md = PASS`。 |
 | 「`animation_design.md` 已經夠詳細，所以可以略過 `SCRIPT`。」 | 仍須執行 `SCRIPT`；場景程式碼不能取代 `teaching_script.md`。 |
 | 「渲染能執行，所以等於已經完成審查。」 | 仍須由獨立審查者產出正式的 `scene_review_result.md`。 |
-| 「預檢已通過，因此獨立場景審查是選用的。」 | 在 `render_preflight.md` 存在後執行場景審查。 |
+| 「交接檔已建立，因此獨立場景審查是選用的。」 | 在 `render_review_handoff.md` 存在後執行場景審查。 |
 | 「QA 可以由基本渲染測試取代。」 | 仍須執行獨立 QA 並產出 `qa_result.md`。 |
 | 「再做一次本機修補，比追查反覆發生的畫面問題更省事。」 | 如果問題顯示前面階段仍有歧義，應退回對應階段處理。 |
 | 「為求保險，我現在應該閱讀所有參考資料。」 | 只讀取目前階段要求的資料；遇到指定情況時，再讀取額外參考資料。 |
@@ -260,7 +260,7 @@ QA 必須檢查內容意思、視覺清晰度、時間安排、版面、交付�
 - `voiceover.md`、`narration_manifest.json` 與可直接使用的旁白音訊都已完成。
 - `generated_algo_scene.py` 存在。
 - 最新渲染證據存在，且確實來自最新 MP4。
-- `render_preflight.md` 存在，且其 Source Evidence 指向最新 MP4。
+- `render_review_handoff.md` 存在，且其 Source Evidence 指向最新 MP4。
 - `scene_review_result.md = PASS`。
 - `qa_result.md = PASS`。
 - 交付摘要符合實際產物，且沒有把尚未通過的關卡說成已完成。

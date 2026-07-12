@@ -1,13 +1,13 @@
-# Render Preflight
+# How to Hand Off a Render for Review
 
-這份文件是 scene-writer 交給獨立 scene reviewer 的簡短交接紀錄。它不做程式碼檢查，也不做畫面審查。
+這份文件說明 scene-writer 如何建立 `render_review_handoff.md`，交給獨立 scene reviewer 使用。
 
-scene-writer 的程式碼靜態 audit（例如物件碰撞、越界、生命週期與 peak state）依 `references/how-to-implement-and-verify-manim-scenes.md` 執行。實際影片、影格與畫面品質由獨立 scene-reviewer 審查。
+`render_review_handoff.md` 是簡短交接紀錄，不做程式碼檢查，也不做畫面審查。scene-writer 的程式碼靜態 audit（例如物件碰撞、越界、生命週期與 peak state）依 `references/how-to-implement-and-verify-manim-scenes.md` 執行。實際影片、影格與畫面品質由獨立 scene-reviewer 審查。
 
-請求 scene review 前，請建立 `render_preflight.md`，並使用以下格式：
+請求 scene review 前，請建立 `render_review_handoff.md`，並使用以下格式：
 
 ```markdown
-# Render Preflight
+# Render Review Handoff
 
 ## Source Evidence
 - Six Scene MP4s: `<依核准順序列出六個檔案路徑>`
@@ -21,7 +21,7 @@ scene-writer 的程式碼靜態 audit（例如物件碰撞、越界、生命週�
 | `<只有非平凡解讀才填寫；沒有則填 N/A>` | `<對原教學內容影響最小的做法>` | `<requirements/design/script/voiceover 的路徑>` |
 ```
 
-`Source Evidence` 用來讓 reviewer 確認交接的是哪一版 MP4。每次 rerender 後，都要更新其中的檔案路徑、最後修改時間與檔案大小；舊 preflight 不可用於新版本。
+`Source Evidence` 用來讓 reviewer 確認交接的是哪一版 MP4。每次 rerender 後，都要更新其中的檔案路徑、最後修改時間與檔案大小；舊 handoff 不可用於新版本。
 
 `Render Assumptions` 只記錄會影響畫面或教學呈現的非平凡解讀，例如上游文件有缺口或彼此衝突時所做的選擇。一般配色、間距或程式組織不需要記錄。
 
