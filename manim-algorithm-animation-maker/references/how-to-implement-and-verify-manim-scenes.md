@@ -1,10 +1,10 @@
 # Manim 實作與首次靜態驗證指南
 
-本指南定義 `generated_algo_scene.py` 的實作方法與首次送檢前的靜態推理。它以 construction patterns 降低第一版 layout 失誤機率；`render_review_handoff.md` 只記錄交接版本與實作解讀，獨立 scene reviewer 則負責檢查程式碼。
+本指南定義 `generated_algo_scene.py` 的實作方法與首次送檢前的靜態推理。它以 construction patterns 降低第一版 layout 失誤機率；`scene_code_review_handoff.md` 只記錄受審程式碼版本、靜態驗證與實作解讀，獨立 scene reviewer 則在任何渲染之前負責檢查程式碼。
 
 ## 實作責任與不可改變事項
 
-依 `animation_design.md` 實作六個獨立 Manim `Scene` 類別，不以 `Section` 代替。六個 Scene 分別對應問題與目標、核心觀念、演算法特有的重要資料與狀態、一次關鍵動作、完整演示，以及結果回顧。每個 Scene 獨立建立及清理畫面，結尾淡出至空白，下一幕再從空白淡入；六幕分別渲染後依核准順序合併。
+依 `animation_design.md` 實作六個獨立 Manim `Scene` 類別，不以 `Section` 代替。六個 Scene 分別對應問題與目標、核心觀念、演算法特有的重要資料與狀態、一次關鍵動作、完整演示，以及結果回顧。每個 Scene 獨立建立及清理畫面，結尾淡出至空白，下一幕再從空白淡入；程式碼通過獨立審查後，才將六幕分別渲染並依核准順序合併。
 
 Scene layer 負責 layout execution、styling、timing、beat staging，以及 audio/overlay synchronization。實作必須忠於 `confirmed_requirements.md`、`animation_design.md`、`teaching_script.md`、需要維持執行忠實性時使用的 algorithm code/pseudocode、`voiceover.md`、`narration_manifest.json` 與音訊資產；不得新增演算法步驟、教學目標、support-structure 語意，或改變 movement semantics、pointer meaning、visited timing、beat 順序與已核准的 active support structure。
 
@@ -220,9 +220,9 @@ Overlays 關閉時不預留只供 overlay 使用的空間；啟用時放在 layo
 
 若高風險定位無法由最終 bounding box、zone 容量及生命週期證明安全，先修改 layout，再重新閱讀受影響 Scene；不能把已知疑點留給後續流程首次發現。
 
-## 送交既有檢查流程前的完成條件
+## 送交獨立程式碼審查前的完成條件
 
-只有在下列條件都完成後，才能送交既有檢查流程：
+只有在下列條件都完成後，才能建立 `scene_code_review_handoff.md` 並送交獨立程式碼審查；此時不執行 Manim render：
 
 - 六個 Scenes 均符合核准結構、獨立建立/清理並可分別渲染。
 - 每個 Scene、每個穩定 beat 與所有 peak states 已靜態複查。
