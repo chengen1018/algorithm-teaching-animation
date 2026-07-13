@@ -14,7 +14,7 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 若目前對話中尚未取得明確授權，必須詢問：
 
 ```text
-此任務會在動畫設計完成後使用 `animation-design-reviewer` 執行獨立內容審查，並在後續階段使用 subagent 處理腳本、旁白、動畫實作及場景審查。你是否同意我在此任務中使用 subagent？請明確回答「同意」或「不同意」(若不同意則無法開始此任務)。
+此任務會在動畫設計完成後使用 `animation-design-reviewer` 執行獨立內容審查，並在後續階段使用 subagent 處理腳本、旁白、動畫實作、場景審查及版面 QA。你是否同意我在此任務中使用 subagent？請明確回答「同意」或「不同意」(若不同意則無法開始此任務)。
 ```
 
 只有當使用者明確回答「同意」時，才能開始後續工作。
@@ -155,6 +155,8 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 `RENDER` 的所有必要輸出與 SHA-256 一致性關卡均已通過，且建立 `render_manifest.md` 後未再修改 `generated_algo_scene.py`。
 
 ### 執行事項
+本階段交給 custom agent `layout-auditor` 執行，詳細工作規則以 `.codex/agents/layout-auditor.toml` 為準；協調者只負責委派、確認必要產物與執行通過／離開關卡。
+
 開始前完整閱讀 `references/layout-audit.md`。對 `generated_algo_scene.py` 中每一個要交付的 Scene class 執行：
 
 ```bash
