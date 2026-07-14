@@ -6,7 +6,7 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 # 演算法教學動畫 v4
 
 ## 概述
-此 skill 用來把使用者的演算法需求製作成完整的 Manim 教學動畫。整個製作過程包含動畫設計、撰寫教學腳本、製作旁白、實作動畫，並在 `RENDER` 階段結束。
+此 skill 用來把使用者的演算法需求製作成完整的 Manim 教學動畫。整個製作過程包含動畫設計、撰寫教學腳本、製作旁白、實作動畫，並在 `QA` 階段結束。
 主要負責的 agent 必須確保所有步驟依序完成，並確認每個階段都符合要求。
 
 ## 必要授權
@@ -14,7 +14,7 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 若目前對話中尚未取得明確授權，必須詢問：
 
 ```text
-此任務會在動畫設計完成後使用 `animation-design-reviewer` 執行獨立內容審查，並在後續階段使用 subagent 處理腳本、旁白、動畫實作及場景審查。你是否同意我在此任務中使用 subagent？請明確回答「同意」或「不同意」(若不同意則無法開始此任務)。
+此任務會在動畫設計完成後使用 `animation-design-reviewer` 執行獨立內容審查，並在後續階段使用 subagent 處理腳本、旁白、動畫實作、場景審查及版面 QA。你是否同意我在此任務中使用 subagent？請明確回答「同意」或「不同意」(若不同意則無法開始此任務)。
 ```
 
 只有當使用者明確回答「同意」時，才能開始後續工作。
@@ -27,9 +27,10 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 2. `SCRIPT`
 3. `VOICEOVER`
 4. `RENDER`
+5. `QA`
 
 開始每個階段前確實閱讀完成目前階段需要的參考資料，不得跳過任何階段，也不得合併、提前或補做後續階段的工作來取代目前階段。
-請照各階段的描述完成工作，且該階段規定的必要產物、審查與通過條件都已滿足後，才能進入下一個階段；`RENDER` 是最後一個階段。
+請照各階段的描述完成工作，且該階段規定的必要產物、審查與通過條件都已滿足後，才能進入下一個階段；`QA` 是最後一個階段。
 
 ## 階段 1：ANIMATION_DESIGN
 
@@ -138,12 +139,44 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 - `render_manifest.md`
 
 ### 通過／離開關卡
-僅當 `generated_algo_scene.py`、`scene_code_review_handoff.md`、`scene_review_result.md = PASS`、六個 Scene MP4、最終合併 MP4 與 `render_manifest.md` 均存在，且三份紀錄的 Code SHA-256 完全一致時，才算完成工作流程。
+僅當 `generated_algo_scene.py`、`scene_code_review_handoff.md`、`scene_review_result.md = PASS`、六個 Scene MP4、最終合併 MP4 與 `render_manifest.md` 均存在，且三份紀錄的 Code SHA-256 完全一致時，才能進入 `QA`。
 `scene_review_result.md` 必須由 `scene-reviewer` 產出，而非 `scene-writer`。
 成功完成渲染、本機自行檢查或預檢，都不能取代渲染前的獨立程式碼審查。
 
 ### 發生問題時退回
 所有程式碼、MP4 產物存在性、實作忠實性或已記錄 assumptions 的問題，都退回 `RENDER` 修正。只要修正涉及程式碼變更，就必須重新通過程式碼審查後才能 render。`RENDER` 不會因上游產物的可合理解讀細節、歧義或衝突而重新啟動上游流程。
+
+## 階段 5：QA
+
+### 目標
+使用程式化 layout audit 檢查已渲染版本的可視物件是否超出畫面、互相重疊或形成嚴格包含關係。此階段不以人工播放影片或視覺判斷取代程式檢查。
+
+### 不得開始直到
+`RENDER` 的所有必要輸出與 SHA-256 一致性關卡均已通過，且建立 `render_manifest.md` 後未再修改 `generated_algo_scene.py`。
+
+### 執行事項
+本階段交給 custom agent `layout-auditor` 執行，詳細工作規則以 `.codex/agents/layout-auditor.toml` 為準；協調者只負責委派、確認必要產物與執行通過／離開關卡。
+
+開始前完整閱讀 `references/layout-audit.md`。對 `generated_algo_scene.py` 中每一個要交付的 Scene class 執行：
+
+```bash
+python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py SceneClass --audit-visible --fail-on-warning --visible-report-level warning
+```
+
+使用同一份已通過 RENDER gate 的 `generated_algo_scene.py`，不得為了讓檢查通過而在 QA 中改動程式碼。逐一記錄 Scene class、實際命令、exit code、完整 audit 輸出與受檢程式碼 SHA-256。若場景已有明確命名的 layout 群組，依 `references/layout-audit.md` 使用 `scripts/scene_layout_audit.py` 建立場景專用檢查；若需因此修改場景程式碼，先退回 `RENDER`。
+
+### 必要輸出
+建立 `layout_audit_result.md`，包含：
+
+- 受檢 `generated_algo_scene.py` 的 SHA-256
+- 每個交付 Scene class 的命令、exit code 與 audit 輸出
+- 明確的 `PASS` 或 `FAIL`
+
+### 通過／離開關卡
+僅當所有交付 Scene class 的 audit exit code 都是 `0`、`layout_audit_result.md = PASS`，且其中記錄的 SHA-256 與 `generated_algo_scene.py`、handoff、review result、render manifest 完全一致時，才能完成工作流程。不得隱藏、刪除或人工忽略 warning 來取得 PASS。
+
+### 發生問題時退回
+任何 audit 執行錯誤、超出畫面或重疊 warning 都使 QA `FAIL`，並退回 `RENDER` 修正。嚴格包含關係在預設 warning 等級下不阻塞；需要調查時可用 `--visible-report-level info` 重新執行並記錄補充資訊。只要修正 `generated_algo_scene.py`，舊 handoff、review result、render manifest 與 layout audit result 全部失效，必須重新完成 `RENDER` 後再執行 QA。
 
 ## 不可接受的捷徑
 遇到下列說法時，必須視為違反流程，不能當成可以省略步驟的理由：
@@ -157,6 +190,7 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 | 「渲染能執行，所以等於已經完成審查。」 | 仍須在渲染前由獨立審查者產出正式的 `scene_review_result.md = PASS`。 |
 | 「交接檔已建立，因此獨立場景審查是選用的。」 | 在 `scene_code_review_handoff.md` 存在後執行獨立程式碼審查，且只有 PASS 後才能渲染。 |
 | 「PASS 後只修了一個小錯，可以直接重新渲染。」 | 任何程式碼變更都會使舊 PASS 失效；必須對新 hash 重新審查。 |
+| 「影片已經渲染完成，所以可以略過 `QA`。」 | 不得略過；必須對所有交付 Scene class 執行程式化 layout audit 並建立 `layout_audit_result.md = PASS`。 |
 | 「再做一次本機修補，比追查反覆發生的畫面問題更省事。」 | 如果問題顯示前面階段仍有歧義，應退回對應階段處理。 |
 | 「為求保險，我現在應該閱讀所有參考資料。」 | 只讀取目前階段要求的資料；遇到指定情況時，再讀取額外參考資料。 |
 | 「我已委派這個階段，所以不再負責該關卡。」 | 協調者仍負責階段順序、產物是否存在與通過條件。 |
@@ -178,3 +212,4 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 - `scene_review_result.md = PASS`，且由獨立 reviewer 在渲染前產出。
 - 六個 Scene MP4、最終合併 MP4 與 `render_manifest.md` 都已建立。
 - handoff、review result、render manifest 的 Code SHA-256 與目前 `generated_algo_scene.py` 完全一致。
+- `layout_audit_result.md = PASS`，涵蓋所有交付 Scene class，且其 Code SHA-256 與目前 `generated_algo_scene.py` 完全一致。
