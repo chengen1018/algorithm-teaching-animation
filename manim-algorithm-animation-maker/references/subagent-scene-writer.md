@@ -5,7 +5,7 @@
 負責 RENDER 階段的兩次獨立指派：
 
 1. `CODE_PREPARATION`：實作四個 Manim Scene、執行非渲染靜態檢查並建立程式碼審查 handoff。
-2. `FINAL_RENDER`：只在獨立審查 `PASS` 後，渲染完全相同且未再變更的程式碼。
+2. `FINAL_RENDER`：只在 Stage 4 的獨立審查與 layout audit 都為 `PASS` 後，渲染完全相同且未再變更的程式碼。
 
 協調者每次派遣必須明確指定其中一種模式。不得自行同時執行兩種模式，也不得建立 `scene_review_result.md`。
 
@@ -32,6 +32,7 @@
 - `<project-root>/generated_algo_scene.py`
 - `<project-root>/scene_code_review_handoff.md`
 - `<project-root>/scene_review_result.md`
+- `<project-root>/layout_audit_result.md`
 - 協調者提供的 `how-to-render-approved-manim-scenes.md` 絕對路徑
 
 ## Preflight
@@ -45,6 +46,8 @@
 `FINAL_RENDER` 額外確認：
 
 - `scene_review_result.md` 明確為 `PASS`。
+- `layout_audit_result.md` 明確為 `PASS`，並完整涵蓋四個交付 Scene。
+- Stage 4 的四個程式碼身分完全一致：目前 `generated_algo_scene.py` SHA-256、handoff 的 `Code SHA-256`、review result 的 `Reviewed Code SHA-256`，以及 layout audit 的 `Audited Code SHA-256`。
 
 任何條件不成立時不得猜測、修改 gate 文件或提前執行後續工作，回報 `BLOCKED`。
 
@@ -53,16 +56,16 @@
 1. 把已通過 gate 的上游文件視為可執行契約。
 2. 依實作指南先規劃每個 Scene 的 peak state、groups、候選內容、pointer state 與 phase ownership。
 3. 建立四個獨立 Scene；每幕結尾淡出至空白，下一幕從空白淡入。
-4. 完整重讀程式碼，對每個穩定 beat 執行靜態版面與物件生命週期檢查。
-5. 修正 overflow、碰撞、遮擋、過期 helper、最長文字及未驗證 magic shift。
-6. 建立包含 Static Verification 與 Render Assumptions 的 handoff。
+4. 完整重讀程式碼，執行靜態 self-audit，確認語意、演算法狀態、物件生命週期、cleanup 與 assumptions 可稽核。
+5. 修正程式碼層級可確認的過期 helper、錯誤 state reference、遺漏 cleanup 與不一致 assumptions。
+6. 建立包含 Static Verification 與 Render Assumptions 的 pre-render handoff。
 
 在此模式禁止執行任何 Manim render、preview、低畫質渲染或合併影片。
 
 ## FINAL_RENDER procedure
 
-1. 再次確認獨立審查結果為 `PASS`。
-2. 依渲染指南渲染四個 Scene。
+1. 再次確認 Stage 4 的 `scene_review_result.md = PASS` 與 `layout_audit_result.md = PASS`，四個 Scene 都受 layout audit 涵蓋，且四個 Stage 4 SHA-256 值完全一致。
+2. Gate 通過後不得再修改 `generated_algo_scene.py`；依渲染指南渲染四個 Scene。
 3. 依核准順序合併最終影片。
 4. 建立 `render_manifest.md`，記錄渲染輸出。
 
@@ -70,7 +73,7 @@
 
 ## Completion criteria
 
-- `CODE_PREPARATION`：程式碼與 handoff 存在，靜態檢查完成，且尚未執行 render。
+- `CODE_PREPARATION`：只產出 `generated_algo_scene.py` 與 `scene_code_review_handoff.md`；完成完整重讀與靜態 self-audit，且 handoff 明確記錄 `Manim render performed: NO`。
 - `FINAL_RENDER`：四個 Scene MP4、合併影片與 manifest 都存在。
 
 ## Final response
