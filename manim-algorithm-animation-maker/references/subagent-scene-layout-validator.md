@@ -50,9 +50,23 @@ order.
 
 1. Record the absolute code path and calculate its SHA-256 before running the
    audit.
-2. Record runner metadata: absolute path, SHA-256, Python version, Manim
-   version when available, operating-system/environment information, and the
-   relevant runner options.
+2. Record the following named layout-affecting evidence fields before the
+   first required audit command. None of these fields may be replaced by an
+   opaque "environment" summary:
+
+   - `Runner path` and `Runner SHA-256`
+   - `Python version`
+   - `Manim version`
+   - `Frame width`
+   - `Frame height`
+   - `Renderer/profile/quality`
+   - `Font/font-resolution evidence` (the requested font names, the resolved
+     font files or fallback names used by Manim/Pango, and file hashes when a
+     resolved local font file is available)
+
+   Also record the relevant runner options and any additional operating-system
+   or environment details needed to reproduce those named values. If a named
+   field cannot be determined, the result cannot be `PASS`.
 3. For each of the four approved Scene classes, in approved order, run exactly
    this non-rendering layout audit and capture complete stdout and stderr:
 
@@ -64,16 +78,18 @@ order.
    `--visible-report-level info` invocation may document strict containment,
    but cannot replace or alter the warning-level verdict.
 5. Write `<project-root>/layout_audit_result.md`. It must contain `Result: PASS`
-   or `Result: FAIL`, `Audited Code SHA-256`, runner/environment metadata, the
-   four Scene commands in order, each exit code, and complete unedited output.
+   or `Result: FAIL`, `Audited Code SHA-256`, every named layout-affecting
+   evidence field above, the four Scene commands in order, each exit code, and
+   complete unedited output.
    Route every blocking finding to Stage 4 `SCENE_IMPLEMENTATION` / `CODE_PREPARATION` for correction.
 
 ## Completion criteria
 
-`Result: PASS` is allowed only when preflight passed, exactly four approved
-Scenes were audited, and every required warning-level command exited `0`. Any
-missing input, command failure, warning, unverified code identity, or inability
-to audit all four Scenes is `Result: FAIL`.
+`Result: PASS` is allowed only when preflight passed, all named environment
+evidence fields are present, exactly four approved Scenes were audited, and
+every required warning-level command exited `0`. Any missing input or named
+environment field, command failure, warning, unverified code identity, or
+inability to audit all four Scenes is `Result: FAIL`.
 
 ## Final response
 

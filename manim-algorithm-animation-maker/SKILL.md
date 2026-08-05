@@ -133,9 +133,12 @@ subagent 回報 `DONE`，上述三類產物都已建立，manifest 涵蓋所有 
 ### Entry gate
 開始前必須全部成立：
 
+- `confirmed_requirements.md` 存在。
 - `animation_design.md` 已通過內容審查並取得使用者明確核准。
+- `animation_design_review.md = PASS`。
 - `teaching_script.md` 存在且 `script_review_result.md = PASS`。
 - `voiceover.md`、`narration_manifest.json` 與四幕所需的可直接使用音訊都存在且已通過 Stage 3 驗證。
+- 上述需求、設計、審查、腳本、旁白、manifest 與音訊之間沒有已知未解決的衝突。
 - 已取得使用 subagent 的明確授權。
 
 ### 委派契約
@@ -160,7 +163,7 @@ Writer 必須完成完整重讀與靜態 self-audit。此子階段不得執行 M
 python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py <SceneClass> --audit-visible --fail-on-warning --visible-report-level warning
 ```
 
-這是建立真實 Manim mobject geometry、但不寫 frame 或 MP4 的 dry-run。`layout_audit_result.md` 必須記錄 `Audited Code SHA-256`、runner 與 layout-affecting environment/profile metadata、四個完整命令、輸出和 exit code。四個必要命令全部 exit `0` 才能 `PASS`；warning、漏檢、hash 無法核對或環境證據不足一律 `FAIL`，不得人工豁免。
+這是建立真實 Manim mobject geometry、但不寫 frame 或 MP4 的 dry-run。`layout_audit_result.md` 必須以具名欄位記錄 `Audited Code SHA-256`、`Runner SHA-256`、`Python version`、`Manim version`、`Frame width`、`Frame height`、`Renderer/profile/quality`、`Font/font-resolution evidence`，以及四個完整命令、輸出和 exit code。Font evidence 至少要列出要求字型、實際解析的 font file 或 fallback 名稱，並在可取得本機 font file 時記錄其 SHA-256。四個必要命令全部 exit `0` 且具名環境證據完整時才能 `PASS`；warning、漏檢、hash 無法核對或任一環境欄位不足一律 `FAIL`，不得人工豁免。
 
 若需要 scene-specific adapter，先退回 `CODE_PREPARATION` 由 writer 依 `layout-audit.md` 實作；任何程式碼變更都要建立新 handoff 與新 hash，再重新執行全部四幕 layout audit。
 
@@ -185,7 +188,7 @@ Stage 4 只建立並接受：
 - `layout_audit_result.md = PASS`，四個核准 Scene 的必要命令都 exit `0`。
 - `scene_review_result.md = PASS`，且由未參與程式碼撰寫的獨立 reviewer 產出。
 - 目前 `generated_algo_scene.py` SHA-256、handoff 的 `Code SHA-256`、layout result 的 `Audited Code SHA-256`、review result 的 `Reviewed Code SHA-256` 與 `Layout-audited Code SHA-256` 全部一致。
-- PASS 後程式碼、上游契約與 layout-affecting environment/profile 沒有改變。
+- PASS 後程式碼、上游契約，以及 layout result 具名記錄的 runner、Python、Manim、frame geometry、renderer/profile/quality 與 font-resolution evidence 沒有改變。
 
 本機自行檢查、dry-run 可執行、非正式 review 或提早產生的 MP4 都不能取代上述 gate。
 
@@ -200,12 +203,12 @@ Stage 4 只建立並接受：
 只用 Stage 4 已通過且 hash 完全一致的單一 source version 完成正式渲染，建立 render evidence，並由獨立 validator 驗證交付媒體的完整性、metadata、音訊、duration、順序與 hashes。Stage 5 不重跑 layout audit，也不得用渲染後觀察取代 Stage 4 的 layout gate。
 
 ### Entry gate
-Stage 4 的四份必要輸出必須存在，layout 與 scene review 都是目前 source hash 的 `PASS`，四幕 layout audit 完整通過，而且 code、上游契約與 layout-affecting environment/profile 自 Stage 4 PASS 後未改變。任一條件不成立都不得開始正式 Manim render。
+Stage 4 的四份必要輸出必須存在，layout 與 scene review 都是目前 source hash 的 `PASS`，四幕 layout audit 完整通過，而且 code、上游契約與 layout result 具名記錄的 runner、Python、Manim、frame geometry、renderer/profile/quality、font-resolution evidence 自 Stage 4 PASS 後未改變。任一條件不成立都不得開始正式 Manim render。
 
 ### 子階段 1：FINAL_RENDER
-再次派遣原 `scene_writer`，明確指定模式 `FINAL_RENDER`，並提供 Stage 4 四份 gate 證據與 `how-to-render-approved-manim-scenes.md` 的絕對路徑。Writer 必須在第一個 render command 前核對目前 code、handoff、layout 與 review hashes 全部一致；gate 通過後不得修改 `generated_algo_scene.py`。
+再次派遣原 `scene_writer`，明確指定模式 `FINAL_RENDER`，並提供 Stage 4 四份 gate 證據與 `how-to-render-approved-manim-scenes.md` 的絕對路徑。Writer 必須在第一個 render command 前逐一核對目前 code、handoff Code hash、layout Audited Code hash、scene review Reviewed Code hash、scene review Layout-audited Code hash 等五個身分全部一致，並逐欄比較目前 render environment/profile 與 layout result 的具名 layout-affecting evidence；gate 通過後不得修改 `generated_algo_scene.py`。
 
-依核准順序渲染四個 Scene、合併最終影片並建立 `render_manifest.md`。四幕與合併 MP4 必須全部存在且非空，manifest 必須把這些輸出綁定到唯一核准的 code hash 與 Stage 4 PASS 證據。
+依核准順序渲染四個 Scene、合併最終影片並建立 `render_manifest.md`。四幕與合併 MP4 必須全部存在且非空，manifest 必須把這些輸出綁定到唯一核准的 code hash 與 Stage 4 PASS 證據。Writer 必須在派遣 DELIVERY_QA 前完整填妥並凍結 manifest；manifest 不得含等待 validator 回填的 QA verdict、result path 或其他 placeholder。
 
 ### 子階段 2：DELIVERY_QA
 `FINAL_RENDER` 完成後，依委派協定派遣 task name `rendered_media_validator` 的獨立 subagent：
@@ -214,7 +217,7 @@ Stage 4 的四份必要輸出必須存在，layout 與 scene review 都是目前
 - project inputs：`generated_algo_scene.py`、`scene_code_review_handoff.md`、`layout_audit_result.md`、`scene_review_result.md`、`render_manifest.md`、`narration_manifest.json`、依核准順序排列的四個 Scene MP4 與合併 MP4
 - 預期產物：`rendered_media_validation_result.md`
 
-Validator 依角色契約對每個 MP4 執行完整的 `ffprobe` metadata、`ffmpeg` decode 與 SHA-256 檢查，核對 source/gate identity、四幕順序、duration 與 audio evidence；不得 render、修改、修補、重編碼或替換媒體。只有 validator 回報 `DONE` 且實際 `rendered_media_validation_result.md = PASS` 才能完成工作流程。
+Validator 依角色契約先記錄 immutable `render_manifest.md` 的絕對路徑與 SHA-256，再對每個 MP4 執行完整的 `ffprobe` metadata、`ffmpeg` decode 與 SHA-256 檢查，核對目前 source、handoff、layout、scene review 的兩個 identity、manifest approved hash、四幕順序、duration 與 audio evidence；不得 render、修改 manifest、修補、重編碼或替換媒體。QA verdict 只寫在 `rendered_media_validation_result.md` 並由 coordinator 用於 exit gate。只有 validator 回報 `DONE` 且實際 `rendered_media_validation_result.md = PASS` 才能完成工作流程。
 
 ### 必要輸出與 Exit gate
 Stage 5 必須建立：
@@ -224,10 +227,10 @@ Stage 5 必須建立：
 - `render_manifest.md`
 - 由獨立 `rendered_media_validator` 產出的 `rendered_media_validation_result.md = PASS`
 
-Manifest、目前 source 與 Stage 4 gate 必須綁定同一個 code hash；media result 必須涵蓋全部五個 MP4，且所有必要 command、metadata、decode、hash、duration、audio 與順序檢查都通過。
+Manifest、目前 source 與 Stage 4 gate 必須綁定同一個 code hash；media result 必須記錄 frozen manifest 的絕對路徑、QA 前後一致的 SHA-256 與所有 source/gate identities，涵蓋全部五個 MP4，且所有必要 command、metadata、decode、hash、duration、audio 與順序檢查都通過。Coordinator 在 exit gate 重新計算目前 manifest SHA-256；只有它仍與 media result 記錄相同時才能完成。
 
 ### 失敗路由
-- 輸出路徑、渲染命令、concat、manifest 或媒體檢查失敗，且可在不改動 code、上游契約或 layout-affecting profile 的情況下修正：留在 Stage 5，重新建立受影響輸出與 manifest，再完整執行 `DELIVERY_QA`。
+- 輸出路徑、渲染命令、concat、manifest 或媒體檢查失敗，且可在不改動 code、上游契約或 layout-affecting profile 的情況下修正：留在 Stage 5，重新建立受影響輸出與 manifest、再次凍結；任何重建的 manifest 都必須接受全新的完整 `DELIVERY_QA`。
 - 任何修復需要改動 `generated_algo_scene.py`：立即停止 Stage 5；舊 handoff、layout result、scene review、render manifest 與 media result 全部失效，回到 Stage 4 `CODE_PREPARATION`。
 - 任何修復改變 layout-affecting environment/profile：回到 Stage 4 `LAYOUT_VERIFICATION`，取得相同目前 code hash 的新 layout 與 scene review PASS 後，才可重新執行 Stage 5。
 
