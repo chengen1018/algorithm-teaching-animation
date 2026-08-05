@@ -15,7 +15,9 @@ There are two bundled audit styles:
 
 ## When to Add It
 
-Use the audit runner during `QA`. Add the scene-specific helper during `RENDER` when:
+Use the audit runner during Stage 4 `SCENE_IMPLEMENTATION`, specifically the
+pre-render `LAYOUT_VERIFICATION` gate. Add the scene-specific helper during
+`CODE_PREPARATION` when:
 
 - the scene contains panels, legends, invariant boxes, dynamic path text, tables, graph labels, or multiple text regions
 - generated text comes from `action_trace.json`
@@ -23,7 +25,15 @@ Use the audit runner during `QA`. Add the scene-specific helper during `RENDER` 
 - the user asks to detect layout issues automatically
 - CI or repeated generation should fail on obvious visual collisions
 
-Run the generic visible-object scan for every delivered Scene, including tiny scenes.
+Run the generic visible-object scan for every delivered Scene, including tiny
+scenes, before any formal Manim render. The required gate command is:
+
+```bash
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py <SceneClass> --audit-visible --fail-on-warning --visible-report-level warning
+```
+
+Run it once for each of the four approved Scene classes in approved order.
+Stage 5 does not repeat this layout gate.
 
 ## Install Into a Project
 
@@ -152,7 +162,9 @@ Limitations:
 - Treat generic-scan warnings as candidates that require deterministic scene-specific checks, not as findings that may be ignored.
 - Resolve a warning from code-level object semantics and named groups through `scene_layout_audit.py`.
 - Ignore transient warnings from in-between animation frames unless they persist in stable frames.
-- Verify the audited `generated_algo_scene.py` SHA-256 matches the reviewed and rendered version.
+- Verify the audited `generated_algo_scene.py` SHA-256 matches the current
+  source and pre-render handoff. The later scene review and formal render must
+  consume that exact hash without modifying the source.
 - Prefer fixing repeated stable-frame warnings in `generated_algo_scene.py`.
 - If the scene cannot express a needed layout state from trace data, fix the trace schema or teaching script first.
 
@@ -170,11 +182,15 @@ Fast non-rendering check plus deterministic whole-scene scan:
 python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene --audit-visible
 ```
 
-Normal Manim render also prints warnings and lets render continue:
+When Stage 5 later renders the already-approved source, embedded audit hooks
+may still print warnings and let render continue:
 
 ```bash
 manim -ql generated_algo_scene.py AlgorithmScene
 ```
+
+That diagnostic output is not a second layout gate and cannot replace or amend
+the hash-bound Stage 4 `layout_audit_result.md`.
 
 Disable audits:
 
