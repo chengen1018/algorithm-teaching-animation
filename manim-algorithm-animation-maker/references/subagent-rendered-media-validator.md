@@ -28,10 +28,20 @@ paths.
 
 - Every required source, gate, manifest, and media file exists and is readable.
 - `layout_audit_result.md` is `PASS` and covers all four approved Scenes.
-- The current source SHA-256, handoff `Code SHA-256`, layout `Audited Code
-  SHA-256`, scene review `Reviewed Code SHA-256`, scene review
-  `Layout-audited Code SHA-256`, and render manifest `Approved Code SHA-256`
-  are all present and identical.
+- All eight source identities below are present and identical:
+
+  1. the recalculated current `generated_algo_scene.py` SHA-256
+  2. handoff `Code SHA-256`
+  3. layout `Audited Code SHA-256`
+  4. scene review `Reviewed Code SHA-256`
+  5. scene review `Layout-audited Code SHA-256`
+  6. render manifest `Approved Code SHA-256`
+  7. render manifest `Current Code SHA-256`
+  8. render manifest `Preflight Current Code SHA-256`, which is the rendered
+     source identity captured immediately before the first render command
+
+  Any missing, unparsable, or mismatched identity makes preflight `Result:
+  FAIL`; do not collapse the three manifest identities into one inferred value.
 - `render_manifest.md` lists exactly four non-empty Scene MP4 files in approved
   order and one non-empty combined MP4, all corresponding to the approved
   source.
@@ -57,12 +67,12 @@ Do not infer missing media, order, audio, duration, or gate evidence.
 
 ## Procedure
 
-1. Record all source/gate identities separately: current source SHA-256,
-   handoff `Code SHA-256`, layout `Audited Code SHA-256`, scene review
-   `Reviewed Code SHA-256`, scene review `Layout-audited Code SHA-256`, and
-   render manifest `Approved Code SHA-256`. Record the immutable manifest's
-   absolute path and calculated `Render Manifest SHA-256`. Verify all source
-   identities match without editing any input.
+1. Record and compare all eight preflight identities separately: recalculated
+   current `generated_algo_scene.py`, handoff, layout audited, scene review
+   reviewed, scene review layout-audited, manifest approved, manifest current,
+   and manifest preflight-current/rendered-source SHA-256. Record the immutable
+   manifest's absolute path and calculated `Render Manifest SHA-256`. Verify
+   every identity is present and identical without editing any input.
 2. For every one of the four Scene MP4s, in manifest order, and then for the
    combined MP4, run and capture complete stdout, stderr, and exit code for:
 
@@ -84,12 +94,14 @@ Do not infer missing media, order, audio, duration, or gate evidence.
 6. Write `<project-root>/rendered_media_validation_result.md` with `Result:
    PASS` or `Result: FAIL` and these separately named identity fields:
 
-   - `Current/Rendered Code SHA-256`
+   - `Current generated_algo_scene.py SHA-256`
    - `Handoff Code SHA-256`
    - `Layout Audited Code SHA-256`
    - `Scene Review Reviewed Code SHA-256`
    - `Scene Review Layout-audited Code SHA-256`
    - `Render Manifest Approved Code SHA-256`
+   - `Render Manifest Current Code SHA-256`
+   - `Render Manifest Preflight Current Code SHA-256 (rendered source identity)`
    - immutable `Render Manifest path`
    - calculated `Render Manifest SHA-256`
 
@@ -110,12 +122,13 @@ Do not infer missing media, order, audio, duration, or gate evidence.
 
 ## Completion criteria
 
-`Result: PASS` is allowed only when preflight passes; the frozen manifest path
-and unchanged preflight/post-check SHA-256 are recorded; every media command exits `0`; all media hashes and
-metadata are recorded; every separately named source and gate identity is
-consistent; each Scene's duration and audio agree with narration evidence; and
-the four Scene files and combined file preserve approved order. Any missing,
-unreadable, inconsistent, corrupt, unverified, or failed item is `Result: FAIL`.
+`Result: PASS` is allowed only when preflight passes; all eight separately named
+source identities are present, recorded, and identical; the frozen manifest
+path and unchanged preflight/post-check SHA-256 are recorded; every media
+command exits `0`; all media hashes and metadata are recorded; each Scene's
+duration and audio agree with narration evidence; and the four Scene files and
+combined file preserve approved order. Any missing, unreadable, inconsistent,
+corrupt, unverified, or failed item is `Result: FAIL`.
 
 ## Final response
 

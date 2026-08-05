@@ -217,7 +217,7 @@ Stage 4 的四份必要輸出必須存在，layout 與 scene review 都是目前
 - project inputs：`generated_algo_scene.py`、`scene_code_review_handoff.md`、`layout_audit_result.md`、`scene_review_result.md`、`render_manifest.md`、`narration_manifest.json`、依核准順序排列的四個 Scene MP4 與合併 MP4
 - 預期產物：`rendered_media_validation_result.md`
 
-Validator 依角色契約先記錄 immutable `render_manifest.md` 的絕對路徑與 SHA-256，再對每個 MP4 執行完整的 `ffprobe` metadata、`ffmpeg` decode 與 SHA-256 檢查，核對目前 source、handoff、layout、scene review 的兩個 identity、manifest approved hash、四幕順序、duration 與 audio evidence；不得 render、修改 manifest、修補、重編碼或替換媒體。QA verdict 只寫在 `rendered_media_validation_result.md` 並由 coordinator 用於 exit gate。只有 validator 回報 `DONE` 且實際 `rendered_media_validation_result.md = PASS` 才能完成工作流程。
+Validator 依角色契約先記錄 immutable `render_manifest.md` 的絕對路徑與 SHA-256，再對每個 MP4 執行完整的 `ffprobe` metadata、`ffmpeg` decode 與 SHA-256 檢查。它必須分別核對目前 source、handoff、layout、scene review 的 reviewed 與 layout-audited identity，以及 manifest 的 `Approved Code SHA-256`、`Current Code SHA-256`、`Preflight Current Code SHA-256`（rendered source identity），八者缺漏或不一致即 `FAIL`；並檢查四幕順序、duration 與 audio evidence。Validator 不得 render、修改 manifest、修補、重編碼或替換媒體。QA verdict 只寫在 `rendered_media_validation_result.md` 並由 coordinator 用於 exit gate。只有 validator 回報 `DONE` 且實際 `rendered_media_validation_result.md = PASS` 才能完成工作流程。
 
 ### 必要輸出與 Exit gate
 Stage 5 必須建立：
