@@ -23,7 +23,7 @@
 
 ## Static Verification
 - Full-file reread: `COMPLETE`
-- Six-Scene stable-beat audit: `COMPLETE`
+- Four-Scene stable-beat audit: `COMPLETE`
 - Non-render checks: `<已執行的語法／靜態檢查與結果；沒有則填 N/A>`
 - Manim render performed: `NO`
 
