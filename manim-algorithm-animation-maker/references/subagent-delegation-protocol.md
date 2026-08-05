@@ -23,7 +23,8 @@
 | 旁白產生 | `voiceover_generator` | `references/subagent-voiceover-generator.md` |
 | 場景程式碼與渲染 | `scene_writer` | `references/subagent-scene-writer.md` |
 | 場景程式碼審查 | `scene_reviewer` | `references/subagent-scene-reviewer.md` |
-| 版面 QA | `layout_auditor` | `references/subagent-layout-auditor.md` |
+| 渲染前 Scene 版面驗證 | `scene_layout_validator` | `references/subagent-scene-layout-validator.md` |
+| 渲染後媒體成品驗證 | `rendered_media_validator` | `references/subagent-rendered-media-validator.md` |
 
 ## 派遣訊息必要欄位
 
