@@ -14,11 +14,12 @@ Before starting, read every coordinator-provided absolute path in full:
 
 1. `<project-root>/generated_algo_scene.py`
 2. `<project-root>/scene_code_review_handoff.md`
-3. `<project-root>/scene_review_result.md`
-4. `<project-root>/render_manifest.md`
-5. `<project-root>/narration_manifest.json`
-6. the four Scene MP4 paths, in approved Scene order
-7. the combined MP4 path
+3. `<project-root>/layout_audit_result.md`
+4. `<project-root>/scene_review_result.md`
+5. `<project-root>/render_manifest.md`
+6. `<project-root>/narration_manifest.json`
+7. the four Scene MP4 paths, in approved Scene order
+8. the combined MP4 path
 
 All input and output paths used in commands and the result must be absolute
 paths.
@@ -26,8 +27,11 @@ paths.
 ## Preflight
 
 - Every required source, gate, manifest, and media file exists and is readable.
+- `layout_audit_result.md` is `PASS`, covers all four approved Scenes, and its
+  `Audited Code SHA-256` matches the handoff, scene review, render manifest,
+  and current `generated_algo_scene.py`.
 - `scene_review_result.md` is `PASS` and binds the same source SHA-256 as the
-  handoff and current `generated_algo_scene.py`.
+  layout result, handoff, render manifest, and current `generated_algo_scene.py`.
 - `render_manifest.md` lists exactly four non-empty Scene MP4 files in approved
   order and one non-empty combined MP4, all corresponding to the approved
   source.
@@ -50,7 +54,7 @@ Do not infer missing media, order, audio, duration, or gate evidence.
 ## Procedure
 
 1. Record the approved source path and SHA-256, and verify its identity against
-   the handoff, review result, and render manifest.
+   the handoff, layout result, review result, and render manifest.
 2. For every one of the four Scene MP4s, in manifest order, and then for the
    combined MP4, run and capture complete stdout, stderr, and exit code for:
 

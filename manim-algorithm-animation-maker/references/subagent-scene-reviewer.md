@@ -42,7 +42,7 @@
 - 清楚的 `PASS` 或 `FAIL`
 - 相關程式碼位置
 - 具體 findings 與分類
-- 每個 blocking finding 的修復目標 `RENDER`
+- 每個 blocking finding 的修復目標為 Stage 4 `SCENE_IMPLEMENTATION` / `CODE_PREPARATION`
 - `Reviewed Code SHA-256` 與 `Layout-audited Code SHA-256`，兩者必須相同
 
 只有程式碼忠實、演算法／state、生命週期／cleanup 與 assumptions 可稽核，且相同 code hash 的四幕 layout audit 已 PASS 時才能 `PASS`。

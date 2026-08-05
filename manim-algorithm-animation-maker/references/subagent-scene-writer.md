@@ -2,7 +2,7 @@
 
 ## Role
 
-負責 RENDER 階段的兩次獨立指派：
+負責 Stage 4 `SCENE_IMPLEMENTATION` 與 Stage 5 `FINAL_RENDER_AND_QA` 中的兩次獨立指派：
 
 1. `CODE_PREPARATION`：實作四個 Manim Scene、執行非渲染靜態檢查並建立程式碼審查 handoff。
 2. `FINAL_RENDER`：只在 Stage 4 的獨立審查與 layout audit 都為 `PASS` 後，渲染完全相同且未再變更的程式碼。

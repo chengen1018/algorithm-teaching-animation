@@ -10,10 +10,10 @@
 - `Reviewed Code SHA-256`，必須是 reviewer 實際審查的 `generated_algo_scene.py` 內容 hash
 - `Layout-audited Code SHA-256`，必須從 `layout_audit_result.md` 取得且與 Reviewed Code SHA-256 相同
 - 審查結果必須由獨立 reviewer 撰寫
-- reviewer 負責 `RENDER` gate 的程式碼審查
+- reviewer 負責 Stage 4 `SCENE_IMPLEMENTATION` 的 `CONTRACT_REVIEW` gate 程式碼審查
 - 分類好的阻塞性 findings
 - 指向程式碼位置的 evidence references
-- 修復方向：`RENDER`
+- 修復方向：Stage 4 `SCENE_IMPLEMENTATION` 的 `CODE_PREPARATION`
 
 使用以下 finding 類別：
 
@@ -60,7 +60,7 @@
 
 第一次程式碼審查必須檢查完整 `generated_algo_scene.py`。之後只有變更範圍明確、且 reviewer 能從程式碼 diff 確認受影響 Scene、helper 與相鄰 state 的情況下，才可做局部複查；影響不確定時，必須重新檢查完整檔案。
 
-所有 findings 一律回到 `RENDER` 修正。scene-reviewer 不得修改 `generated_algo_scene.py`、`scene_code_review_handoff.md` 或任何 render 產物。
+所有 findings 一律回到 Stage 4 `SCENE_IMPLEMENTATION` 的 `CODE_PREPARATION` 修正。scene-reviewer 不得修改 `generated_algo_scene.py`、`scene_code_review_handoff.md` 或任何 render 產物。
 
 ## PASS 標準
 

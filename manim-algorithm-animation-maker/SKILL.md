@@ -211,7 +211,7 @@ Stage 4 的四份必要輸出必須存在，layout 與 scene review 都是目前
 `FINAL_RENDER` 完成後，依委派協定派遣 task name `rendered_media_validator` 的獨立 subagent：
 
 - 角色規格：`subagent-rendered-media-validator.md` 的絕對路徑
-- project inputs：`generated_algo_scene.py`、`scene_code_review_handoff.md`、`scene_review_result.md`、`render_manifest.md`、`narration_manifest.json`、依核准順序排列的四個 Scene MP4 與合併 MP4
+- project inputs：`generated_algo_scene.py`、`scene_code_review_handoff.md`、`layout_audit_result.md`、`scene_review_result.md`、`render_manifest.md`、`narration_manifest.json`、依核准順序排列的四個 Scene MP4 與合併 MP4
 - 預期產物：`rendered_media_validation_result.md`
 
 Validator 依角色契約對每個 MP4 執行完整的 `ffprobe` metadata、`ffmpeg` decode 與 SHA-256 檢查，核對 source/gate identity、四幕順序、duration 與 audio evidence；不得 render、修改、修補、重編碼或替換媒體。只有 validator 回報 `DONE` 且實際 `rendered_media_validation_result.md = PASS` 才能完成工作流程。

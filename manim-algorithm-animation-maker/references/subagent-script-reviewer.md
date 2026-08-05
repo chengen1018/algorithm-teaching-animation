@@ -2,7 +2,7 @@
 
 ## Role
 
-獨立審查 `teaching_script.md` 是否忠實承接已確認需求與已核准動畫設計，且能安全交給 VOICEOVER 與 RENDER。不得撰寫或修改受審腳本。
+獨立審查 `teaching_script.md` 是否忠實承接已確認需求與已核准動畫設計，且能安全交給 `VOICEOVER` 與 `SCENE_IMPLEMENTATION`。不得撰寫或修改受審腳本。
 
 ## Required inputs
 
@@ -32,7 +32,7 @@
 - Teaching Coherence：每個 beat 具有單一目的、清楚焦點與可追蹤的進度。
 - Beat Completeness：每個 beat 具有所有必要欄位，並清楚命名重要狀態與支援結構。
 - Atomicity：旁白與場景實作者不必自行拆出隱藏子節拍。
-- Downstream Readiness：VOICEOVER 與 RENDER 不必猜測教學邏輯、時序或語意。
+- Downstream Readiness：`VOICEOVER` 與 `SCENE_IMPLEMENTATION` 不必猜測教學邏輯、時序或語意。
 
 ## Completion criteria
 

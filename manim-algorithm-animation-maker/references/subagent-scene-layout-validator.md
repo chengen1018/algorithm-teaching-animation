@@ -66,7 +66,7 @@ order.
 5. Write `<project-root>/layout_audit_result.md`. It must contain `Result: PASS`
    or `Result: FAIL`, `Audited Code SHA-256`, runner/environment metadata, the
    four Scene commands in order, each exit code, and complete unedited output.
-   Route every blocking finding to `RENDER`.
+   Route every blocking finding to Stage 4 `SCENE_IMPLEMENTATION` / `CODE_PREPARATION` for correction.
 
 ## Completion criteria
 
