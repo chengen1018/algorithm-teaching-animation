@@ -1,5 +1,9 @@
 # Sub-Agent Model Routing Validation Scenarios
 
+## Repository path convention
+
+The repository's tracked canonical directory is `docs/` (lowercase). This fixture therefore uses `docs/superpowers/validation/2026-08-07-subagent-model-routing-scenarios.md`; the task brief's `Docs/` spelling is not a tracked repository path.
+
 ## Scenario prompt
 
 ```text
@@ -33,10 +37,35 @@ Use the Manim Algorithm Animation Maker skill from the supplied absolute path. D
 Baseline criterion results:
 
 - PASS — Exactly eight task names are present.
-- FAIL — No role has the required explicit or inherited model/reasoning mapping: every `Model source`, `Effective model`, and `Reasoning effort` value is `Not specified`.
+- FAIL — `script_writer` and `scene_writer` do not use explicit `gpt-5.6-sol` / `high`; each listed routing field is `Not specified`.
+- FAIL — The other six roles do not inherit `gpt-5.6-luna` / `xhigh`; each listed routing field is `Not specified`.
 - FAIL — Stage 5 uses `scene_writer` (`FINAL_RENDER`), not `scene_final_renderer`.
 - PASS — Only `scene_writer` is permitted to edit `generated_algo_scene.py`; the Stage 5 `scene_writer` entry is not permitted to edit it.
 - FAIL — The baseline dispatch plan defines no missing-or-invalid project-config handling and therefore does not produce `BLOCKED` with no fallback.
+
+## Structural Check Evidence
+
+```text
+$ rg -n "Scenario prompt|Pass criteria|Baseline Evidence|Forward-Test Evidence|Runtime Reload Boundary" docs/superpowers/validation/2026-08-07-subagent-model-routing-scenarios.md
+7:## Scenario prompt
+13:## Pass criteria
+22:## Baseline Evidence
+48:## Forward-Test Evidence
+50:## Runtime Reload Boundary
+[exit 0]
+
+$ git diff --check HEAD^ HEAD -- docs/superpowers/validation/2026-08-07-subagent-model-routing-scenarios.md
+[no output]
+[exit 0]
+
+$ git diff --check -- docs/superpowers/validation/2026-08-07-subagent-model-routing-scenarios.md
+[no output]
+[exit 0]
+
+$ git diff --check --cached
+[no output]
+[exit 0]
+```
 
 ## Forward-Test Evidence
 
