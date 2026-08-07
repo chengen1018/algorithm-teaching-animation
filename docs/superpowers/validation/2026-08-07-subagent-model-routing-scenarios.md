@@ -69,4 +69,40 @@ $ git diff --check --cached
 
 ## Forward-Test Evidence
 
+Fresh-context evaluator inputs (and no design specification, baseline diagnosis, or answer):
+
+- Skill folder: `/Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker`
+- Scenario file: `/Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/Docs/superpowers/validation/2026-08-07-subagent-model-routing-scenarios.md`
+- Role-spec paths must be literal absolute filesystem paths (spaces must not be URL-encoded).
+
+Raw response:
+
+```text
+| Stage | Task name | Role-spec path | Model source | Effective model | Reasoning effort | Source edits permitted |
+|---|---|---|---|---|---|---|
+| 1 | animation_design_reviewer | /Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker/references/subagent-animation-design-reviewer.md | project default | gpt-5.6-luna | xhigh | No |
+| 2 | script_writer | /Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker/references/subagent-script-writer.md | explicit spawn override | gpt-5.6-sol | high | No |
+| 2 | script_reviewer | /Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker/references/subagent-script-reviewer.md | project default | gpt-5.6-luna | xhigh | No |
+| 3 | voiceover_generator | /Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker/references/subagent-voiceover-generator.md | project default | gpt-5.6-luna | xhigh | No |
+| 4 | scene_writer | /Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker/references/subagent-scene-writer.md | explicit spawn override | gpt-5.6-sol | high | Yes |
+| 4 | scene_layout_validator | /Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker/references/subagent-scene-layout-validator.md | project default | gpt-5.6-luna | xhigh | No |
+| 4 | scene_reviewer | /Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker/references/subagent-scene-reviewer.md | project default | gpt-5.6-luna | xhigh | No |
+| 5 | scene_final_renderer | /Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker/references/subagent-scene-final-renderer.md | project default | gpt-5.6-luna | xhigh | No |
+```
+
+Forward-test criterion results:
+
+- PASS — Exactly eight task names are present.
+- PASS — Only `script_writer` and `scene_writer` use explicit `gpt-5.6-sol` / `high`.
+- PASS — The other six roles use project defaults `gpt-5.6-luna` / `xhigh`.
+- PASS — Stage 5 uses `scene_final_renderer`, not `scene_writer`.
+- PASS — Only `scene_writer` is permitted to edit `generated_algo_scene.py`; `scene_final_renderer` is not.
+- PASS — `references/subagent-delegation-protocol.md` requires `BLOCKED` with no fallback when project config is missing or invalid; the valid-config scenario therefore emits the dispatch plan rather than a fallback route.
+
 ## Runtime Reload Boundary
+
+This validation task started before `.codex/config.toml` was added. Static checks and the fresh-context planning test above are valid, but actual Luna runtime selection must be verified from a new task started at this project root. Use:
+
+```text
+請讀取目前專案的 .codex/config.toml，使用 manim-algorithm-animation-maker 的 subagent delegation protocol，只列出八個角色的 task name、model source、effective model 與 reasoning effort；不要生成影片或修改檔案。
+```
