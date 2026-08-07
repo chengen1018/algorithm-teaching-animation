@@ -15,9 +15,9 @@
 
 ## 渲染與合併
 
-1. 使用上游要求的品質、畫面尺寸與 frame rate，依核准順序分別渲染六個 Scene。
-2. 確認六個 Scene MP4 都存在且非空檔案。
-3. 依核准順序合併六個 Scene MP4，建立最終合併 MP4。
+1. four-scene contract 必須包含四個 Scene；使用上游要求的品質、畫面尺寸與 frame rate，依核准順序分別渲染四個 Scene。
+2. 確認四個 Scene MP4 都存在且非空檔案。
+3. 依核准順序合併四個 Scene MP4，建立最終合併 MP4。
 4. 確認最終 MP4 存在且非空檔案，並記錄輸出資訊。
 5. 不得在渲染或合併後偷改 `generated_algo_scene.py`。
 
@@ -47,8 +47,6 @@
 | 2 | `<Scene class>` | `<path>` | `<mtime>` | `<size>` |
 | 3 | `<Scene class>` | `<path>` | `<mtime>` | `<size>` |
 | 4 | `<Scene class>` | `<path>` | `<mtime>` | `<size>` |
-| 5 | `<Scene class>` | `<path>` | `<mtime>` | `<size>` |
-| 6 | `<Scene class>` | `<path>` | `<mtime>` | `<size>` |
 
 ## Combined Output
 - Combined MP4: `<path>`

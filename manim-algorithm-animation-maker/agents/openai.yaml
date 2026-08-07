@@ -1,0 +1,7 @@
+interface:
+  display_name: "Manim Algorithm Animation Maker"
+  short_description: "依完整流程設計、實作、渲染並驗證 Manim 演算法教學動畫"
+  default_prompt: "使用 $manim-algorithm-animation-maker 為指定演算法製作完整的 Manim 教學動畫。"
+
+policy:
+  allow_implicit_invocation: true

@@ -4,7 +4,7 @@
 
 ## 實作責任與不可改變事項
 
-依 `animation_design.md` 實作六個獨立 Manim `Scene` 類別，不以 `Section` 代替。六個 Scene 分別對應問題與目標、核心觀念、演算法特有的重要資料與狀態、一次關鍵動作、完整演示，以及結果回顧。每個 Scene 獨立建立及清理畫面，結尾淡出至空白，下一幕再從空白淡入；程式碼通過獨立審查後，才將六幕分別渲染並依核准順序合併。
+依 `animation_design.md` 實作四個獨立 Manim `Scene` 類別，不以 `Section` 代替；這是實作時必須維持的 four-scene contract。四個 Scene 分別對應問題與目標、演算法如何運作：決策規則與追蹤狀態、完整演示演算法，以及最終結果與簡短回顧。每個 Scene 獨立建立及清理畫面，結尾淡出至空白，下一幕再從空白淡入；程式碼通過獨立審查後，才將四幕分別渲染並依核准順序合併。
 
 Scene layer 負責 layout execution、styling、timing、beat staging，以及 audio/overlay synchronization。實作必須忠於 `confirmed_requirements.md`、`animation_design.md`、`teaching_script.md`、需要維持執行忠實性時使用的 algorithm code/pseudocode、`voiceover.md`、`narration_manifest.json` 與音訊資產；不得新增演算法步驟、教學目標、support-structure 語意，或改變 movement semantics、pointer meaning、visited timing、beat 順序與已核准的 active support structure。
 
@@ -224,7 +224,7 @@ Overlays 關閉時不預留只供 overlay 使用的空間；啟用時放在 layo
 
 只有在下列條件都完成後，才能建立 `scene_code_review_handoff.md` 並送交獨立程式碼審查；此時不執行 Manim render：
 
-- 六個 Scenes 均符合核准結構、獨立建立/清理並可分別渲染。
+- 四個 Scenes 均符合核准結構、獨立建立/清理並可分別渲染。
 - 每個 Scene、每個穩定 beat 與所有 peak states 已靜態複查。
 - 最長文字、panel 容量、公式與 overlay 已按最終 bounding box 複查。
 - 所有 pointer destinations、共享 anchors/indexes 與共址策略已複查。

@@ -79,7 +79,7 @@ self._audit_layout("final", nodes, labels, panels, extra_items=[("result", resul
 Prefer a dry-run before rendering video:
 
 ```bash
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene
 ```
 
 The runner imports the scene, patches `Scene.play()` so animations jump to their final state, skips `wait()` and sound playback, and lets layout audit checkpoints print findings. It still creates Manim mobjects, so text metrics and `arrange()` / `next_to()` geometry are real, but it does not write frames or MP4 output.
@@ -87,19 +87,19 @@ The runner imports the scene, patches `Scene.play()` so animations jump to their
 Use `--fail-on-warning` for CI-like checks:
 
 ```bash
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene --fail-on-warning
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene --fail-on-warning
 ```
 
 Use `--traceback` when debugging scene construction errors:
 
 ```bash
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene --traceback
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene --traceback
 ```
 
 For a deterministic whole-scene pass that does not rely on project-specific `_audit_layout(...)` groups, add `--audit-visible`:
 
 ```bash
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene --audit-visible
 ```
 
 This pass scans visible scene mobjects after every patched `Scene.play()` and once again after `construct()`:
@@ -114,19 +114,19 @@ Useful controls:
 
 ```bash
 # only scan the final construct() state
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible --visible-final-only
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene --audit-visible --visible-final-only
 
 # cap printed unique messages; errors and warnings still count for --fail-on-warning
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible --visible-max-reports 80
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene --audit-visible --visible-max-reports 80
 
 # print only errors
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible --visible-report-level error
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene --audit-visible --visible-report-level error
 
 # include strict-containment info logs
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible --visible-report-level info
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene --audit-visible --visible-report-level info
 
 # explicit default: print errors and warnings, suppress strict-containment info logs
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible --visible-report-level warning
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene --audit-visible --visible-report-level warning
 ```
 
 Limitations:
@@ -161,13 +161,13 @@ Limitations:
 Fast non-rendering check:
 
 ```bash
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene
 ```
 
 Fast non-rendering check plus deterministic whole-scene scan:
 
 ```bash
-python path/to/skill/scripts/run_layout_audit.py generated_algo_scene.py AlgorithmScene --audit-visible
+python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py AlgorithmScene --audit-visible
 ```
 
 Normal Manim render also prints warnings and lets render continue:
