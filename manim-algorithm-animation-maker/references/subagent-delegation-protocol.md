@@ -21,9 +21,10 @@
 | 教學腳本撰寫 | `script_writer` | `references/subagent-script-writer.md` |
 | 教學腳本審查 | `script_reviewer` | `references/subagent-script-reviewer.md` |
 | 旁白產生 | `voiceover_generator` | `references/subagent-voiceover-generator.md` |
-| 場景程式碼與渲染 | `scene_writer` | `references/subagent-scene-writer.md` |
+| 場景程式碼 | `scene_writer` | `references/subagent-scene-writer.md` |
 | 場景程式碼審查 | `scene_reviewer` | `references/subagent-scene-reviewer.md` |
 | 渲染前 Scene 版面驗證 | `scene_layout_validator` | `references/subagent-scene-layout-validator.md` |
+| 正式場景渲染與合併 | `scene_final_renderer` | `references/subagent-scene-final-renderer.md` |
 
 ## 派遣訊息必要欄位
 
