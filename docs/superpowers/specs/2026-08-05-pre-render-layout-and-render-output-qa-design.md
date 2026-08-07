@@ -1,5 +1,10 @@
 # Pre-render Layout and Render Output QA Design
 
+> **2026-08-07 decision amendment:** Stage 5 uses one coordinator-owned
+> `DELIVERY_CHECK`. The former independent `rendered_media_validator` and its
+> strict post-render audit are superseded by the lightweight design in
+> `docs/superpowers/specs/2026-08-07-lightweight-delivery-check-design.md`.
+
 ## Purpose
 
 重新定義演算法動畫 skill 的第四、第五階段，將「程式碼是否可以安全渲染」與「渲染後影片是否可以交付」分成兩個獨立關卡。
@@ -14,7 +19,7 @@
 本設計涵蓋：
 
 - 五階段流程中的 `SCENE_IMPLEMENTATION` 與 `FINAL_RENDER_AND_QA`。
-- `scene_writer`、`scene_layout_validator`、`scene_reviewer` 與 `rendered_media_validator` 的責任邊界。
+- `scene_writer`、`scene_layout_validator` 與 `scene_reviewer` 的責任邊界，以及 coordinator-owned `DELIVERY_CHECK`。
 - 渲染前與渲染後的 entry gate、exit gate、必要產物、版本綁定及失效規則。
 - 將既有 `layout_auditor` 與 `render_output_auditor` 名稱改為更明確的角色名稱。
 
@@ -45,7 +50,7 @@ flowchart TD
     R -->|FAIL| W
     R -->|PASS，hash 一致| G["Pre-render Gate"]
     G --> F["scene_writer\nFINAL_RENDER"]
-    F --> Q["rendered_media_validator\n成品驗證"]
+    F --> Q["coordinator\nDELIVERY_CHECK"]
     Q -->|輸出或媒體問題| F
     Q -->|需要修改程式碼| W
     Q -->|PASS| D["完成交付"]
@@ -67,7 +72,7 @@ flowchart TD
 
 ### Treat the rendered video as a separate artifact
 
-影片檔案不是程式碼審查的證據。影片產生後仍必須檢查檔案完整性、媒體 metadata、audio stream、duration、合併順序與 manifest 綁定。
+影片檔案不是程式碼審查的證據。影片產生後只執行低成本的 `ffprobe`、combined decode 與 source hash binding；不重新執行 layout、語意或 Scene 順序審查。
 
 ## Stage 4: `SCENE_IMPLEMENTATION`
 
@@ -317,83 +322,57 @@ runner 會建立 Manim mobjects、將動畫跳到終態、跳過 wait 與 sound 
 - 合併順序與合併 command。
 - 最終合併影片的 SHA-256 與 metadata。
 
-### Subphase 5.2: `DELIVERY_QA`
+### Subphase 5.2: `DELIVERY_CHECK`
 
 #### Owner
 
-獨立 `rendered_media_validator`，task name 為 `rendered_media_validator`。
-
-此名稱取代原本的 `render_output_auditor`。名稱表示它驗證的是已渲染的影片與音訊媒體，而不是重新審查 scene code。
+Coordinator。此子階段不派遣額外 subagent，也不提供 release、CI 或 strict mode。
 
 #### Inputs
 
 - `generated_algo_scene.py`
-- `scene_code_review_handoff.md`
-- `layout_audit_result.md`
-- `scene_review_result.md`
-- `narration_manifest.json`
 - `render_manifest.md`
 - 四個 Scene MP4。
 - 最終合併 MP4。
 
 #### Responsibilities
 
-- 驗證 `render_manifest.md` 對應第四階段核准的 code hash。
-- 確認四個 Scene MP4 與合併影片存在且非空。
-- 使用媒體工具完整 decode 每個影片，確認沒有檔案損壞。
-- 檢查 resolution、frame rate、codec 與 render profile。
-- 檢查必要的 audio stream 是否存在。
-- 檢查 Scene duration 與合併影片 duration 的合理一致性。
-- 檢查合併順序與 approved Scene 順序一致。
-- 驗證 manifest 記錄的每個 MP4 SHA-256 與實際檔案一致。
-
-#### Non-responsibilities
-
-`rendered_media_validator` 不得：
-
-- 修改 `generated_algo_scene.py`。
-- 修改、覆蓋或重新編碼影片來取得 PASS。
-- 重新判斷 layout 或演算法語意。
-- 隱藏 decode、audio、hash 或 metadata 錯誤。
+- 對五個 MP4 執行 `ffprobe -v error -show_format -show_streams -of json`；probe 失敗即代表檔案缺失、為空或不可解析，不另設存在性／大小檢查。
+- 對 combined MP4 執行 `ffmpeg -v error -i <combined.mp4> -f null -`，確認合併成品可解碼。
+- 重新計算目前 `generated_algo_scene.py` SHA-256，與 frozen manifest 的 approved/rendered source hash 比對。
+- 將三組命令結果、exit status、hash comparison 與 `PASS`／`FAIL` 寫入 `delivery_check_result.md`。
+- Scene 順序由 four-Scene contract 與 render commands 建立；本 check 不做獨立順序 assertion。
 
 #### Required output
 
-建立 `<project-root>/rendered_media_validation_result.md`，至少包含：
+建立 `<project-root>/delivery_check_result.md`，至少包含：
 
 - `Result: PASS` 或 `Result: FAIL`。
-- Approved Code SHA-256。
-- Rendered Code SHA-256。
-- 每個影片的檢查命令與 exit code。
-- 實際 media metadata。
-- 檔案 SHA-256 驗證。
-- Scene 與 combined duration 驗證。
-- audio stream 驗證。
-- 合併順序驗證。
-- 所有 blocking findings 與修復目標。
+- 五個 `ffprobe` commands 與 exit status。
+- combined MP4 的 `ffmpeg` decode command 與 exit status。
+- 目前 source hash、manifest approved/rendered source hash 與 comparison result。
 
 ### Stage 5 exit gate
 
 只有以下條件全部成立，整個 skill 才能完成：
 
-- 四個 Scene MP4 均通過完整媒體檢查。
-- 最終合併 MP4 通過完整媒體檢查。
+- 五個 MP4 的 `ffprobe` 都成功。
+- 最終合併 MP4 的 `ffmpeg` decode 成功。
 - `render_manifest.md` 存在且內容完整。
-- `rendered_media_validation_result.md` 明確為 `PASS`。
-- render、review、layout 與目前程式碼的 code hash 一致。
-- 所有 MP4 SHA-256 與 manifest 記錄一致。
-- 沒有未解決的 blocking finding。
+- `delivery_check_result.md` 明確為 `PASS`。
+- render manifest 的 approved/rendered source hash 與目前程式碼一致。
 
 ## Invalidation and Recovery Rules
 
 | 變更或問題 | 失效範圍 | 回退位置 |
 | --- | --- | --- |
-| `generated_algo_scene.py` 有任何變更 | handoff、layout result、scene review、全部 render 產物及 rendered-media result | Stage 4 `CODE_PREPARATION` |
+| `generated_algo_scene.py` 有任何變更 | handoff、layout result、scene review、全部 render 產物及 delivery result | Stage 4 `CODE_PREPARATION` |
 | layout runner、scene-specific adapter、Manim 版本、字型或 frame geometry 改變 | layout result、scene review 及全部 Stage 5 產物 | Stage 4 `LAYOUT_VERIFICATION` |
 | requirements、animation design、script 或 voiceover 改變 | Stage 4 與 Stage 5 產物；必要時重新開啟其所屬上游 gate | 對應上游階段 |
 | layout validation `FAIL` | layout result 不通過；不得進入 scene review | Stage 4 writer |
 | scene review `FAIL` | scene review 不通過；任何 code 修正也使 layout result 失效 | Stage 4 writer |
-| render command、暫存路徑或輸出目錄錯誤，但 code 與 render profile 不變 | manifest、相關 MP4 及 rendered-media result | Stage 5 `FINAL_RENDER` |
-| MP4 遺漏、損壞、合併錯誤或 metadata 錯誤 | manifest、相關 MP4 及 rendered-media result | Stage 5 `FINAL_RENDER` |
+| render command、暫存路徑或輸出目錄錯誤，但 code 與 render profile 不變 | manifest、相關 MP4 及 delivery result | Stage 5 `FINAL_RENDER` |
+| MP4 遺漏、損壞、合併錯誤或 probe/decode 錯誤 | manifest、相關 MP4 及 delivery result | Stage 5 `FINAL_RENDER` |
 | render 失敗且需要修改 code | Stage 4 與 Stage 5 全部產物 | Stage 4 writer |
 | render profile 改變且可能影響 layout | layout result、scene review 及 Stage 5 全部產物 | Stage 4 `LAYOUT_VERIFICATION` |
 | 以相同 code hash、相同環境與相同 profile 重新 render | 保留 Stage 4 PASS；Stage 5 render 產物失效 | Stage 5 `FINAL_RENDER` |
@@ -408,7 +387,6 @@ runner 會建立 Manim mobjects、將動畫跳到終態、跳過 wait 與 sound 
 | `scene_writer` | 寫 code、執行 writer self-check、修正 findings、依核准版本 render | 審查自己的 code、建立獨立 review PASS、在 PASS 後偷偷改 code |
 | `scene_layout_validator` | 執行非渲染 Scene 幾何驗證、建立 layout result | 修改 code、審查演算法語意、忽略 warning、執行正式 render |
 | `scene_reviewer` | 審查需求與設計忠實性、演算法 state、lifecycle、assumptions | 修改 code、執行 render、重新取代 layout validator 的幾何判定 |
-| `rendered_media_validator` | 驗證 MP4、音訊、metadata、duration、合併順序與 hash | 修改 code、修改影片、重新執行 layout audit、隱藏成品錯誤 |
 
 ## Required Documentation Changes
 
@@ -416,8 +394,7 @@ runner 會建立 Manim mobjects、將動畫跳到終態、跳過 wait 與 sound 
 
 - `manim-algorithm-animation-maker/SKILL.md`：將第四階段改為 `SCENE_IMPLEMENTATION`，第五階段改為 `FINAL_RENDER_AND_QA`，並重寫兩階段的 gate 與回退規則。
 - `references/subagent-layout-auditor.md`：改名為 `references/subagent-scene-layout-validator.md`，更新 role、inputs、task name 與渲染前責任。
-- 新增 `references/subagent-rendered-media-validator.md`，定義第五階段成品驗證。
-- `references/subagent-delegation-protocol.md`：將 `layout_auditor` 更新為 `scene_layout_validator`，加入 `rendered_media_validator`。
+- `references/subagent-delegation-protocol.md`：將 `layout_auditor` 更新為 `scene_layout_validator`；Stage 5 不新增媒體 validator agent。
 - `references/layout-audit.md`：將使用時機從渲染後 QA 改為 Stage 4 的非渲染 layout verification。
 - `references/how-to-review-manim-scene-code.md`：移除 reviewer 對實際 layout collision 的重複權責，保留語意、state、lifecycle 與 assumptions 審查。
 - `references/how-to-render-approved-manim-scenes.md`：改成只接受 Stage 4 的雙重 PASS，並輸出完整 render manifest。
@@ -435,7 +412,7 @@ runner 會建立 Manim mobjects、將動畫跳到終態、跳過 wait 與 sound 
 - 四個 Scene 的 layout result 與 scene review 都綁定同一個 code hash。
 - code 變更會使舊渲染前 PASS 失效。
 - 正式 render 只使用 Stage 4 通過的 code。
-- `rendered_media_validator` 能獨立驗證 Scene MP4、combined MP4、audio、duration、metadata、順序與 hash。
+- coordinator 能以三項低成本操作完成 `DELIVERY_CHECK`，並正確將 probe/decode failure 留在 Stage 5、source hash mismatch 退回 Stage 4。
 - 媒體輸出問題可留在 Stage 5 修復；需要修改 code 時會正確退回 Stage 4。
 - 角色名稱、task name、reference 檔名與 delegation protocol 完全一致。
 - `git diff --check` 通過，且所有文件沒有未解決的 TODO、TBD、矛盾 gate 或模糊失效規則。

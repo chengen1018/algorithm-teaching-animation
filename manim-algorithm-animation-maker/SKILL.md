@@ -200,7 +200,7 @@ Stage 4 只建立並接受：
 ## 階段 5：FINAL_RENDER_AND_QA
 
 ### 目標
-只用 Stage 4 已通過且 hash 完全一致的單一 source version 完成正式渲染，建立 render evidence，並由獨立 validator 驗證交付媒體的完整性、metadata、音訊、duration、順序與 hashes。Stage 5 不重跑 layout audit，也不得用渲染後觀察取代 Stage 4 的 layout gate。
+只用 Stage 4 已通過且 hash 完全一致的單一 source version 完成正式渲染，建立 render evidence，並執行唯一的輕量成品檢查。Stage 5 不重跑 layout audit，也不重新審查演算法語意。
 
 ### Entry gate
 Stage 4 的四份必要輸出必須存在，layout 與 scene review 都是目前 source hash 的 `PASS`，四幕 layout audit 完整通過，而且 code、上游契約與 layout result 具名記錄的 runner、Python、Manim、frame geometry、renderer/profile/quality、font-resolution evidence 自 Stage 4 PASS 後未改變。任一條件不成立都不得開始正式 Manim render。
@@ -208,16 +208,21 @@ Stage 4 的四份必要輸出必須存在，layout 與 scene review 都是目前
 ### 子階段 1：FINAL_RENDER
 再次派遣原 `scene_writer`，明確指定模式 `FINAL_RENDER`，並提供 Stage 4 四份 gate 證據與 `how-to-render-approved-manim-scenes.md` 的絕對路徑。Writer 必須在第一個 render command 前逐一核對目前 code、handoff Code hash、layout Audited Code hash、scene review Reviewed Code hash、scene review Layout-audited Code hash 等五個身分全部一致，並逐欄比較目前 render environment/profile 與 layout result 的具名 layout-affecting evidence；gate 通過後不得修改 `generated_algo_scene.py`。
 
-依核准順序渲染四個 Scene、合併最終影片並建立 `render_manifest.md`。四幕與合併 MP4 必須全部存在且非空，manifest 必須把這些輸出綁定到唯一核准的 code hash 與 Stage 4 PASS 證據。Writer 必須在派遣 DELIVERY_QA 前完整填妥並凍結 manifest；manifest 不得含等待 validator 回填的 QA verdict、result path 或其他 placeholder。
+依核准順序渲染四個 Scene、合併最終影片並建立 `render_manifest.md`。Manifest 記錄實際 render commands、輸出路徑與核准 code hash，但不把 Scene 順序再當成 Stage 5 的獨立檢查。Writer 必須在執行 `DELIVERY_CHECK` 前完整填妥並凍結 manifest。
 
-### 子階段 2：DELIVERY_QA
-`FINAL_RENDER` 完成後，依委派協定派遣 task name `rendered_media_validator` 的獨立 subagent：
+### 子階段 2：DELIVERY_CHECK
+`FINAL_RENDER` 完成後，由 coordinator 執行唯一的輕量成品檢查，不再派遣額外的 media-validator subagent，也不提供 release、CI 或 strict mode。
 
-- 角色規格：`subagent-rendered-media-validator.md` 的絕對路徑
-- project inputs：`generated_algo_scene.py`、`scene_code_review_handoff.md`、`layout_audit_result.md`、`scene_review_result.md`、`render_manifest.md`、`narration_manifest.json`、依核准順序排列的四個 Scene MP4 與合併 MP4
-- 預期產物：`rendered_media_validation_result.md`
+- project inputs：`generated_algo_scene.py`、`render_manifest.md`、四個 Scene MP4 與合併 MP4
+- 預期產物：`delivery_check_result.md`
 
-Validator 依角色契約先記錄 immutable `render_manifest.md` 的絕對路徑與 SHA-256，再對每個 MP4 執行完整的 `ffprobe` metadata、`ffmpeg` decode 與 SHA-256 檢查。它必須分別核對目前 source、handoff、layout、scene review 的 reviewed 與 layout-audited identity，以及 manifest 的 `Approved Code SHA-256`、`Current Code SHA-256`、`Preflight Current Code SHA-256`（rendered source identity），八者缺漏或不一致即 `FAIL`；並檢查四幕順序、duration 與 audio evidence。Validator 不得 render、修改 manifest、修補、重編碼或替換媒體。QA verdict 只寫在 `rendered_media_validation_result.md` 並由 coordinator 用於 exit gate。只有 validator 回報 `DONE` 且實際 `rendered_media_validation_result.md = PASS` 才能完成工作流程。
+`DELIVERY_CHECK` 只有三項操作：
+
+1. 對四個 Scene MP4 與 combined MP4 執行 `ffprobe -v error -show_format -show_streams -of json`。`ffprobe` 失敗即表示檔案缺失、為空或不是可解析的媒體，因此不另設存在性／大小檢查。
+2. 對 combined MP4 執行 `ffmpeg -v error -i <combined.mp4> -f null -`，確認合併成品可以被解碼。
+3. 重新計算目前 `generated_algo_scene.py` SHA-256，並與 frozen manifest 的核准／rendered source hash 比對。
+
+`DELIVERY_CHECK` 不檢查 Scene 順序，不重新執行 layout，不修改 source、manifest 或任何 MP4。Coordinator 將命令、exit status、hash comparison 與 `PASS`／`FAIL` 寫入 `delivery_check_result.md`。
 
 ### 必要輸出與 Exit gate
 Stage 5 必須建立：
@@ -225,26 +230,26 @@ Stage 5 必須建立：
 - 依核准順序的四個非空 Scene MP4
 - 非空的最終合併 MP4
 - `render_manifest.md`
-- 由獨立 `rendered_media_validator` 產出的 `rendered_media_validation_result.md = PASS`
+- `delivery_check_result.md = PASS`
 
-Manifest、目前 source 與 Stage 4 gate 必須綁定同一個 code hash；media result 必須記錄 frozen manifest 的絕對路徑、QA 前後一致的 SHA-256 與所有 source/gate identities，涵蓋全部五個 MP4，且所有必要 command、metadata、decode、hash、duration、audio 與順序檢查都通過。Coordinator 在 exit gate 重新計算目前 manifest SHA-256；只有它仍與 media result 記錄相同時才能完成。
+Manifest、目前 source 與 Stage 4 gate 必須綁定同一個 code hash；delivery result 必須記錄五個 `ffprobe` exit status、combined decode exit status 與 source hash comparison。
 
 ### 失敗路由
-- 輸出路徑、渲染命令、concat、manifest 或媒體檢查失敗，且可在不改動 code、上游契約或 layout-affecting profile 的情況下修正：留在 Stage 5，重新建立受影響輸出與 manifest、再次凍結；任何重建的 manifest 都必須接受全新的完整 `DELIVERY_QA`。
-- 任何修復需要改動 `generated_algo_scene.py`：立即停止 Stage 5；舊 handoff、layout result、scene review、render manifest 與 media result 全部失效，回到 Stage 4 `CODE_PREPARATION`。
+- `ffprobe` 或 combined decode 失敗：留在 Stage 5 `FINAL_RENDER`，重新建立受影響輸出與 manifest，再次執行 `DELIVERY_CHECK`。
+- source hash mismatch：立即停止 Stage 5；回到 Stage 4 `CODE_PREPARATION`，重新完成 layout 與 scene review。
 - 任何修復改變 layout-affecting environment/profile：回到 Stage 4 `LAYOUT_VERIFICATION`，取得相同目前 code hash 的新 layout 與 scene review PASS 後，才可重新執行 Stage 5。
 
 ## 證據失效矩陣
 
 | 變更或失敗 | 立即失效的證據 | 回復路徑 |
 | --- | --- | --- |
-| `generated_algo_scene.py` 內容或 SHA-256 改變 | handoff、layout result、scene review、render manifest、rendered-media result | Stage 4 `CODE_PREPARATION`，再依序完成 layout、review 與 Stage 5 |
-| Layout runner、Manim 版本、font、frame geometry、quality/profile 或其他影響 layout 的環境改變 | layout result、依賴它的 scene review，以及其後建立的 render manifest 與 rendered-media result | 用目前 code hash 重跑 Stage 4 `LAYOUT_VERIFICATION` 與 `CONTRACT_REVIEW`，再重做 Stage 5 |
+| `generated_algo_scene.py` 內容或 SHA-256 改變 | handoff、layout result、scene review、render manifest、delivery result | Stage 4 `CODE_PREPARATION`，再依序完成 layout、review 與 Stage 5 |
+| Layout runner、Manim 版本、font、frame geometry、quality/profile 或其他影響 layout 的環境改變 | layout result、依賴它的 scene review，以及其後建立的 render manifest 與 delivery result | 用目前 code hash 重跑 Stage 4 `LAYOUT_VERIFICATION` 與 `CONTRACT_REVIEW`，再重做 Stage 5 |
 | 已核准需求、設計、腳本、旁白、narration manifest 或音訊契約改變 | 變更點之後的所有 Stage gate 與 render/media 證據 | 回到擁有該內容的 Stage，重新通過所有下游 gate |
 | `layout_audit_result.md = FAIL`、漏檢任一 Scene 或 hash 不一致 | Stage 4 layout gate 及任何後續證據 | Stage 4 `CODE_PREPARATION` 修正後重跑四幕 layout audit |
 | `scene_review_result.md = FAIL`、不獨立或 hash 不一致 | Stage 4 review gate 及任何後續證據 | 交回 writer 修正；若 code 改變，重新建立全部 Stage 4 證據 |
-| 任一 Scene／合併 MP4 或 `render_manifest.md` 新建、改寫或重新產生 | 舊 render manifest 與 `rendered_media_validation_result.md` | 保持 code 與 Stage 4 gate 不變，重建 manifest 並重跑 `DELIVERY_QA` |
-| `rendered_media_validation_result.md = FAIL` 或媒體輸出檢查失敗 | Stage 5 exit gate | 不改 code/profile 時留在 Stage 5 修復輸出；否則依變更類型回到 Stage 4 |
+| 任一 Scene／合併 MP4 或 `render_manifest.md` 新建、改寫或重新產生 | 舊 render manifest 與 `delivery_check_result.md` | 保持 code 與 Stage 4 gate 不變，重建輸出並重跑 `DELIVERY_CHECK` |
+| `delivery_check_result.md = FAIL` 或媒體輸出檢查失敗 | Stage 5 exit gate | 不改 code/profile 時留在 Stage 5 修復輸出；否則依變更類型回到 Stage 4 |
 
 ## 不可接受的捷徑
 遇到下列說法時，必須視為違反流程，不能當成可以省略步驟的理由：
@@ -258,7 +263,7 @@ Manifest、目前 source 與 Stage 4 gate 必須綁定同一個 code hash；medi
 | 「渲染能執行，所以等於已經完成審查。」 | 仍須在渲染前由 layout validator 與獨立 scene reviewer 產出同一 code hash 的正式 PASS。 |
 | 「交接檔已建立，因此 layout 或獨立場景審查是選用的。」 | Handoff 之後仍須依序完成 `LAYOUT_VERIFICATION` 與 `CONTRACT_REVIEW`，兩者 PASS 後才能渲染。 |
 | 「PASS 後只修了一個小錯，可以直接重新渲染。」 | 程式碼變更會使全部 Stage 4 與下游證據失效；必須重建並通過後才能重新渲染。 |
-| 「影片已經渲染完成，所以可以略過 `DELIVERY_QA`。」 | 不得略過；必須由獨立 `rendered_media_validator` 建立 `rendered_media_validation_result.md = PASS`。 |
+| 「影片已經渲染完成，所以可以略過 `DELIVERY_CHECK`。」 | 不得略過；必須完成五個 MP4 的 `ffprobe`、combined MP4 decode 與 source hash comparison，並建立 `delivery_check_result.md = PASS`。 |
 | 「再做一次本機修補，比追查反覆發生的畫面問題更省事。」 | 如果問題顯示前面階段仍有歧義，應退回對應階段處理。 |
 | 「為求保險，我現在應該閱讀所有參考資料。」 | 只讀取目前階段要求的資料；遇到指定情況時，再讀取額外參考資料。 |
 | 「我已委派這個階段，所以不再負責該關卡。」 | 協調者仍負責階段順序、產物是否存在與通過條件。 |
@@ -281,4 +286,4 @@ Manifest、目前 source 與 Stage 4 gate 必須綁定同一個 code hash；medi
 - Stage 4 的 `scene_review_result.md = PASS`，且由獨立 reviewer 在渲染前產出。
 - 目前 source、handoff、layout 與 review 的所有 Stage 4 SHA-256 欄位完全一致。
 - Stage 5 的四個 Scene MP4、最終合併 MP4 與 `render_manifest.md` 都已建立，且綁定該核准 code hash。
-- Stage 5 的 `rendered_media_validation_result.md = PASS`，由獨立 validator 產出並涵蓋全部五個 MP4。
+- Stage 5 的 `delivery_check_result.md = PASS`，記錄五個 `ffprobe`、combined decode 與 source hash comparison。

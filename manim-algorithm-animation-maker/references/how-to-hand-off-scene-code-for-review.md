@@ -37,7 +37,7 @@
 
 `Code SHA-256` 是 Stage 4 審查、layout audit 與後續渲染的版本身分。scene-reviewer 必須將實際審查的 hash 寫進 `scene_review_result.md` 的 `Reviewed Code SHA-256`，並同時記錄 layout result 的 `Layout-audited Code SHA-256`；兩者與 handoff 及目前 source hash 必須相同。
 
-每次修改 `generated_algo_scene.py` 後，不論變更大小，舊的 `scene_code_review_handoff.md`、`layout_audit_result.md`、`scene_review_result.md`、四個 Scene MP4、合併 MP4、`render_manifest.md` 與 `rendered_media_validation_result.md` 全部失效。scene-writer 必須從 Stage 4 `CODE_PREPARATION` 重新執行靜態 audit、建立新 handoff 與新 hash，再依序取得四幕 layout PASS、獨立 scene review PASS、正式 render 與全新的 DELIVERY_QA PASS。
+每次修改 `generated_algo_scene.py` 後，不論變更大小，舊的 `scene_code_review_handoff.md`、`layout_audit_result.md`、`scene_review_result.md`、四個 Scene MP4、合併 MP4、`render_manifest.md` 與 `delivery_check_result.md` 全部失效。scene-writer 必須從 Stage 4 `CODE_PREPARATION` 重新執行靜態 audit、建立新 handoff 與新 hash，再依序取得四幕 layout PASS、獨立 scene review PASS、正式 render 與全新的 `DELIVERY_CHECK` PASS。
 
 handoff 不得列出或要求本次程式碼的 MP4；MP4 只會在程式碼審查 PASS 後被產生。
 

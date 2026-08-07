@@ -75,14 +75,14 @@
 3. 逐欄比較 layout result 的 runner、Python、Manim、frame width、frame height、renderer/profile/quality 與 font/font-resolution evidence，確認它們仍與目前核准的 render environment/profile 相容；任一欄位缺漏、改變或無法證明相容都回到 Stage 4 `LAYOUT_VERIFICATION`。
 4. Gate 通過後不得再修改 `generated_algo_scene.py`；依渲染指南渲染四個 Scene。
 5. 依核准順序合併最終影片。
-6. 建立並完整填妥 `render_manifest.md`，記錄渲染輸出；在派遣 `rendered_media_validator` 前凍結 manifest，之後 writer 與 validator 都不得修改它。
+6. 建立並完整填妥 `render_manifest.md`，記錄渲染輸出；在 coordinator 執行 `DELIVERY_CHECK` 前凍結 manifest，之後不得修改它。
 
 若技術修復需要改動 `generated_algo_scene.py`，立即停止，不得繼續渲染；回報 `BLOCKED`，讓舊 PASS 失效並回到 `CODE_PREPARATION` 與獨立審查。
 
 ## Completion criteria
 
 - `CODE_PREPARATION`：只產出 `generated_algo_scene.py` 與 `scene_code_review_handoff.md`；完成完整重讀與靜態 self-audit，且 handoff 明確記錄 `Manim render performed: NO`。
-- `FINAL_RENDER`：四個 Scene MP4、合併影片與已完整填妥且凍結的 manifest 都存在；manifest 不含尚未產生的 DELIVERY_QA verdict placeholder。
+- `FINAL_RENDER`：四個 Scene MP4、合併影片與已完整填妥且凍結的 manifest 都存在；manifest 不含尚未產生的 `DELIVERY_CHECK` placeholder。
 
 ## Final response
 
