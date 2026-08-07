@@ -72,7 +72,7 @@ $ git diff --check --cached
 Fresh-context evaluator inputs (and no design specification, baseline diagnosis, or answer):
 
 - Skill folder: `/Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker`
-- Scenario file: `/Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/Docs/superpowers/validation/2026-08-07-subagent-model-routing-scenarios.md`
+- Scenario file: `/Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/docs/superpowers/validation/2026-08-07-subagent-model-routing-scenarios.md`
 - Role-spec paths must be literal absolute filesystem paths (spaces must not be URL-encoded).
 
 Raw response:
@@ -98,6 +98,40 @@ Forward-test criterion results:
 - PASS — Stage 5 uses `scene_final_renderer`, not `scene_writer`.
 - PASS — Only `scene_writer` is permitted to edit `generated_algo_scene.py`; `scene_final_renderer` is not.
 - PASS — `references/subagent-delegation-protocol.md` requires `BLOCKED` with no fallback when project config is missing or invalid; the valid-config scenario therefore emits the dispatch plan rather than a fallback route.
+
+## Static Validation Evidence
+
+The default `/usr/bin/python3` is Python 3.9.6 and lacks both `tomllib` and PyYAML. The following literal commands use installed Python 3.11 and a temporary, non-project PyYAML location at `/private/tmp/task4-model-routing-python-deps`.
+
+```text
+$ PYTHONPATH=/private/tmp/task4-model-routing-python-deps python3.11 /Users/lichengen/.codex/skills/.system/skill-creator/scripts/quick_validate.py "/Users/lichengen/Developer/Senior-project/Manim Algorithm Animation Maker/manim-algorithm-animation-maker"
+Skill is valid!
+[exit 0]
+
+$ python3.11 -c 'from pathlib import Path; import tomllib; tomllib.loads(Path(".codex/config.toml").read_text())'
+[no output]
+[exit 0]
+
+$ rg -n "FINAL_RENDER" manim-algorithm-animation-maker/references/subagent-scene-writer.md
+[no output]
+[exit 1 — expected: no matches]
+
+$ rg -n "scene_final_renderer" manim-algorithm-animation-maker/SKILL.md manim-algorithm-animation-maker/references/subagent-delegation-protocol.md manim-algorithm-animation-maker/references/how-to-render-approved-manim-scenes.md
+manim-algorithm-animation-maker/SKILL.md:217:依委派協定派遣 task name `scene_final_renderer` 的 subagent：
+manim-algorithm-animation-maker/references/subagent-delegation-protocol.md:33:| 正式場景渲染與合併 | `scene_final_renderer` | `references/subagent-scene-final-renderer.md` | project default | `gpt-5.6-luna` | `xhigh` |
+manim-algorithm-animation-maker/references/how-to-render-approved-manim-scenes.md:7:Stage 4 的 `Exit gate` 是唯一的渲染前 gate。協調者將 Stage 4 的四份 gate 證據、已核准的 source version 與 render profile 直接交給 `scene_final_renderer`；本文件不再建立第二份 `Entry gate`，也不要求在第一個 render command 前重做相同的 hash、PASS 或 environment preflight。
+[exit 0]
+
+$ git diff --check
+[no output]
+[exit 0]
+
+$ git status --short
+ M manim-algorithm-animation-maker/SKILL.md
+ M manim-algorithm-animation-maker/references/how-to-render-approved-manim-scenes.md
+ M manim-algorithm-animation-maker/references/subagent-scene-writer.md
+[exit 0]
+```
 
 ## Runtime Reload Boundary
 
