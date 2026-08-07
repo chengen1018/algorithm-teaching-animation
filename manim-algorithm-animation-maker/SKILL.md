@@ -22,6 +22,8 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 
 ## Subagent 委派契約
 
+取得授權後、第一次派遣前，協調者必須依 `references/subagent-delegation-protocol.md` 完成 project config preflight；Preflight 未通過時不得派遣任何 subagent。
+
 每次委派前，協調者必須完整閱讀並遵守本 skill 的 `references/subagent-delegation-protocol.md`。
 
 每次委派時，必須依照協定指定的 task name，並在派遣訊息中清楚提供以下資訊：
@@ -206,9 +208,18 @@ Stage 4 只建立並接受：
 Stage 4 的四份必要輸出必須存在，layout 與 scene review 都是目前 source hash 的 `PASS`，四幕 layout audit 完整通過，而且 code、上游契約與 layout result 具名記錄的 runner、Python、Manim、frame geometry、renderer/profile/quality、font-resolution evidence 自 Stage 4 PASS 後未改變。任一條件不成立都不得開始正式 Manim render。
 
 ### 子階段 1：FINAL_RENDER
-再次派遣原 `scene_writer`，明確指定模式 `FINAL_RENDER`，並提供 Stage 4 四份 gate 證據與 `how-to-render-approved-manim-scenes.md` 的絕對路徑。Writer 必須在第一個 render command 前逐一核對目前 code、handoff Code hash、layout Audited Code hash、scene review Reviewed Code hash、scene review Layout-audited Code hash 等五個身分全部一致，並逐欄比較目前 render environment/profile 與 layout result 的具名 layout-affecting evidence；gate 通過後不得修改 `generated_algo_scene.py`。
+依委派協定派遣 task name `scene_final_renderer` 的 subagent：
 
-依核准順序渲染四個 Scene、合併最終影片並建立 `render_manifest.md`。Manifest 記錄實際 render commands、輸出路徑與核准 code hash，但不把 Scene 順序再當成 Stage 5 的獨立檢查。Writer 必須在執行 `DELIVERY_CHECK` 前完整填妥並凍結 manifest。
+- 角色規格：`references/subagent-scene-final-renderer.md` 的絕對路徑
+- Stage 4 gate evidence：`generated_algo_scene.py`、`scene_code_review_handoff.md`、`layout_audit_result.md`、`scene_review_result.md` 的絕對路徑
+- approved render profile
+- handoff 所列的四個 Scene class 與核准順序
+- render guide：`references/how-to-render-approved-manim-scenes.md` 的絕對路徑
+- 預期產物：四個 Scene MP4、combined MP4 與 `render_manifest.md` 的絕對路徑
+
+Renderer 直接使用 Stage 4 `Exit gate` 所核准的 immutable source version 與 render profile，不得在本階段重新執行 Stage 4 的 hash、PASS 或 environment preflight，也不得修改 source 或 gate evidence。
+
+依核准順序渲染四個 Scene、合併最終影片並建立 `render_manifest.md`。Manifest 記錄實際 render commands、exit codes、輸出路徑與核准 code hash，但不把 Scene 順序再當成 Stage 5 的獨立檢查。Renderer 必須在執行 `DELIVERY_CHECK` 前完整填妥並凍結 manifest。
 
 ### 子階段 2：DELIVERY_CHECK
 `FINAL_RENDER` 完成後，由 coordinator 執行唯一的輕量成品檢查，不再派遣額外的 media-validator subagent，也不提供 release、CI 或 strict mode。

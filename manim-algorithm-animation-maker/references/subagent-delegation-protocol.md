@@ -64,7 +64,7 @@
 1. 完整閱讀角色規格。
 2. 確認並完整閱讀以下必要輸入與參考：
    - <absolute-path>
-3. 執行角色規格中的 Preflight。
+3. 若角色規格定義 `Preflight`，執行該 `Preflight`；若未定義，依角色規格明列的 gate ownership 與 input checks 執行。
 
 不要執行任何未指派的後續階段。
 

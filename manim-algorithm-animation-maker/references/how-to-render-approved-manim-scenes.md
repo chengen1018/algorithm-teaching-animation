@@ -2,6 +2,8 @@
 
 這份文件只用於 `generated_algo_scene.py` 已通過 Stage 4 layout 與獨立 scene review 的最終渲染。程式碼尚未 PASS 時不得使用本流程產生 preview 或送審 MP4。正式 render、四個 Scene MP4、合併 MP4、`render_manifest.md` 與 `delivery_check_result.md` 全部屬於 Stage 5；不得用它們取代 Stage 4 的 layout gate。
 
+Stage 5 的正式渲染與合併由 `scene_final_renderer` 執行。
+
 ## 渲染前關卡
 
 執行第一個 Manim render command 前，必須全部確認：
