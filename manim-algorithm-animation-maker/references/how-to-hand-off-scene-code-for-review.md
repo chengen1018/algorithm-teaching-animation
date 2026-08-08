@@ -1,12 +1,12 @@
 # How to Hand Off Scene Code for Review
 
-這份文件說明 scene-writer 如何在執行任何 Manim render 之前建立 `scene_code_review_handoff.md`，交給獨立 scene-reviewer 進行程式碼審查。
+這份文件說明 scene-writer 如何在 `CODE_PREPARATION` 中、執行任何 Manim render 之前建立 pre-render `scene_code_review_handoff.md`，交給 `scene_layout_validator` 與獨立 scene-reviewer 使用。
 
-`scene_code_review_handoff.md` 是程式碼交接紀錄，不做程式碼檢查，也不做畫面審查。scene-writer 的靜態 audit（例如物件碰撞、越界、生命週期與 peak state）依 `references/how-to-implement-and-verify-manim-scenes.md` 執行；獨立 scene-reviewer 另行審查程式碼。
+`scene_code_review_handoff.md` 是 pre-render 程式碼交接紀錄，不做程式碼檢查，也不做畫面審查。scene-writer 執行完整重讀與靜態 self-audit；`scene_layout_validator` 另行負責 mobject geometry；獨立 scene-reviewer 另行負責語意與程式碼責任。
 
 ## 交接時點
 
-必須先完成整支 `generated_algo_scene.py` 與必要靜態 audit，才能建立 handoff。在 reviewer 對目前 code hash 產出 `scene_review_result.md = PASS` 之前，不得渲染單幕、preview、low-quality 版本或最終影片。
+必須先完成整支 `generated_algo_scene.py` 與必要靜態 self-audit，才能建立 handoff。handoff 只屬於 `CODE_PREPARATION`，該模式只產出程式碼與 handoff，並必須記錄 `Manim render performed: NO`。在相同 code hash 的 layout audit 與 reviewer 都產出 `PASS` 前，不得渲染單幕、preview、low-quality 版本或最終影片。
 
 ## 交接格式
 
@@ -35,9 +35,9 @@
 
 ## 版本與失效規則
 
-`Code SHA-256` 是程式碼審查與後續渲染的版本身分。scene-reviewer 必須將實際審查的 hash 寫進 `scene_review_result.md` 的 `Reviewed Code SHA-256`。
+`Code SHA-256` 是 Stage 4 審查、layout audit 與後續渲染的版本身分。scene-reviewer 必須將實際審查的 hash 寫進 `scene_review_result.md` 的 `Reviewed Code SHA-256`，並同時記錄 layout result 的 `Layout-audited Code SHA-256`；兩者與 handoff 及目前 source hash 必須相同。
 
-每次修改 `generated_algo_scene.py` 後，舊的 `scene_code_review_handoff.md` 與 `scene_review_result.md` 都失效，不論變更大小。scene-writer 必須重新執行受影響範圍的靜態 audit、更新 handoff 並取得新 PASS。
+每次修改 `generated_algo_scene.py` 後，不論變更大小，舊的 `scene_code_review_handoff.md`、`layout_audit_result.md`、`scene_review_result.md`、四個 Scene MP4、合併 MP4、`render_manifest.md` 與 `delivery_check_result.md` 全部失效。scene-writer 必須從 Stage 4 `CODE_PREPARATION` 重新執行靜態 audit、建立新 handoff 與新 hash，再依序取得四幕 layout PASS、獨立 scene review PASS、正式 render 與全新的 `DELIVERY_CHECK` PASS。
 
 handoff 不得列出或要求本次程式碼的 MP4；MP4 只會在程式碼審查 PASS 後被產生。
 

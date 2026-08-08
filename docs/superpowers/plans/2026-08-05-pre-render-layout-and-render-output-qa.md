@@ -6,6 +6,8 @@
 
 **Architecture:** Keep the existing five-stage workflow, but replace Stage 4 with `SCENE_IMPLEMENTATION` and Stage 5 with `FINAL_RENDER_AND_QA`. `scene_writer` produces code, `scene_layout_validator` performs deterministic non-rendering geometry checks, `scene_reviewer` checks semantic fidelity and lifecycle, and `rendered_media_validator` checks the final MP4/audio artifacts. Every gate records the `generated_algo_scene.py` SHA-256; code or layout-affecting environment changes invalidate downstream evidence.
 
+> **2026-08-07 post-implementation amendment:** The full post-render media-validator design below is superseded. The current workflow has one coordinator-owned `DELIVERY_CHECK` only: `ffprobe` all five MP4s (which implicitly rejects missing/zero-byte/unparseable files), `ffmpeg` decode of the combined MP4, and one source-hash comparison. There is no Scene-order assertion, no release/CI/strict mode, and no `rendered_media_validator` subagent. The current decision is specified in `docs/superpowers/specs/2026-08-07-lightweight-delivery-check-design.md`.
+
 **Tech Stack:** Markdown skill/reference files, YAML metadata, Python Manim dry-run runner, `ffprobe`/`ffmpeg` media inspection, shell-based documentation checks, and the skill creator `quick_validate.py` validator.
 
 ## Global Constraints

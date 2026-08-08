@@ -2,6 +2,12 @@
 
 本文件定義協調者如何把工作委派給 subagent。不得只用角色名稱要求 subagent 自行推測工作。
 
+## Project config preflight
+
+取得使用者授權後、第一次派遣任何 subagent 前，協調者必須解析本次動畫 `project root` 啟動 task 時已存在的 `.codex/config.toml`，並確認 `[agents]` 的 `enabled = true`（未設為 `false`）、`default_subagent_model = "gpt-5.6-luna"` 與 `default_subagent_reasoning_effort = "xhigh"`。
+
+若 config 缺檔、無法解析、任一值不符、runtime 拒絕 Luna，或 config 是在目前 task 啟動後才加入，project config preflight 一律回報 `BLOCKED`，不得派遣任何 subagent。協調者不得自行覆寫設定或 fallback 到其他 model／reasoning effort；必須要求使用者從含有正確 config 的動畫 `project root` 建立新 task。
+
 ## 派遣資料
 
 每次委派前，協調者必須準備：
@@ -15,15 +21,18 @@
 
 ## 角色對應
 
-| 工作 | task name | 角色規格 |
-| --- | --- | --- |
-| 動畫設計審查 | `animation_design_reviewer` | `references/subagent-animation-design-reviewer.md` |
-| 教學腳本撰寫 | `script_writer` | `references/subagent-script-writer.md` |
-| 教學腳本審查 | `script_reviewer` | `references/subagent-script-reviewer.md` |
-| 旁白產生 | `voiceover_generator` | `references/subagent-voiceover-generator.md` |
-| 場景程式碼與渲染 | `scene_writer` | `references/subagent-scene-writer.md` |
-| 場景程式碼審查 | `scene_reviewer` | `references/subagent-scene-reviewer.md` |
-| 版面 QA | `layout_auditor` | `references/subagent-layout-auditor.md` |
+| 工作 | task name | 角色規格 | model source | model | reasoning effort |
+| --- | --- | --- | --- | --- | --- |
+| 動畫設計審查 | `animation_design_reviewer` | `references/subagent-animation-design-reviewer.md` | project default | `gpt-5.6-luna` | `xhigh` |
+| 教學腳本撰寫 | `script_writer` | `references/subagent-script-writer.md` | explicit spawn override | `gpt-5.6-sol` | `high` |
+| 教學腳本審查 | `script_reviewer` | `references/subagent-script-reviewer.md` | project default | `gpt-5.6-luna` | `xhigh` |
+| 旁白產生 | `voiceover_generator` | `references/subagent-voiceover-generator.md` | project default | `gpt-5.6-luna` | `xhigh` |
+| 場景程式碼 | `scene_writer` | `references/subagent-scene-writer.md` | explicit spawn override | `gpt-5.6-sol` | `high` |
+| 渲染前 Scene 版面驗證 | `scene_layout_validator` | `references/subagent-scene-layout-validator.md` | project default | `gpt-5.6-luna` | `xhigh` |
+| 場景程式碼審查 | `scene_reviewer` | `references/subagent-scene-reviewer.md` | project default | `gpt-5.6-luna` | `xhigh` |
+| 正式場景渲染與合併 | `scene_final_renderer` | `references/subagent-scene-final-renderer.md` | project default | `gpt-5.6-luna` | `xhigh` |
+
+對標示為 `project default` 的角色呼叫 `spawn_agent` 時，必須省略 `model` 與 `reasoning_effort`，由 project config 繼承預設值。對 `script_writer` 與 `scene_writer` 兩個 `explicit spawn override` 角色呼叫 `spawn_agent` 時，必須明確傳入 `model = "gpt-5.6-sol"` 與 `reasoning_effort = "high"`。不得只把 model 名稱寫入派遣 `message` 來假裝已套用模型路由。
 
 ## 派遣訊息必要欄位
 
@@ -55,7 +64,7 @@
 1. 完整閱讀角色規格。
 2. 確認並完整閱讀以下必要輸入與參考：
    - <absolute-path>
-3. 執行角色規格中的 Preflight。
+3. 若角色規格定義 `Preflight`，執行該 `Preflight`；若未定義，依角色規格明列的 gate ownership 與 input checks 執行。
 
 不要執行任何未指派的後續階段。
 
