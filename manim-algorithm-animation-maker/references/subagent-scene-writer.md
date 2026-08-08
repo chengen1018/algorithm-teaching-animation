@@ -22,15 +22,7 @@
 - 協調者提供的 `how-to-implement-and-verify-manim-scenes.md` 絕對路徑
 - 協調者提供的 `how-to-hand-off-scene-code-for-review.md` 絕對路徑
 
-## Preflight
-
-共同條件：
-
-- 所有必要輸入存在且可讀。
-- `animation_design_review.md` 與 `script_review_result.md` 都已清楚判定為 `PASS`。
-- 四幕設計、腳本、旁白與音檔彼此一致。
-
-任何條件不成立時不得猜測、修改 gate 文件或提前執行後續工作，回報 `BLOCKED`。
+上述檔案是必須閱讀的權威輸入，不另建立 upstream preflight。若實際讀取時發現必要檔案無法存取，回報 `BLOCKED`。
 
 ## CODE_PREPARATION procedure
 

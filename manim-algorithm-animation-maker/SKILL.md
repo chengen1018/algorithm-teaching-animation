@@ -58,6 +58,10 @@ description: 當使用者要求以 Manim 將演算法名稱、範例輸入或執
 開始每個階段前確實閱讀完成目前階段需要的參考資料，不得跳過任何階段，也不得合併、提前或補做後續階段的工作來取代目前階段。
 請照各階段的描述完成工作，且該階段規定的必要產物、審查與通過條件都已滿足後，才能進入下一個階段。
 
+### 階段 gate 原則
+
+本 skill 每個階段只定義自己的 `Exit gate`。第 N 階段的 `Exit gate` 同時就是第 N+1 階段的開始資格；下一階段不得再另列或重做同一組 `Entry gate` 檢查。只有子階段之間為了確認新產物、回報狀態或失敗路由所需要的局部確認，才保留在該子階段的描述中。
+
 ## 階段 1：ANIMATION_DESIGN
 
 ### 目標
@@ -132,34 +136,31 @@ subagent 回報 `DONE`，上述三類產物都已建立，manifest 涵蓋所有 
 ### 目標
 將已核准的上游內容實作為四個 Scene，並在任何正式 Manim render 之前完成非渲染 layout 驗證與獨立契約審查。此階段只能產生程式碼與 gate 證據；目前版本的 MP4 既不是必要輸出，也不得作為通關證據。
 
-### Entry gate
-開始前必須全部成立：
-
-- `confirmed_requirements.md` 存在。
-- `animation_design.md` 已通過內容審查並取得使用者明確核准。
-- `animation_design_review.md = PASS`。
-- `teaching_script.md` 存在且 `script_review_result.md = PASS`。
-- `voiceover.md`、`narration_manifest.json` 與四幕所需的可直接使用音訊都存在且已通過 Stage 3 驗證。
-- 上述需求、設計、審查、腳本、旁白、manifest 與音訊之間沒有已知未解決的衝突。
-- 已取得使用 subagent 的明確授權。
-
-### 委派契約
-協調者依委派協定使用以下三個彼此分離的角色，並在每次派遣中傳入角色規格、必要 project inputs、skill references、runner 與預期產物的絕對路徑：
-
-- scene writer：task name `scene_writer`，角色規格 `subagent-scene-writer.md`，模式 `CODE_PREPARATION`
-- layout validator：task name `scene_layout_validator`，角色規格 `subagent-scene-layout-validator.md`
-- scene reviewer：task name `scene_reviewer`，角色規格 `subagent-scene-reviewer.md`
-- 實作與 handoff references：`how-to-implement-and-verify-manim-scenes.md`、`how-to-hand-off-scene-code-for-review.md`
-- layout reference 與 runner：`layout-audit.md`、`run_layout_audit.py`
-- 契約審查 reference：`how-to-review-manim-scene-code.md`
-
 ### 子階段 1：CODE_PREPARATION
-派遣 `scene_writer` 並明確指定 `CODE_PREPARATION`。Writer 把已通過 gate 的上游產物視為可執行契約，以最小、保守方式處理可合理解讀的細節，建立 `generated_algo_scene.py` 與 pre-render `scene_code_review_handoff.md`，並在 handoff 記錄 `Render Assumptions`、四個 Scene class 的核准順序、`Code SHA-256` 與 `Manim render performed: NO`。
+依委派協定派遣 task name `scene_writer` 的 subagent，明確指定模式 `CODE_PREPARATION`，完成 Stage 4 的場景程式碼實作與 pre-render handoff：
+
+- 角色規格：`references/subagent-scene-writer.md` 的絕對路徑
+- project inputs：`confirmed_requirements.md`、`animation_design.md`、`animation_design_review.md`、`teaching_script.md`、`script_review_result.md`、`voiceover.md`、`narration_manifest.json`、`audio/voiceover/` 的絕對路徑
+- skill references：`references/how-to-implement-and-verify-manim-scenes.md`、`references/how-to-hand-off-scene-code-for-review.md` 的絕對路徑
+- 預期產物：`generated_algo_scene.py`、`scene_code_review_handoff.md` 的絕對路徑
+
+Writer 把已通過 gate 的上游產物視為可執行契約，以最小、保守方式處理可合理解讀的細節，並在 handoff 記錄 `Render Assumptions`、四個 Scene class 的核准順序、`Code SHA-256` 與 `Manim render performed: NO`。
 
 Writer 必須完成完整重讀與靜態 self-audit。此子階段不得執行 Manim render、preview、低畫質 render 或合併影片，也不得先建立本版本的送審 MP4。
 
+若上游契約不完整、衝突或必須改變已核准內容，不得由 writer 自行補寫；退回擁有該內容的 Stage 1、2 或 3。
+
 ### 子階段 2：LAYOUT_VERIFICATION
-協調者確認 writer 回報 `DONE`、兩份輸出存在且沒有以本版本 MP4 作為證據後，派遣 `scene_layout_validator`。Validator 對 handoff 所列的四個 Scene class 依核准順序各執行一次以下必要命令，完整保留 stdout、stderr 與 exit code：
+協調者確認 `scene_writer` 回報 `DONE`、兩份輸出存在且沒有以本版本 MP4 作為證據後，依委派協定派遣 task name `scene_layout_validator` 的 subagent：
+
+- 角色規格：`references/subagent-scene-layout-validator.md` 的絕對路徑
+- project inputs：`generated_algo_scene.py`、`scene_code_review_handoff.md` 的絕對路徑
+- skill reference：`references/layout-audit.md` 的絕對路徑
+- runner：`scripts/run_layout_audit.py` 的絕對路徑
+- 額外派遣資料：handoff 所列四個 Scene class 與核准順序
+- 預期產物：`layout_audit_result.md` 的絕對路徑
+
+Validator 對 handoff 所列的四個 Scene class 依核准順序各執行一次以下必要命令，完整保留 stdout、stderr 與 exit code：
 
 ```bash
 python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py <SceneClass> --audit-visible --fail-on-warning --visible-report-level warning
@@ -169,10 +170,19 @@ python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py <S
 
 若需要 scene-specific adapter，先退回 `CODE_PREPARATION` 由 writer 依 `layout-audit.md` 實作；任何程式碼變更都要建立新 handoff 與新 hash，再重新執行全部四幕 layout audit。
 
+若 layout audit `FAIL`、漏檢任一 Scene、warning 未處理或 hash／環境證據不一致，留在 Stage 4，先修正 `CODE_PREPARATION`，再重跑全部四幕 layout audit。
+
 ### 子階段 3：CONTRACT_REVIEW
-只有 `scene_layout_validator` 回報 `DONE`、`layout_audit_result.md = PASS`、完整涵蓋四幕且 audited hash 與目前程式碼及 handoff 相同後，才能派遣獨立 `scene_reviewer`。
+只有 `scene_layout_validator` 回報 `DONE`、`layout_audit_result.md = PASS`、完整涵蓋四幕且 audited hash 與目前程式碼及 handoff 相同後，才能依委派協定派遣 task name `scene_reviewer` 的獨立 subagent：
+
+- 角色規格：`references/subagent-scene-reviewer.md` 的絕對路徑
+- project inputs：`confirmed_requirements.md`、`animation_design.md`、`animation_design_review.md`、`teaching_script.md`、`script_review_result.md`、`generated_algo_scene.py`、`scene_code_review_handoff.md`、`layout_audit_result.md` 的絕對路徑
+- skill reference：`references/how-to-review-manim-scene-code.md` 的絕對路徑
+- 預期產物：`scene_review_result.md` 的絕對路徑
 
 Reviewer 建立 `scene_review_result.md`，只審查 source fidelity、演算法／state correctness、lifecycle／ownership、cleanup 與 assumptions；實際 mobject geometry、bounding-box、碰撞、遮擋與 safe-frame 判定以 `layout_audit_result.md` 為唯一責任來源，不得重做。Review result 必須記錄相同的 `Reviewed Code SHA-256` 與 `Layout-audited Code SHA-256`。
+
+若 `scene_review_result.md = FAIL`、reviewer 不獨立或 hash 不一致，留在 Stage 4，將 blocking findings 交回 writer；任何程式碼修正都要從 `CODE_PREPARATION` 重新建立 handoff、layout audit 與契約審查。
 
 ### 必要輸出
 Stage 4 只建立並接受：
@@ -194,18 +204,14 @@ Stage 4 只建立並接受：
 
 本機自行檢查、dry-run 可執行、非正式 review 或提早產生的 MP4 都不能取代上述 gate。
 
-### 失敗路由
-- Layout `FAIL`：留在 Stage 4，交回 `scene_writer` 的 `CODE_PREPARATION` 修正；產生新 hash 後重跑全部四幕 layout audit，再做契約審查。
-- Reviewer `FAIL`：留在 Stage 4，將 blocking findings 交回 writer；任何程式碼修正都使舊 handoff 與 layout result 失效，必須從 `CODE_PREPARATION` 重新開始。
-- 上游契約不完整、衝突或必須改變已核准內容：退回擁有該內容的 Stage 1、2 或 3，不得由 writer 或 reviewer 自行補寫新意思。
+Stage 4 `Exit gate` 通過後，若在正式渲染前發現程式碼改變，回到 `CODE_PREPARATION`；若 layout-affecting environment/profile 改變，回到 `LAYOUT_VERIFICATION`；若上游需求、設計、腳本或旁白契約改變，回到擁有該內容的 Stage。
 
 ## 階段 5：FINAL_RENDER_AND_QA
 
 ### 目標
 只用 Stage 4 已通過且 hash 完全一致的單一 source version 完成正式渲染，建立 render evidence，並執行唯一的輕量成品檢查。Stage 5 不重跑 layout audit，也不重新審查演算法語意。
 
-### Entry gate
-Stage 4 的四份必要輸出必須存在，layout 與 scene review 都是目前 source hash 的 `PASS`，四幕 layout audit 完整通過，而且 code、上游契約與 layout result 具名記錄的 runner、Python、Manim、frame geometry、renderer/profile/quality、font-resolution evidence 自 Stage 4 PASS 後未改變。任一條件不成立都不得開始正式 Manim render。
+Stage 5 直接承接 Stage 4 的 `Exit gate`；Stage 4 已確認的四份 gate 證據、source hash 與 layout-affecting evidence 不在本階段重複檢查。
 
 ### 子階段 1：FINAL_RENDER
 依委派協定派遣 task name `scene_final_renderer` 的 subagent：
@@ -218,6 +224,8 @@ Stage 4 的四份必要輸出必須存在，layout 與 scene review 都是目前
 - 預期產物：四個 Scene MP4、combined MP4 與 `render_manifest.md` 的絕對路徑
 
 Renderer 直接使用 Stage 4 `Exit gate` 所核准的 immutable source version 與 render profile，不得在本階段重新執行 Stage 4 的 hash、PASS 或 environment preflight，也不得修改 source 或 gate evidence。
+
+若正式渲染前發現 Stage 4 PASS 後程式碼已改變，回到 Stage 4 `CODE_PREPARATION`；若 layout-affecting environment/profile 改變，回到 `LAYOUT_VERIFICATION`；若上游需求、設計、腳本或旁白契約改變，回到擁有該內容的 Stage。不得使用舊的 Stage 4 gate 繼續渲染。
 
 依核准順序渲染四個 Scene、合併最終影片並建立 `render_manifest.md`。Manifest 記錄實際 render commands、exit codes、輸出路徑與核准 code hash，但不把 Scene 順序再當成 Stage 5 的獨立檢查。Renderer 必須在執行 `DELIVERY_CHECK` 前完整填妥並凍結 manifest。
 
@@ -235,6 +243,8 @@ Renderer 直接使用 Stage 4 `Exit gate` 所核准的 immutable source version 
 
 `DELIVERY_CHECK` 不檢查 Scene 順序，不重新執行 layout，不修改 source、manifest 或任何 MP4。Coordinator 將命令、exit status、hash comparison 與 `PASS`／`FAIL` 寫入 `delivery_check_result.md`。
 
+若任一 `ffprobe` 或 combined decode 失敗，留在 Stage 5 `FINAL_RENDER`，只修復並重新建立受影響的輸出與 manifest，再重跑 `DELIVERY_CHECK`。若 source hash mismatch，回到 Stage 4 `CODE_PREPARATION`；若修復改變 layout-affecting environment/profile，回到 Stage 4 `LAYOUT_VERIFICATION`；若上游契約改變，回到擁有該內容的 Stage。只要重新產生任一 MP4 或 manifest，舊的 `delivery_check_result.md` 就不能沿用，必須重新執行 `DELIVERY_CHECK`。
+
 ### 必要輸出與 Exit gate
 Stage 5 必須建立：
 
@@ -244,57 +254,3 @@ Stage 5 必須建立：
 - `delivery_check_result.md = PASS`
 
 Manifest、目前 source 與 Stage 4 gate 必須綁定同一個 code hash；delivery result 必須記錄五個 `ffprobe` exit status、combined decode exit status 與 source hash comparison。
-
-### 失敗路由
-- `ffprobe` 或 combined decode 失敗：留在 Stage 5 `FINAL_RENDER`，重新建立受影響輸出與 manifest，再次執行 `DELIVERY_CHECK`。
-- source hash mismatch：立即停止 Stage 5；回到 Stage 4 `CODE_PREPARATION`，重新完成 layout 與 scene review。
-- 任何修復改變 layout-affecting environment/profile：回到 Stage 4 `LAYOUT_VERIFICATION`，取得相同目前 code hash 的新 layout 與 scene review PASS 後，才可重新執行 Stage 5。
-
-## 證據失效矩陣
-
-| 變更或失敗 | 立即失效的證據 | 回復路徑 |
-| --- | --- | --- |
-| `generated_algo_scene.py` 內容或 SHA-256 改變 | handoff、layout result、scene review、render manifest、delivery result | Stage 4 `CODE_PREPARATION`，再依序完成 layout、review 與 Stage 5 |
-| Layout runner、Manim 版本、font、frame geometry、quality/profile 或其他影響 layout 的環境改變 | layout result、依賴它的 scene review，以及其後建立的 render manifest 與 delivery result | 用目前 code hash 重跑 Stage 4 `LAYOUT_VERIFICATION` 與 `CONTRACT_REVIEW`，再重做 Stage 5 |
-| 已核准需求、設計、腳本、旁白、narration manifest 或音訊契約改變 | 變更點之後的所有 Stage gate 與 render/media 證據 | 回到擁有該內容的 Stage，重新通過所有下游 gate |
-| `layout_audit_result.md = FAIL`、漏檢任一 Scene 或 hash 不一致 | Stage 4 layout gate 及任何後續證據 | Stage 4 `CODE_PREPARATION` 修正後重跑四幕 layout audit |
-| `scene_review_result.md = FAIL`、不獨立或 hash 不一致 | Stage 4 review gate 及任何後續證據 | 交回 writer 修正；若 code 改變，重新建立全部 Stage 4 證據 |
-| 任一 Scene／合併 MP4 或 `render_manifest.md` 新建、改寫或重新產生 | 舊 render manifest 與 `delivery_check_result.md` | 保持 code 與 Stage 4 gate 不變，重建輸出並重跑 `DELIVERY_CHECK` |
-| `delivery_check_result.md = FAIL` 或媒體輸出檢查失敗 | Stage 5 exit gate | 不改 code/profile 時留在 Stage 5 修復輸出；否則依變更類型回到 Stage 4 |
-
-## 不可接受的捷徑
-遇到下列說法時，必須視為違反流程，不能當成可以省略步驟的理由：
-
-| 捷徑 | 必要回應 |
-| --- | --- |
-| 「可以略過 `DESIGN_DEVELOPMENT`，直接把蒐集的需求交給下游。」 | 不得略過；`COLLECT_REQUIREMENTS` 不能取代共同動畫設計與獨立內容審查。 |
-| 「reviewer 在聊天中說沒問題，所以不用建立審查檔。」 | 非正式意見不能取代由獨立 `animation-design-reviewer` 產出的 `animation_design_review.md = PASS`。 |
-| 「`animation_design.md` 已經夠詳細，所以可以略過 `SCRIPT`。」 | 仍須執行 `SCRIPT`；場景程式碼不能取代 `teaching_script.md`。 |
-| 「先渲染再做 layout 或讓 reviewer 看 code，可以更快確認。」 | 不得先渲染；Stage 4 必須依序取得四幕 `layout_audit_result.md = PASS` 與獨立 `scene_review_result.md = PASS`。 |
-| 「渲染能執行，所以等於已經完成審查。」 | 仍須在渲染前由 layout validator 與獨立 scene reviewer 產出同一 code hash 的正式 PASS。 |
-| 「交接檔已建立，因此 layout 或獨立場景審查是選用的。」 | Handoff 之後仍須依序完成 `LAYOUT_VERIFICATION` 與 `CONTRACT_REVIEW`，兩者 PASS 後才能渲染。 |
-| 「PASS 後只修了一個小錯，可以直接重新渲染。」 | 程式碼變更會使全部 Stage 4 與下游證據失效；必須重建並通過後才能重新渲染。 |
-| 「影片已經渲染完成，所以可以略過 `DELIVERY_CHECK`。」 | 不得略過；必須完成五個 MP4 的 `ffprobe`、combined MP4 decode 與 source hash comparison，並建立 `delivery_check_result.md = PASS`。 |
-| 「再做一次本機修補，比追查反覆發生的畫面問題更省事。」 | 如果問題顯示前面階段仍有歧義，應退回對應階段處理。 |
-| 「為求保險，我現在應該閱讀所有參考資料。」 | 只讀取目前階段要求的資料；遇到指定情況時，再讀取額外參考資料。 |
-| 「我已委派這個階段，所以不再負責該關卡。」 | 協調者仍負責階段順序、產物是否存在與通過條件。 |
-| 「這個核心設計缺口很小，可以直接在 `SCRIPT` 或 `SCENE_IMPLEMENTATION` 中補上。」 | 不得在下游修補核心設計；退回 `DESIGN_DEVELOPMENT`，重新審查與重新核准。 |
-| 「使用者修改設計後，可以沿用舊審查。」 | 不可沿用；更新設計後重新執行內容審查與使用者最終核准。 |
-
-## 完成檢查
-在聲稱工作流程完成前，確認：
-
-- `confirmed_requirements.md` 存在，且準確保留使用者來源與來源標籤。
-- `animation_design.md` 存在，且完整設計四個獨立 Scene。
-- `animation_design_review.md = PASS`，且由獨立的 `animation-design-reviewer` 產出。
-- 已取得使用者對完整設計的明確核准。
-- `teaching_script.md` 存在。
-- `script_review_result.md = PASS`。
-- `voiceover.md`、`narration_manifest.json` 與可直接使用的旁白音訊都已完成。
-- `generated_algo_scene.py` 存在。
-- Stage 4 的 `scene_code_review_handoff.md` 存在，且記錄目前 code hash 與 `Manim render performed: NO`。
-- Stage 4 的 `layout_audit_result.md = PASS`，涵蓋依核准順序執行的全部四個 Scene dry-run。
-- Stage 4 的 `scene_review_result.md = PASS`，且由獨立 reviewer 在渲染前產出。
-- 目前 source、handoff、layout 與 review 的所有 Stage 4 SHA-256 欄位完全一致。
-- Stage 5 的四個 Scene MP4、最終合併 MP4 與 `render_manifest.md` 都已建立，且綁定該核准 code hash。
-- Stage 5 的 `delivery_check_result.md = PASS`，記錄五個 `ffprobe`、combined decode 與 source hash comparison。

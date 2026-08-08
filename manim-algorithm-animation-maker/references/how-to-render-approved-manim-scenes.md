@@ -2,29 +2,11 @@
 
 這份文件只用於 `generated_algo_scene.py` 已通過 Stage 4 layout 與獨立 scene review 的最終渲染。程式碼尚未 PASS 時不得使用本流程產生 preview 或送審 MP4。正式 render、四個 Scene MP4、合併 MP4、`render_manifest.md` 與 `delivery_check_result.md` 全部屬於 Stage 5；不得用它們取代 Stage 4 的 layout gate。
 
-Stage 5 的正式渲染與合併由 `scene_final_renderer` 執行。
+## 渲染前資料
 
-## 渲染前關卡
+Stage 4 的 `Exit gate` 是唯一的渲染前 gate。協調者將 Stage 4 的四份 gate 證據、已核准的 source version 與 render profile 直接交給 `scene_final_renderer`；本文件不再建立第二份 `Entry gate`，也不要求在第一個 render command 前重做相同的 hash、PASS 或 environment preflight。
 
-執行第一個 Manim render command 前，必須全部確認：
-
-- `scene_code_review_handoff.md`、`layout_audit_result.md` 與 `scene_review_result.md` 都存在。
-- `layout_audit_result.md = PASS`，完整涵蓋核准順序的四個 Scene。
-- `scene_review_result.md = PASS`。
-- 下列五個 SHA-256 身分逐一存在且完全一致：目前 `generated_algo_scene.py`、handoff 的 `Code SHA-256`、layout result 的 `Audited Code SHA-256`、review result 的 `Reviewed Code SHA-256`、review result 的 `Layout-audited Code SHA-256`。
-- `layout_audit_result.md` 明確記錄 `Runner SHA-256`、`Python version`、`Manim version`、`Frame width`、`Frame height`、`Renderer/profile/quality` 與 `Font/font-resolution evidence`。
-- 在第一個 render command 前重新取得目前 render environment/profile 的同名欄位，逐欄與 layout result 比較；font evidence 必須比較要求字型、實際解析的 font file 或 fallback 名稱，以及可取得時的 font file SHA-256。每一欄都必須相同，或由核准 render profile 明確證明相容。
-- Stage 4 PASS 後程式碼、上游契約與上述 layout-affecting evidence 都沒有改變。
-
-使用下列命令取得並保存 preflight evidence；所有路徑都必須是絕對路徑，hash 值以 64 個小寫 hexadecimal 字元記錄：
-
-```bash
-shasum -a 256 <absolute-project-root>/generated_algo_scene.py
-python --version
-manim --version
-```
-
-同時保存 render profile/config 所提供的 frame width、frame height、renderer/profile/quality 與 font-resolution evidence。任一 hash、PASS status、Scene coverage 或具名 layout-affecting evidence 缺漏、不一致或無法證明相容就停止，回到 Stage 4；不得以舊 PASS 渲染新程式碼或新 layout profile。
+Stage 4 PASS 後若已知程式碼、上游契約或 layout-affecting environment/profile 改變，必須依 `SKILL.md` Stage 4 的回退規則重新取得 gate；不能在 Stage 5 以臨時 preflight 取代回退流程。
 
 ## 渲染與合併
 
@@ -32,6 +14,7 @@ manim --version
 2. 依 render contract 順序以實際 concat input list 合併四個 Scene MP4，記錄 concat command、input list 與 exit code。
 3. 渲染、concat 或建立 manifest 後不得修改 `generated_algo_scene.py`；任何程式碼變動都會使 Stage 4 與 Stage 5 evidence 失效。
 4. 記錄四個 Scene、combined MP4、所有 commands 與核准 code hash 後，完整建立並凍結 `render_manifest.md`。只有凍結後才能執行 coordinator-owned `DELIVERY_CHECK`；check 不得補寫或改寫 manifest。
+5. 若問題只涉及輸出、command、concat、manifest 或 media decode，且 code/profile 不變，留在 Stage 5 重建受影響輸出後重跑 `DELIVERY_CHECK`；若 code、profile 或上游契約改變，停止渲染並依 `SKILL.md` 回到對應的 Stage 4 或上游 Stage。
 
 `DELIVERY_CHECK` 使用以下低成本 commands（以實際絕對路徑取代 placeholder）：
 
@@ -43,14 +26,6 @@ shasum -a 256 <absolute-project-root>/generated_algo_scene.py
 
 `ffprobe` 對五個 MP4 的 exit status 是主要媒體檢查；它同時隱含檢查檔案存在、非空與可解析性。`ffmpeg` 只對 combined MP4 執行 decode，確認合併成品可讀取；兩者都不得修改或重編碼任何 artifact。
 
-## 渲染失敗時
-
-若問題只涉及輸出路徑、render command、concat、manifest、metadata 或 media decode，且可在不改動 `generated_algo_scene.py`、上游契約或 layout-affecting profile 的情況下修正，可留在 Stage 5。重新建立受影響的 MP4 與 manifest 並再次凍結，然後重新執行 `DELIVERY_CHECK`。
-
-若修復需要改動 `generated_algo_scene.py`，必須立即停止 Stage 5。任何程式碼變更都會使 handoff、layout result、scene review、render manifest 與 delivery result 失效；回到 Stage 4 `CODE_PREPARATION`，建立新 hash 並重新完成 layout audit 和獨立 review 後才能重新渲染。
-
-若修復改變 layout-affecting environment/profile，回到 Stage 4 `LAYOUT_VERIFICATION`，使用相同目前 code hash 取得新的 layout PASS 與 scene review PASS，才可重做 Stage 5。
-
 ## `render_manifest.md`
 
 四個 Scene 與 combined MP4 均完成後建立 `render_manifest.md`。所有 `<...>` placeholder 必須換成實際值；不可省略欄位、以相對路徑取代絕對路徑，或只記錄部分媒體。manifest 在 `FINAL_RENDER` 結束前必須完整填妥並凍結，不得包含需要 `DELIVERY_CHECK` 之後回填的結果欄位。
@@ -61,7 +36,7 @@ shasum -a 256 <absolute-project-root>/generated_algo_scene.py
 ## Approved Source and Stage 4 Gate
 - Code path: `<absolute generated_algo_scene.py path>`
 - Approved Code SHA-256: `<the single hash approved by the five-way Stage 4 gate>`
-- Rendered Source Code SHA-256: `<64-character hash calculated immediately before the first render command>`
+- Rendered Source Code SHA-256: `<the same immutable hash supplied by the Stage 4 Exit gate>`
 - Handoff path: `<absolute scene_code_review_handoff.md path>`
 - Layout audit path: `<absolute layout_audit_result.md path>`
 - Scene review path: `<absolute scene_review_result.md path>`
