@@ -39,7 +39,7 @@
 
 ### Source Fidelity
 
-- 必須有四個 `Scene` 類別，並依核准順序實作問題與目標、演算法如何運作：決策規則與追蹤狀態、完整演示演算法、最終結果與簡短回顧的教學結構與主要 beat；是否確實如此？
+- 是否有四個 `Scene` 類別，並依 handoff 核准順序忠實實作 `animation_design.md` 中每幕的教學責任與主要 beat？
 - 程式碼是否忠實實作已確認需求、已核准設計與已審查 script，而非新增自己的演算法步驟或教學目標？
 - 已核准為必要的 support structure、pointer 意義與 state 更新是否在程式碼中可追溯？
 

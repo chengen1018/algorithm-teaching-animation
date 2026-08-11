@@ -1,39 +1,49 @@
 # 動畫設計：Array Sorting
 
-在套用 `references/how-to-design-animation.md` 後，對 array-sorting 動畫使用這份參考。它補充如何理解 comparisons 或 updates、movement、identity 與 progress 的專用決策；不會取代通用流程或產物契約。
+對 array sorting 動畫使用這份參考。Designer 以 `references/how-to-design-animation.md` 為共通流程；Reviewer 將本文件列出的要求加入專用審查條件。
 
-## 必要設計決策
+## 必須說清楚的設計內容
 
-### active comparison unit
+### 每一步正在比較或更新哪些資料
 
-設計必須定義符合該演算法的 active decision 或 update 單位。對 comparison-based sort，要說明這個單位是 pair、key 與 candidate、pivot 與 scanned item，或其他精確元素組合；比較的 operands 與結果必須在 resulting change 之前就變得可見。對 non-comparison sort，則要辨識 count、bucket placement、digit pass、distribution step，或其他造成下一個狀態變化的 update，並顯示其輸入與結果，而不是硬發明 comparison。
+Comparison-based sort 必須寫清楚每一步比較哪兩個元素，例如一對相鄰元素、key 與 candidate，或 pivot 與目前掃描的元素。比較對象與結果要先出現在畫面上，再呈現交換、移動或其他變化。
 
-### movement model
+Non-comparison sort 必須改為寫清楚這一步正在更新什麼，例如 count、bucket、目前 digit 或 distribution；不要替原本沒有 comparison 的演算法加入比較動作。
 
-當元素移動時，設計必須選定它是 swap、shift、copy，還是作為持續物件移動。Position 必須在整個操作中編碼一個穩定含義。要顯示足夠的路徑或中間空位，讓觀眾能分辨所選操作與視覺上相似但語意不同的操作。若演算法更新的是 counts、buckets 或 auxiliary storage，則應定義該 update 模型，而不要暗示其實不存在的元素移動。
+### 元素要怎麼移動或更新
 
-### settled-progress expression
+寫清楚畫面使用 swap、shift、copy，還是讓同一個元素物件移到新位置。觀眾必須能從路徑或空位看出實際發生的操作，不能把不同操作畫得一模一樣。
 
-設計必須定義符合該演算法的 progress 模型，例如 settled boundary、completed pass、processed digit、accumulated counts、filled buckets 或 merged runs。不應預設一定有一個連續成長的 settled region。若「settled」有意義，必須精確說明它保證什麼；否則就使用更符合演算法的 progress 語言。Progress styling 必須與 active decision / update 以及 untouched data 保持區別，避免觀眾把「正在被注意」誤認成「已完成」。
+如果演算法更新的是 counts、buckets 或 auxiliary storage，就直接顯示那些資料的更新，不要暗示 array 元素正在移動。
 
-### temporary holding position
+### 如何顯示目前已完成到哪裡
 
-若某項目離開 array，而其他項目會 shift，設計必須提供一個可見的 temporary holding position，並保留該項目與 open slot 之間的關聯。若演算法從未把項目暫時拿到 array 外，必須明確說明，且不得憑空發明一個會暗示錯誤狀態的 holding area。Auxiliary counts 或 buckets 不能被當成 temporary holding position，除非它們真的存放 array items。
+選擇符合演算法的進度表示，例如已固定的 boundary、完成的 pass、處理完成的 digit、累積完成的 counts、已填入的 buckets 或完成合併的 runs。
 
-### duplicate-value identity tracking
+不要預設所有 sorting 都有一段連續成長的 settled region。畫面必須讓觀眾分得出「目前正在處理」、「已完成」與「尚未處理」。
 
-當 equal values 的相對順序、移動，或 bucket placement 會影響理解時，設計必須為這些項目提供持續身份。應透過 labels、tokens 或其他非純色彩線索，讓觀眾能區分 value equality 與 object identity，並正確觀察 stability 或 instability。若身份對既定目標不重要，就不要加入會暗示正在評估 stability 的追蹤機制。
+### 元素暫時移出陣列時放在哪裡
+
+如果某個元素會暫時離開 array，而其他元素向空位 shift，畫面要提供清楚的暫放位置，並讓觀眾看得出該元素和空位的關係。
+
+演算法沒有這種操作時，不要自行加入暫放區。Counts 或 buckets 只有在真的存放 array items 時，才可以視為元素的暫放位置。
+
+### 相同數值的元素是否需要區分
+
+如果 equal values 的相對順序或移動會影響教學目標，使用 labels、tokens 或其他不只依賴顏色的方式維持元素身份，讓觀眾能判斷 stability。
+
+如果元素身份與教學目標無關，就不要加入會讓觀眾誤以為動畫正在檢查 stability 的標記。
 
 ## 教學風險
 
-### 會掩蓋因果的 movement
+### 動作太快，觀眾看不出原因
 
-不要在顯示造成它們的決策或 update 之前，就先動畫化多個 swaps、shifts、placements 或 auxiliary updates。對 comparison-based sorts，要把 comparison 證據與其結果分開；對 non-comparison sorts，則應保留相關的 count、digit、bucket 或 distribution 證據，直到因果連結足夠清楚。
+先顯示造成變化的 comparison 或 update，再呈現 swap、shift、placement 或 auxiliary update。必要證據要保留到因果關係已經清楚。
 
-### settled styling 與 active styling 太像
+### 正在處理和已完成看起來一樣
 
-若設計使用 settled styling，就不要讓它與 active styling 相似。對沒有 settled elements 的演算法，應改為把所選 progress 模型與 active update 區分開。必須確認在暫停畫面時，不會讓 still-in-progress 的項目看起來像已完成或已永久定位。
+目前焦點與完成進度必須使用不同呈現。暫停畫面時，不能讓仍在處理的元素看起來已經完成或永久定位。
 
-### sample 從未示範關鍵操作
+### 範例沒有出現關鍵操作
 
-不要選一個避開演算法特徵性 comparison、swap、shift、partition、merge、count update、bucket placement、digit pass，或其他必要操作的 sample。應預先指出那個關鍵操作，並標明 sample 中哪個精確時刻迫使它發生。
+範例至少要實際出現這個演算法最重要的操作，例如 comparison、swap、shift、partition、merge、count update、bucket placement 或 digit pass。設計中要指出它發生在哪一步。

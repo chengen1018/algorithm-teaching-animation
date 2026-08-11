@@ -1,12 +1,14 @@
 # Manim 實作與首次靜態驗證指南
 
-本指南定義 `generated_algo_scene.py` 的實作方法與首次送檢前的靜態推理。它以 construction patterns 降低第一版 layout 失誤機率；`scene_code_review_handoff.md` 只記錄受審程式碼版本、靜態驗證與實作解讀，獨立 scene reviewer 則在任何渲染之前負責檢查程式碼。
+本指南定義 `generated_algo_scene.py` 的實作方法與首次送檢前的靜態推理。它以 construction patterns 降低第一版 layout 失誤機率；`scene_code_review_handoff.md` 記錄受審程式碼、四個 Scene 順序、render profile、靜態驗證與實作解讀，獨立 scene reviewer 則在任何渲染之前負責檢查程式碼。
 
 ## 實作責任與不可改變事項
 
-依 `animation_design.md` 實作四個獨立 Manim `Scene` 類別，不以 `Section` 代替；這是實作時必須維持的 four-scene contract。四個 Scene 分別對應問題與目標、演算法如何運作：決策規則與追蹤狀態、完整演示演算法，以及最終結果與簡短回顧。每個 Scene 獨立建立及清理畫面，結尾淡出至空白，下一幕再從空白淡入；程式碼通過獨立審查後，才將四幕分別渲染並依核准順序合併。
+依 `animation_design.md` 與 handoff 的核准順序實作四個獨立 Manim `Scene` 類別，不以 `Section` 代替，也不在實作階段重新定義每幕的教學責任。每個 Scene 獨立建立及清理畫面，結尾淡出至空白，下一幕再從空白淡入；程式碼通過獨立審查後，才將四幕分別渲染並依核准順序合併。
 
 Scene layer 負責 layout execution、styling、timing、beat staging，以及 audio/overlay synchronization。實作必須忠於 `confirmed_requirements.md`、`animation_design.md`、`teaching_script.md`、需要維持執行忠實性時使用的 algorithm code/pseudocode、`voiceover.md`、`narration_manifest.json` 與音訊資產；不得新增演算法步驟、教學目標、support-structure 語意，或改變 movement semantics、pointer meaning、visited timing、beat 順序與已核准的 active support structure。
+
+所有 Scene 必須使用 `render_profile.json` 指定的 frame geometry 與字型。不得用另一個 Python、Manim profile 或 fallback font 進行 layout 規劃。
 
 可以依演算法採不同程式結構，但 style roles、layout setup、beat execution、visibility ownership 與 final cleanup 必須容易稽核。使用 `ROLE_BASE`、`ROLE_FOCUS`、`ROLE_SETTLED`、`ROLE_SUPPORT`、`POINTER_LABEL_BUFF` 等語意常數，避免散落且無法解釋的數值。
 

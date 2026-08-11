@@ -80,6 +80,8 @@
 
 完成後，由主要 Agent 讀取 `confirmed_requirements.md` 並進入 `DESIGN_DEVELOPMENT`，直接與使用者共同設計動畫。
 
+Coordinator 另依 `references/render-profile.md` 建立 `render_profile.json`。預設解析度、frame rate、renderer、Manim Python 與字型屬於執行設定，不寫進 `confirmed_requirements.md`；只有使用者主動指定的輸出要求才記錄為需求。
+
 ## 不屬於 COLLECT_REQUIREMENTS
 
 不要在此階段決定或詢問：

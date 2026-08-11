@@ -1,7 +1,9 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.util
+import json
 import os
 import sys
 import traceback
@@ -20,10 +22,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument("scene_file", help="Path to the generated scene file.")
     parser.add_argument("scene_class", nargs="?", help="Scene class name. Defaults to the first Scene subclass.")
+    parser.add_argument("--render-profile", help="Absolute render_profile.json used by layout and final render.")
     parser.add_argument(
-        "--fail-on-warning",
+        "--require-adapter",
         action="store_true",
-        help="Set MANIM_LAYOUT_AUDIT_FAIL=1 so LayoutAudit findings fail the run.",
+        help="Fail unless scene-specific initial, beat and final adapter checkpoints run without findings.",
     )
     parser.add_argument(
         "--audit-visible",
@@ -62,7 +65,7 @@ def parse_args() -> argparse.Namespace:
         "--visible-max-reports",
         type=int,
         default=250,
-        help="Maximum number of unique visible-audit messages to print. Errors and warnings still affect exit status.",
+        help="Maximum number of unique visible-audit messages to print. Visible errors still affect exit status.",
     )
     parser.add_argument(
         "--visible-report-level",
@@ -76,6 +79,99 @@ def parse_args() -> argparse.Namespace:
         help="Print a full traceback if scene construction fails.",
     )
     return parser.parse_args()
+
+
+def gate_failures(
+    *,
+    visible_errors: int,
+    visible_warnings: int,
+    checkpoints: list[str],
+    require_adapter: bool,
+) -> list[str]:
+    del visible_warnings
+    failures: list[str] = []
+    if visible_errors:
+        failures.append(f"{visible_errors} visible object finding(s) exceeded the frame")
+    if not require_adapter:
+        return failures
+
+    normalized = [context.strip().lower() for context in checkpoints]
+    has_initial = any(context == "initial" or context.endswith(":initial") for context in normalized)
+    has_beat = any(context.startswith("beat:") or ":beat:" in context for context in normalized)
+    has_final = any(context == "final" or context.endswith(":final") for context in normalized)
+    if not has_initial:
+        failures.append("scene-specific adapter is missing an initial checkpoint")
+    if not has_beat:
+        failures.append("scene-specific adapter is missing a beat checkpoint")
+    if not has_final:
+        failures.append("scene-specific adapter is missing a final checkpoint")
+    return failures
+
+
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def apply_render_profile(profile_path: Path) -> dict[str, object]:
+    from manim import config, __version__ as manim_version
+    import manimpango
+
+    profile = json.loads(profile_path.read_text(encoding="utf-8"))
+    required = (
+        "pixel_width",
+        "pixel_height",
+        "frame_rate",
+        "renderer",
+        "frame_width",
+        "frame_height",
+        "font",
+        "python_executable",
+        "manim_version",
+    )
+    missing = [field for field in required if field not in profile]
+    if missing:
+        raise RuntimeError(f"render profile is missing: {', '.join(missing)}")
+
+    expected_python = Path(str(profile["python_executable"])).expanduser().resolve()
+    current_python = Path(sys.executable).resolve()
+    if current_python != expected_python:
+        raise RuntimeError(f"Python mismatch: current={current_python}, profile={expected_python}")
+    if str(manim_version) != str(profile["manim_version"]):
+        raise RuntimeError(f"Manim version mismatch: current={manim_version}, profile={profile['manim_version']}")
+    available_fonts = {str(font).casefold() for font in manimpango.list_fonts()}
+    if str(profile["font"]).casefold() not in available_fonts:
+        raise RuntimeError(f"profile font is unavailable: {profile['font']}")
+
+    config.pixel_width = int(profile["pixel_width"])
+    config.pixel_height = int(profile["pixel_height"])
+    config.frame_rate = float(profile["frame_rate"])
+    config.renderer = str(profile["renderer"])
+    config.frame_width = float(profile["frame_width"])
+    config.frame_height = float(profile["frame_height"])
+    print(f"[layout-profile] path={profile_path}")
+    print(f"[layout-profile] SHA-256={sha256(profile_path)}")
+    print(
+        "[layout-profile] "
+        f"python={current_python} manim={manim_version} renderer={config.renderer} "
+        f"resolution={config.pixel_width}x{config.pixel_height} fps={config.frame_rate} "
+        f"frame={config.frame_width}x{config.frame_height} font={profile['font']}"
+    )
+    return profile
+
+
+def reset_adapter_checkpoints() -> None:
+    module = sys.modules.get("scene_layout_audit")
+    reset = getattr(module, "reset_layout_audit_checkpoints", None)
+    if callable(reset):
+        reset()
+
+
+def adapter_checkpoints() -> list[str]:
+    module = sys.modules.get("scene_layout_audit")
+    get_checkpoints = getattr(module, "get_layout_audit_checkpoints", None)
+    if callable(get_checkpoints):
+        return list(get_checkpoints())
+    return []
 
 
 class VisibleAuditAccumulator:
@@ -291,13 +387,21 @@ def main() -> int:
     sys.path.insert(0, str(scene_file.parent))
 
     os.environ.setdefault("MANIM_LAYOUT_AUDIT", "1")
-    if args.fail_on_warning:
+    if args.require_adapter:
         os.environ["MANIM_LAYOUT_AUDIT_FAIL"] = "1"
     os.environ["MANIM_LAYOUT_DRY_RUN"] = "1"
 
     try:
+        if args.require_adapter and not args.render_profile:
+            raise RuntimeError("--require-adapter requires --render-profile")
+        if args.render_profile:
+            profile_path = Path(args.render_profile).expanduser().resolve()
+            if not profile_path.is_file():
+                raise RuntimeError(f"render profile not found: {profile_path}")
+            apply_render_profile(profile_path)
         module = load_module(scene_file)
         scene_class = find_scene_class(module, args.scene_class)
+        reset_adapter_checkpoints()
         visible_auditor = VisibleAuditAccumulator(args, scene_class.__name__) if args.audit_visible else None
         with patched_scene_methods(visible_auditor):
             scene = scene_class()
@@ -311,11 +415,17 @@ def main() -> int:
         return 1
 
     print(f"[layout-runner] completed dry-run for {scene_class.__name__}")
-    if (
-        args.fail_on_warning
-        and visible_auditor is not None
-        and (visible_auditor.error_count or visible_auditor.warning_count)
-    ):
+    checkpoints = adapter_checkpoints()
+    print(f"[layout-runner] adapter checkpoints ({len(checkpoints)}): {', '.join(checkpoints) or 'none'}")
+    failures = gate_failures(
+        visible_errors=visible_auditor.error_count if visible_auditor is not None else 0,
+        visible_warnings=visible_auditor.warning_count if visible_auditor is not None else 0,
+        checkpoints=checkpoints,
+        require_adapter=args.require_adapter,
+    )
+    for failure in failures:
+        print(f"[layout-runner] gate failure: {failure}", file=sys.stderr)
+    if failures:
         return 1
     return 0
 

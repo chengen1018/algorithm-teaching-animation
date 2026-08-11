@@ -11,7 +11,7 @@
 1. `<project-root>/confirmed_requirements.md`
 2. `<project-root>/animation_design.md`
 3. 協調者提供的 `how-to-review-design.md` 絕對路徑
-4. 協調者指定且與本演算法相符的共通與唯一專用設計參考
+4. 若本演算法屬於 skill 已定義的專用類型，協調者提供 Designer 本次實際使用的唯一一份專用 reference；其他演算法沒有第 4 項
 
 `confirmed_requirements.md` 是使用者需求與限制的權威來源；`animation_design.md` 是唯一審查對象；skill references 定義審查方法。不得使用未寫入這些檔案的聊天記憶或推測。
 
@@ -19,9 +19,9 @@
 
 - 所有必要輸入都存在且可讀。
 - `animation_design.md` 包含四個獨立 Scene。
-- 協調者已明確傳入本次適用的設計參考；不得自行同時套用多份專用參考。
+- 若有適用的專用 reference，其內容必須與本次演算法類型一致。
 
-缺檔、路徑不明或無法確定適用參考時，不得審查或猜測，回報 `BLOCKED`。
+必要檔案缺失或路徑不明時，不得審查或猜測，回報 `BLOCKED`。
 
 ## Procedure
 
@@ -34,6 +34,8 @@
 - 視覺表示在四個 Scene 中維持相同含義。
 - 文件具體到腳本與 Manim 實作者不需要猜測。
 - 使用者選定或提出的設計完整保留。
+
+若協調者提供專用 reference，只把其中與該演算法有關的必要條件當作審查標準；不得執行創作流程或提出替代設計。
 
 ## Completion criteria
 

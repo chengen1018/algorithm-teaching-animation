@@ -7,6 +7,21 @@ from typing import Iterable, Sequence
 from manim import config
 
 
+_LAYOUT_AUDIT_CHECKPOINTS: list[str] = []
+
+
+def reset_layout_audit_checkpoints() -> None:
+    _LAYOUT_AUDIT_CHECKPOINTS.clear()
+
+
+def get_layout_audit_checkpoints() -> list[str]:
+    return list(_LAYOUT_AUDIT_CHECKPOINTS)
+
+
+def record_layout_audit_checkpoint(context: str) -> None:
+    _LAYOUT_AUDIT_CHECKPOINTS.append(context)
+
+
 @dataclass(frozen=True)
 class LayoutBounds:
     left: float
@@ -137,7 +152,11 @@ class LayoutAudit:
             self.check_no_overlap(first_name, first_mobject, second_name, second_mobject, min_gap)
 
     def report(self, raise_on_issue: bool = False) -> list[str]:
-        if not self.enabled or not self.issues:
+        if not self.enabled:
+            return []
+
+        record_layout_audit_checkpoint(self.context)
+        if not self.issues:
             return []
 
         prefix = f"[layout:{self.context}]" if self.context else "[layout]"

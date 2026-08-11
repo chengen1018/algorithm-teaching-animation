@@ -2,6 +2,8 @@
 
 Reviewer 只檢查動畫設計的內容品質，不重新設計動畫。
 
+本文件提供完整的共通審查標準。若 coordinator 另外提供一份與演算法類型相符的專用 reference，再加上其中列出的演算法特有條件。
+
 ## 檢查項目
 
 ### Algorithm Correctness

@@ -1,100 +1,67 @@
 # Scene Layout Validator Contract
 
-## Role boundary
+## 角色
 
-`scene_layout_validator` is the pre-render layout-validation role. It uses the
-layout-audit runner to execute the four approved Scene classes without formal
-Manim rendering. The runner creates real Manim mobjects so geometry can be
-checked, but it must not write frames or MP4 files. This role does not validate
-rendered media.
+`scene_layout_validator` 在正式 render 前，對四個已核准 Scene 執行非渲染 layout audit。Runner 會建立真實 Manim mobjects，但不寫入 frame 或 MP4。本角色不檢查已渲染媒體，也不修改 Scene。
 
-## Required inputs
+## 必要輸入
 
-Before starting, read every coordinator-provided absolute path in full:
+開始前完整閱讀 coordinator 傳入的絕對路徑：
 
 1. `<project-root>/generated_algo_scene.py`
 2. `<project-root>/scene_code_review_handoff.md`
-3. the `layout-audit.md` reference
-4. the `run_layout_audit.py` runner
+3. `<project-root>/render_profile.json`
+4. `layout-audit.md`
+5. `run_layout_audit.py`
 
-The coordinator must also identify the four delivered Scene class names and
-their approved order. All input and output paths used in commands and the
-result must be absolute paths.
+Coordinator 另外提供 handoff 已列出的四個 Scene class 與核准順序。所有 command 與結果檔都使用絕對路徑。
 
 ## Preflight
 
-- All required inputs and the runner exist and are readable.
-- `scene_code_review_handoff.md` identifies the exact `generated_algo_scene.py`
-  under audit and its SHA-256.
-- The handoff's four-Scene contract identifies exactly four delivered Scene
-  classes in order.
-- The runner is the supplied non-render layout runner; its documented behavior
-  does not invoke a formal `manim` render or write video output.
+- 所有必要輸入與 runner 都存在且可讀。
+- Handoff 的 code path 與 `Code SHA-256` 對應目前 `generated_algo_scene.py`。
+- Handoff 依序列出正好四個 Scene class。
+- Handoff 的 render profile path/hash 對應目前 `render_profile.json`。
+- Runner 是 skill 提供的非渲染 layout runner。
 
-If preflight cannot be completed, write `layout_audit_result.md` with
-`Result: FAIL`, the failed preflight evidence, and the code hash when it can be
-calculated. Do not substitute another source, runner, Scene list, or inferred
-order.
+Preflight 失敗時，建立 `layout_audit_result.md`，寫入 `Result: FAIL`、失敗證據，以及能取得的 code/profile hash。不得改用其他 source、runner、Scene list 或推測的順序。
 
-## Forbidden actions
+## 禁止事項
 
-- Do not run formal Manim rendering commands, including `manim` or
-  `python -m manim`.
-- Do not create frames, MP4 files, previews, or any other rendered media.
-- Do not modify `generated_algo_scene.py`, the handoff, the runner, the audit
-  reference, or any upstream artifact.
-- Do not change the layout runner's geometry algorithm, hide warnings, truncate
-  output, omit a Scene, or manually waive a finding.
+- 不執行 `manim` 或 `python -m manim` 等正式 render command。
+- 不建立 frame、MP4、preview 或其他渲染媒體。
+- 不修改 source、handoff、render profile、runner、audit reference 或上游產物。
+- 不省略 Scene、截斷輸出或人工豁免 adapter finding。
 
 ## Procedure
 
-1. Record the absolute code path and calculate its SHA-256 before running the
-   audit.
-2. Record the following named layout-affecting evidence fields before the
-   first required audit command. None of these fields may be replaced by an
-   opaque "environment" summary:
-
-   - `Runner path` and `Runner SHA-256`
-   - `Python version`
-   - `Manim version`
-   - `Frame width`
-   - `Frame height`
-   - `Renderer/profile/quality`
-   - `Font/font-resolution evidence` (the requested font names, the resolved
-     font files or fallback names used by Manim/Pango, and file hashes when a
-     resolved local font file is available)
-
-   Also record the relevant runner options and any additional operating-system
-   or environment details needed to reproduce those named values. If a named
-   field cannot be determined, the result cannot be `PASS`.
-3. For each of the four approved Scene classes, in approved order, run exactly
-   this non-rendering layout audit and capture complete stdout and stderr:
+1. 記錄 code path 與目前 `generated_algo_scene.py` SHA-256。
+2. 記錄 `Runner path`、`Runner SHA-256`、`Render Profile path` 與 `Render Profile SHA-256`，以及 profile 內的 Python、Manim、frame geometry、renderer、解析度、frame rate 與 font。
+3. 使用 profile 的 `python_executable`，對四個 Scene 依核准順序執行：
 
    ```bash
-   python <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py <SceneClass> --audit-visible --fail-on-warning --visible-report-level warning
+   <render-profile-python> <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py <SceneClass> --render-profile <absolute-project-root>/render_profile.json --audit-visible --require-adapter --visible-report-level warning
    ```
 
-4. Record each complete command and exit code. A supplementary
-   `--visible-report-level info` invocation may document strict containment,
-   but cannot replace or alter the warning-level verdict.
-5. Write `<project-root>/layout_audit_result.md`. It must contain `Result: PASS`
-   or `Result: FAIL`, `Audited Code SHA-256`, every named layout-affecting
-   evidence field above, the four Scene commands in order, each exit code, and
-   complete unedited output.
-   Route every blocking finding to Stage 4 `SCENE_IMPLEMENTATION` / `CODE_PREPARATION` for correction.
+4. 完整記錄每個 command、stdout、stderr、exit code、profile evidence 與 adapter checkpoint summary。
+5. 建立 `<project-root>/layout_audit_result.md`，寫入 `Result: PASS` 或 `Result: FAIL`、所有 hash、profile 欄位，以及四個 Scene 的完整結果。
+6. 把 blocking finding 路由至 Stage 4 `CODE_PREPARATION`。
 
-## Completion criteria
+泛用 overlap 訊息只供除錯；畫面越界、adapter 的具名檢查失敗、缺少 initial／beat／final checkpoint 或 profile 不一致才是 gate failure。
 
-`Result: PASS` is allowed only when preflight passed, all named environment
-evidence fields are present, exactly four approved Scenes were audited, and
-every required warning-level command exited `0`. Any missing input or named
-environment field, command failure, warning, unverified code identity, or
-inability to audit all four Scenes is `Result: FAIL`.
+## 完成條件
+
+只有在以下條件全部成立時才能寫入 `Result: PASS`：
+
+- Preflight 通過。
+- Code、runner 與 render profile hash 完整且一致。
+- 四個核准 Scene 全部受檢。
+- 每個 Scene 都記錄 initial、至少一個 beat 與 final adapter checkpoint。
+- 四個必要 command 全部 exit `0`。
+
+缺少輸入、profile mismatch、command failure、畫面越界、adapter failure、checkpoint 不完整、code identity 無法確認或漏檢 Scene，一律寫入 `Result: FAIL`。
 
 ## Final response
 
-- `DONE`: give the absolute `layout_audit_result.md` path, its `PASS` or `FAIL`
-  result, the audited code SHA-256, and the four Scene exit codes.
-- `BLOCKED`: use only when the environment prevents even writing
-  `layout_audit_result.md`; give the evidence, affected absolute paths, and the
-  action required from the coordinator.
+- `DONE`：提供 `layout_audit_result.md` 絕對路徑、`PASS` 或 `FAIL`、audited code/profile SHA-256，以及四個 Scene exit codes。
+- `BLOCKED`：只在環境連結果檔都無法建立時使用；提供證據、受影響路徑與 coordinator 必須處理的事項。

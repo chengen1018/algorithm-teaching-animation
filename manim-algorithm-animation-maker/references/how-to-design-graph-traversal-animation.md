@@ -4,35 +4,35 @@
 
 ## 必要設計決策
 
-### queue 或 stack visibility
+### 什麼時候要顯示 queue 或 stack
 
 當 queue 或 stack 的順序會決定未來 traversal 行為時，設計必須顯示它。要顯示 active 端點、保留項目順序，並讓每次 enqueue、dequeue、push 或 pop 與造成它的 graph 事件同步。
 
-### visited timing
+### 節點何時標記為 visited
 
 設計必須精確定義節點何時變成 visited，例如在 discovery 時，或在取出進行 processing 時。視覺狀態變化必須發生在那個精確時刻，因為不同時機會改變 duplicate frontier entries 是否可能出現。
 
-### discovery 與 processing
+### 如何區分 discovered 與 processed
 
 設計必須為 discovered 與 processed 狀態賦予不同且持續的含義。要顯示兩者之間的轉換，並讓它與 support structure 連動，避免觀眾誤以為找到一個節點就表示它所有鄰居都已處理完。
 
-### frontier 或 path emphasis
+### 畫面主要追蹤 frontier 還是 path
 
 設計必須選定主要教學對象是 frontier、traversal tree，還是 current path。強調方式必須符合演算法與學習目標：breadth-first 行為需要 frontier 順序，而 depth-first 推理則可能需要 stack 或 path 的連續性。
 
-### BFS layer expansion
+### 是否需要顯示 BFS 的分層擴展
 
 對 BFS，設計必須決定 layer expansion 是否屬於教學目標。若是，則 current layer 與 next layer 必須有明顯區別，同時 layer membership 仍須與 discovered / processed 狀態分開；一個節點可以在進入 next layer 時就被 discovered，但尚未 processed。若 layer expansion 不是教學目標，就不要加入會與 queue 競爭注意力，或暗示額外演算法狀態的 layer styling。
 
-### sample topology 與 traversal setup
+### 範例 graph 需要呈現哪些結構
 
 在 traversal 開始前，設計必須明確 graph 的 directedness、起始節點與相關 topology。Sample 只需暴露與教學目標有關的結構：例如 frontier growth 所需的 branching、用於 revisitation 的 cycles 或 cross-edges、會讓 visited timing 變重要的 duplicate-discovery 壓力，或決定 sequencing 的 neighbor-order 影響。不要要求每個 sample 一定包含所有這些結構。
 
-### neighbor order
+### 鄰居節點的處理順序
 
 設計必須說明 neighbor visitation order，並在它影響 queue、stack 或 path 之前，就讓這個順序可見。若有多種順序都合法，則應將選定順序標示為 deterministic teaching choice，而非演算法保證。
 
-### stable graph layout
+### Traversal 過程中不要移動節點
 
 設計必須在 traversal 開始前固定 node positions，並保持穩定。應透過 highlights、edges 與 support-structure updates 顯示狀態變化；空間移動不應讓人誤以為 graph topology 本身在改變。
 
