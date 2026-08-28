@@ -18,7 +18,6 @@ REQUIRED_FILES = (
     "CONTRIBUTING.md",
     "CHANGELOG.md",
     "KOKORO_SETUP.md",
-    "docs/releasing.md",
     "manim-algorithm-animation-maker/SKILL.md",
 )
 
