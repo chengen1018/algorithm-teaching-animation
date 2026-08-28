@@ -6,7 +6,6 @@
 
 - 修正安裝、使用或相容性文件。
 - 改善既有 Skill workflow、references 或輔助 scripts。
-- 補充可以重現問題的單元測試。
 - 改善演算法動畫設計指南，但不擴大目前 Skill 的適用範圍。
 
 大型新功能或會改變 Skill contract 的提案，請先建立 Feature Request。這可以避免實作方向與目前維護範圍不一致。
@@ -19,7 +18,7 @@
 ## 修改 Skill 文件
 
 - 保留 `SKILL.md` 的 YAML frontmatter 與 Skill 名稱。
-- 修改 workflow 時，同步檢查對應 reference、subagent role 與測試。
+- 修改 workflow 時，同步檢查對應 reference、subagent role 與輔助 scripts。
 - 不要讓 writer 與 reviewer 變成同一個角色。
 - 不要以 README 的簡短摘要取代 `SKILL.md` 或 references 中的完整 gate。
 - 若改變必要輸入、輸出或 restart rule，Pull Request 必須清楚說明相容性影響。

@@ -15,11 +15,9 @@
 - Render profile、非渲染 layout audit 與 MP4 delivery verification scripts。
 - Quick Sort、Longest Common Subsequence 與 Johnson Algorithm 三支公開示範影片。
 - 繁體中文 README、安裝文件與開源貢獻文件。
-- GitHub Actions 快速檢查。
 
 ### 已知限制
 
-- 正式 Manim render 與 Kokoro TTS 不在快速 CI 中執行。
 - 目前主要在 macOS 開發；Windows 與 Linux 的完整動畫流程尚未宣稱完成驗證。
 - 產生動畫需要使用者明確同意使用 subagent。
 

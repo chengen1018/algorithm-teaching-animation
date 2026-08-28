@@ -41,11 +41,6 @@ body:
       description: 移除憑證、使用者資料與本機私人路徑後再貼上內容。
     validations:
       required: true
-  - type: textarea
-    id: tests
-    attributes:
-      label: 已執行的檢查
-      description: 例如 python3 scripts/check_repository.py 或特定動畫 gate。
   - type: checkboxes
     id: scope
     attributes:
