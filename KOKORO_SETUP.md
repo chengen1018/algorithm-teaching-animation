@@ -1,5 +1,7 @@
 # Kokoro TTS 環境設置說明
 
+[返回 README](README.md)
+
 這份說明是第一次使用此 skill 之前看的，用來幫你把 Kokoro TTS 的環境準備好。
 設置只需要做一次，之後每個動畫製作都會共用這個環境。
 
@@ -71,7 +73,7 @@ pip install numpy soundfile
 
 在已啟動的虛擬環境中，執行以下指令來快速驗證：
 
-```python
+```bash
 python -c "from kokoro import KPipeline; print('Kokoro OK')"
 ```
 
