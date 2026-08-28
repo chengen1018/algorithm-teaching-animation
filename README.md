@@ -10,7 +10,7 @@
 
 ### Quick Sort
 
-[![Quick Sort 動畫影片](assets/showcase/quicksort.jpg)](https://www.youtube.com/watch?v=Lmz1Z9-1f3Q)
+[![Quick Sort 動畫影片](assets/showcase/quicksort.png)](https://www.youtube.com/watch?v=Lmz1Z9-1f3Q)
 
 以陣列分割與遞迴過程呈現 Quick Sort，片長約 5 分 45 秒。
 
@@ -18,7 +18,7 @@
 
 ### Longest Common Subsequence
 
-[![Longest Common Subsequence 動畫影片](assets/showcase/lcs.jpg)](https://www.youtube.com/watch?v=gUQMSyASYw0)
+[![Longest Common Subsequence 動畫影片](assets/showcase/lcs.png)](https://www.youtube.com/watch?v=gUQMSyASYw0)
 
 以動態規劃表格與回溯過程呈現 Longest Common Subsequence，片長約 10 分 50 秒。
 
@@ -26,7 +26,7 @@
 
 ### Johnson Algorithm
 
-[![Johnson Algorithm 動畫影片](assets/showcase/johnson-algorithm.jpg)](https://www.youtube.com/watch?v=jqRVnd7lnlc)
+[![Johnson Algorithm 動畫影片](assets/showcase/johnson-algorithm.png)](https://www.youtube.com/watch?v=jqRVnd7lnlc)
 
 呈現 Bellman–Ford、邊權重調整與重複執行 Dijkstra 的流程，片長約 11 分 43 秒。
 
