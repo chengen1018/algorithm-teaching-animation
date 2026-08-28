@@ -57,8 +57,8 @@ Skill 依序執行五個階段：
 ### 前置需求
 
 - Codex，且可以安裝本機 Skill。
-- Python 3.10、3.11 或 3.12。
-- Manim 與 FFmpeg／FFprobe。
+- Manim 與可執行它的 Python 環境。
+- FFmpeg／FFprobe。
 - 能顯示影片文字語言的字型。
 - Kokoro TTS；請依照 [Kokoro TTS 環境設置](KOKORO_SETUP.md) 準備。
 - 可用的 subagent 功能。此 Skill 在開始動畫流程前會要求使用者明確同意使用 subagent。

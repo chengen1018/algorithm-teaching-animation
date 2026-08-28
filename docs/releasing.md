@@ -22,7 +22,7 @@
    ```
 
 3. 從全新 clone 依 README 完成安裝與 Quickstart 文件檢查。
-4. 確認 GitHub Actions 的 Python 3.10、3.11、3.12 jobs 全部通過。
+4. 確認 GitHub Actions 全部通過。
 5. 確認三張 poster、YouTube links 與待上傳 MP4 的對應關係。
 6. 使用 FFprobe 檢查三支 MP4 的影像與聲音 streams、解析度、frame rate 和 duration。
 7. 更新 `CHANGELOG.md`、`pyproject.toml` 版本與 Release notes。

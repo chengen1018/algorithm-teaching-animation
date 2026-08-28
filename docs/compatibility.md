@@ -4,11 +4,7 @@
 
 本文件記錄目前專案明確支援或已驗證的環境。沒有列出的平台不代表一定不能使用，但目前不宣稱已完成驗證。
 
-## Python
-
-- 支援版本：Python 3.10、3.11、3.12。
-- Python 3.9 或更舊版本不在支援範圍。
-- Manim 與 Kokoro 可以使用不同的 virtual environment；請勿假設兩者必須安裝在同一個環境。
+Manim 與 Kokoro 可以使用不同的 virtual environment；請勿假設兩者必須安裝在同一個環境。
 
 ## 必要工具
 
