@@ -1,0 +1,37 @@
+name: 功能建議
+description: 提議符合目前專案範圍的改善
+title: "[Feature]: "
+labels: ["enhancement"]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: 要解決的問題
+      description: 請描述目前的使用情境與具體限制。
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 建議方案
+      description: 說明希望改變的行為，不需要先提交完整實作。
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: 考慮過的替代方案
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 驗收條件
+      description: 說明什麼結果代表這項改善已完成。
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: 範圍確認
+      options:
+        - label: 這項建議與 Manim 演算法教學動畫工作流程直接相關。
+          required: true

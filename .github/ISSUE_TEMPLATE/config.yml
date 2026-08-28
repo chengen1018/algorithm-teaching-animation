@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 使用與安裝問題
+    url: https://github.com/chengen1018/manim-algorithm-animation-maker/discussions
+    about: 請在 Discussions 詢問一般使用、安裝與環境問題。
+  - name: 私密安全回報
+    url: https://github.com/chengen1018/manim-algorithm-animation-maker/security/advisories/new
+    about: 請勿公開尚未修正的安全漏洞。
