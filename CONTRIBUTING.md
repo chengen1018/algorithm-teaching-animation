@@ -27,13 +27,3 @@
 ## 不得提交的內容
 
 請勿在 Pull Request 中提交憑證、私人設定、cache、TTS 音訊、Manim render output 或其他生成的大型媒體檔案。
-
-## Pull Request
-
-- 一個 Pull Request 只處理一個清楚的目的。
-- 說明問題、解法、測試方式與可能的相容性影響。
-- 保持變更範圍精簡，不重構無關內容。
-- 確認 GitHub Actions 全部通過。
-- 回應 review，並在修改後重新執行受影響的測試。
-
-提交 Pull Request 即表示你同意依本專案的 [MIT License](LICENSE) 提供該貢獻。
