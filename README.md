@@ -63,8 +63,6 @@ Skill 依序執行五個階段：
 - Kokoro TTS；請依照 [Kokoro TTS 環境設置](KOKORO_SETUP.md) 準備。
 - 可用的 subagent 功能。此 Skill 在開始動畫流程前會要求使用者明確同意使用 subagent。
 
-詳細支援範圍請見 [相容性說明](docs/compatibility.md)。
-
 ### 安裝 Skill
 
 ```bash
@@ -98,9 +96,7 @@ Skill 會先詢問是否同意使用 subagent。只有明確同意後，才會�
 
 ## 參與貢獻
 
-開始修改前請閱讀 [貢獻指南](CONTRIBUTING.md) 與 [安全政策](SECURITY.md)。一般使用問題請參考 [支援說明](SUPPORT.md)。
-
-近期方向請見 [Roadmap](docs/roadmap.md)，版本變更請見 [Changelog](CHANGELOG.md)。
+開始修改前請閱讀 [貢獻指南](CONTRIBUTING.md)，版本變更請見 [Changelog](CHANGELOG.md)。
 
 ## 授權
 

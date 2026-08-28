@@ -14,7 +14,7 @@
 - Kokoro TTS 本機旁白產生與音訊驗證工具。
 - Render profile、非渲染 layout audit 與 MP4 delivery verification scripts。
 - Quick Sort、Longest Common Subsequence 與 Johnson Algorithm 三支公開示範影片。
-- 繁體中文 README、安裝文件、相容性說明與開源貢獻文件。
+- 繁體中文 README、安裝文件與開源貢獻文件。
 - GitHub Actions 快速檢查。
 
 ### 已知限制

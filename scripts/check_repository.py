@@ -16,13 +16,9 @@ REQUIRED_FILES = (
     "README.md",
     "LICENSE",
     "CONTRIBUTING.md",
-    "SECURITY.md",
-    "SUPPORT.md",
     "CHANGELOG.md",
     "KOKORO_SETUP.md",
-    "docs/compatibility.md",
     "docs/releasing.md",
-    "docs/roadmap.md",
     "manim-algorithm-animation-maker/SKILL.md",
 )
 
