@@ -1,0 +1,10 @@
+[project]
+name = "manim-algorithm-animation-maker"
+version = "0.1.0"
+description = "A Codex skill for creating reviewed, narrated Manim algorithm animations"
+requires-python = ">=3.10,<3.13"
+license = { text = "MIT" }
+
+[project.urls]
+Repository = "https://github.com/chengen1018/manim-algorithm-animation-maker"
+Documentation = "https://github.com/chengen1018/manim-algorithm-animation-maker#readme"
