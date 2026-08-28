@@ -96,16 +96,6 @@ Skill 會先詢問是否同意使用 subagent。只有明確同意後，才會�
 
 完整流程會在動畫專案中建立需求、設計、腳本、旁白、Manim 原始碼、審查與驗證紀錄，以及四幕 Scene MP4 與最終合併影片。實際檔名與通過條件以 [Skill 主文件](manim-algorithm-animation-maker/SKILL.md) 為準。
 
-## 開發與驗證
-
-Repository 的快速檢查不會下載 TTS 模型，也不會執行正式 Manim render：
-
-```bash
-python3 scripts/check_repository.py
-```
-
-完整動畫的品質與交付規則已記錄在 Skill 主文件及其 references。本 README 只提供公開導覽，不重複列出所有 gate。
-
 ## 參與貢獻
 
 開始修改前請閱讀 [貢獻指南](CONTRIBUTING.md) 與 [安全政策](SECURITY.md)。一般使用問題請參考 [支援說明](SUPPORT.md)。
