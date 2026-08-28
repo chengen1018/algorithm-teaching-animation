@@ -24,15 +24,9 @@
 - 不要以 README 的簡短摘要取代 `SKILL.md` 或 references 中的完整 gate。
 - 若改變必要輸入、輸出或 restart rule，Pull Request 必須清楚說明相容性影響。
 
-## 不得提交的檔案
+## 不得提交的內容
 
-- `.tts-config`、`.env`、API keys 或其他憑證。
-- `__pycache__`、virtual environment、cache 或暫存檔。
-- Kokoro 產生的音訊。
-- Manim `media/`、Scene MP4、合併影片或其他 render output。
-- 含有本機絕對路徑或私人動畫專案內容的驗證紀錄。
-
-README 使用的三張輕量 poster 是刻意維護的公開素材，不受上述完整影片限制。
+請勿在 Pull Request 中提交憑證、私人設定、cache、TTS 音訊、Manim render output 或其他生成的大型媒體檔案。
 
 ## Pull Request
 
