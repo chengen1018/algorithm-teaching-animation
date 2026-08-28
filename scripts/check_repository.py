@@ -16,7 +16,6 @@ REQUIRED_FILES = (
     "README.md",
     "LICENSE",
     "CONTRIBUTING.md",
-    "CODE_OF_CONDUCT.md",
     "SECURITY.md",
     "SUPPORT.md",
     "CHANGELOG.md",

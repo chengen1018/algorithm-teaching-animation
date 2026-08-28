@@ -108,7 +108,7 @@ python3 scripts/check_repository.py
 
 ## 參與貢獻
 
-開始修改前請閱讀 [貢獻指南](CONTRIBUTING.md)、[行為準則](CODE_OF_CONDUCT.md) 與 [安全政策](SECURITY.md)。一般使用問題請參考 [支援說明](SUPPORT.md)。
+開始修改前請閱讀 [貢獻指南](CONTRIBUTING.md) 與 [安全政策](SECURITY.md)。一般使用問題請參考 [支援說明](SUPPORT.md)。
 
 近期方向請見 [Roadmap](docs/roadmap.md)，版本變更請見 [Changelog](CHANGELOG.md)。
 

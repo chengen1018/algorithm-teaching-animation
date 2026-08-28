@@ -60,4 +60,4 @@ python3 scripts/check_repository.py
 - 確認 GitHub Actions 全部通過。
 - 回應 review，並在修改後重新執行受影響的測試。
 
-提交 Pull Request 即表示你同意依本專案的 [MIT License](LICENSE) 提供該貢獻，並遵守 [行為準則](CODE_OF_CONDUCT.md)。
+提交 Pull Request 即表示你同意依本專案的 [MIT License](LICENSE) 提供該貢獻。
