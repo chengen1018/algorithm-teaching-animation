@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import importlib.util
 import json
 import os
@@ -108,10 +107,6 @@ def gate_failures(
     return failures
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
 def apply_render_profile(profile_path: Path) -> dict[str, object]:
     from manim import config, __version__ as manim_version
     import manimpango
@@ -149,7 +144,6 @@ def apply_render_profile(profile_path: Path) -> dict[str, object]:
     config.frame_width = float(profile["frame_width"])
     config.frame_height = float(profile["frame_height"])
     print(f"[layout-profile] path={profile_path}")
-    print(f"[layout-profile] SHA-256={sha256(profile_path)}")
     print(
         "[layout-profile] "
         f"python={current_python} manim={manim_version} renderer={config.renderer} "

@@ -8,6 +8,10 @@
 - 使用自然、簡短、適合口說的句子；不要逐字朗讀像教科書的段落。
 - 每個 beat 聚焦一個主要重點，並說明這一刻為什麼重要。
 - 畫面焦點要先建立，旁白才開始；該 beat 的畫面狀態至少保留到旁白結束。
+- 每個 Scene 4 complexity 結論都明確說出其對應 teaching script 的 case label，不以未核准 case 補充或替換結論。
+- 旁白先說明分析模型，再說結論，例如「最壞情況時間複雜度為 O(n log n)」或「每次 append 的 amortized time complexity 為 O(1)」。
+- 旁白依 Scene 4 beats 口語化 input size、主要工作與 work count，不能只念 O(...)。
+- worst、average、expected 與 amortized 保持各自含義，不把 average 當成 expected，也不把單次 worst cost 當成 amortized cost。
 
 旁白內容只從以下檔案導出：
 

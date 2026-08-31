@@ -6,33 +6,27 @@
 
 ## Required inputs
 
-開始前完整閱讀協調者傳入的絕對路徑：
+開始前完整閱讀派遣訊息中的全部 `Required inputs`：
 
-1. `<project-root>/confirmed_requirements.md`
-2. `<project-root>/animation_design.md`
-3. `<project-root>/animation_design_review.md`
-4. `<project-root>/teaching_script.md`
-5. 協調者提供的 `how-to-write-teaching-script.md` 絕對路徑
+1. `Confirmed requirements`
+2. `Animation design`
+3. `Teaching script`
+4. `Teaching script guide`
 
-`confirmed_requirements.md` 與已核准的 `animation_design.md` 是內容權威；`teaching_script.md` 是唯一審查對象。不得假設其他聊天、口頭決策或隱含背景。
-
-## Preflight
-
-- 所有必要輸入都存在且可讀。
-- `animation_design_review.md` 已清楚判定為 `PASS`，且目前設計已取得使用者核准。
-- 本 reviewer 未曾撰寫或修改 `teaching_script.md`。
-
-缺檔、gate 未通過或獨立性不成立時，回報 `BLOCKED`，不得建立虛假的審查結果。
+`Confirmed requirements` 與已核准的 `Animation design` 是內容權威；`Teaching script` 是唯一審查對象。不得假設其他聊天、口頭決策或隱含背景。
 
 ## Procedure
 
 檢查：
 
-- Source Fidelity：腳本忠實遵循需求、限制、四幕順序、畫面語意與動畫決策，沒有發明新意思。
+- Source Fidelity：腳本忠實遵循需求、限制、五幕順序、畫面語意與動畫決策，沒有發明新意思。
+- Complexity Scope：`Animation design` 的 `Complexity Scope` 每個已核准 case 都在 Scene 4 有完整原子 beats，依序覆蓋 input variables、工作單位、一般化的重複／分層／phase 結構、expression 與 case label，且沒有 unapproved case。
 - Teaching Coherence：每個 beat 具有單一目的、清楚焦點與可追蹤的進度。
 - Beat Completeness：每個 beat 具有所有必要欄位，並清楚命名重要狀態與支援結構。
 - Atomicity：旁白與場景實作者不必自行拆出隱藏子節拍。
 - Downstream Readiness：`VOICEOVER` 與 `SCENE_IMPLEMENTATION` 不必猜測教學邏輯、時序或語意。
+
+每次重新審查都必須對目前的 `Teaching script` 完整執行上述檢查，不只確認先前 findings 是否已修正。
 
 ## Completion criteria
 

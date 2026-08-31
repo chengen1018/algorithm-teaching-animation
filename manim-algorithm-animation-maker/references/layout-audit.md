@@ -2,6 +2,18 @@
 
 在 Stage 4 `LAYOUT_VERIFICATION` 使用本文件。Layout audit 會建立真實 Manim mobjects，但不寫入 frame 或 MP4。
 
+## 執行輸入與 Preflight
+
+執行前，確認派遣訊息中的所有 `Required inputs` 均存在且可讀，並確認 `Scene classes and approved order` 依核准順序列出五個互不重複、且存在於目前 `Scene source` 的 Scene class。
+
+Preflight 失敗時，建立 `layout_audit_result.md` 並寫入 `Result: FAIL` 與失敗證據；只有連結果檔都無法建立時才是 `BLOCKED`。
+
+## 適用範圍
+
+- Scene Writer 只使用 project-side adapter/checkpoint contract。
+- Scene Writer 不執行 Layout Validator Preflight、必要命令或建立 `layout_audit_result.md`。
+- Layout Validator 使用 execution input/Preflight、必要命令、gate/result。
+
 ## 三個元件各自負責什麼
 
 - `run_layout_audit.py`：載入 Scene、把動畫直接推到結束狀態、跳過 `wait()` 與音訊，並執行檢查。
@@ -63,9 +75,11 @@ self._audit_layout("final", nodes, labels, panels, extra_items=[("result", resul
 
 Runner 會檢查三類名稱是否都出現。缺少任一類時，該 Scene 不能通過 gate。
 
+Scene 4 必須在每個必要 derivation phase 的 resolved state 建立 `beat:<id>` checkpoint，並把當下可見的公式、case label、多變數圖或 auxiliary-space diagram 納入具名 adapter；不能只檢查公式最後完整出現的畫面。
+
 ## 必要命令
 
-對 handoff 的四個 Scene class 依核准順序分別執行：
+對派遣訊息提供的五個 Scene class 依核准順序分別執行：
 
 ```bash
 <render-profile-python> <absolute-runner-path> \
@@ -81,7 +95,7 @@ Runner 會：
 1. 驗證目前 Python、Manim 版本、字型與 `render_profile.json` 一致。
 2. 套用 profile 記錄的 frame geometry、解析度、frame rate 與 renderer；未經使用者覆寫時即為 1920×1080、60 fps、Cairo。
 3. 執行 Scene adapter 與泛用可見物件掃描。
-4. 在 stdout 記錄 profile SHA-256 與 adapter checkpoint 名稱。
+4. 在 stdout 記錄 profile 設定與 adapter checkpoint 名稱。
 
 ## Gate 判定
 
@@ -94,6 +108,19 @@ Runner 會：
 - 執行中的 Python、Manim、font 或 profile 設定不一致。
 
 泛用 overlap 訊息保留在輸出中協助找問題，但不單獨決定 exit code。真正需要禁止的重疊必須由 adapter 以具名物件明確檢查。
+
+## `layout_audit_result.md`
+
+結果檔必須記錄：
+
+- `Result: PASS` 或 `Result: FAIL`
+- Render profile 及執行環境欄位
+- 五個 Scene 的核准順序
+- 每個實際 command、stdout、stderr 與 exit code
+- 每個 Scene 的 adapter checkpoint summary
+- 所有 blocking findings
+
+只有 Preflight 通過、五個核准 Scene 全部受檢、每個 Scene 的 initial／beat／final checkpoint 完整，且五個必要 command 全部 exit `0` 時，才能寫入 `Result: PASS`。其餘情況寫入 `Result: FAIL`。
 
 ## Adapter 可用檢查
 

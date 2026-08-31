@@ -1,6 +1,6 @@
 # Manim Algorithm Animation Maker
 
-一套給 Codex 使用的 Skill，將演算法需求整理成經過設計、審查、旁白製作、Manim 實作與交付驗證的四幕教學動畫。
+一套給 Codex 使用的 Skill，將演算法需求整理成經過設計、審查、旁白製作、Manim 實作與交付驗證的五幕教學動畫。
 
 > 專案目前仍在早期版本。它提供完整工作流程與本機驗證工具，但不保證所有演算法、語言或作業系統都能直接使用。
 
@@ -44,7 +44,7 @@ AI 可以快速產生文字與程式碼，但單次生成不一定能同時維�
 
 Skill 依序執行五個階段：
 
-1. `ANIMATION_DESIGN`：確認需求並設計四幕動畫。
+1. `ANIMATION_DESIGN`：確認需求並設計五幕動畫。
 2. `SCRIPT`：撰寫並審查教學腳本。
 3. `VOICEOVER`：產生旁白文字、音訊與驗證資料。
 4. `SCENE_IMPLEMENTATION`：實作 Manim Scene，執行非渲染版面檢查與程式碼審查。
@@ -61,7 +61,7 @@ Skill 依序執行五個階段：
 - FFmpeg／FFprobe。
 - 能顯示影片文字語言的字型。
 - Kokoro TTS；請依照 [Kokoro TTS 環境設置](KOKORO_SETUP.md) 準備。
-- 可用的 subagent 功能。此 Skill 在開始動畫流程前會要求使用者明確同意使用 subagent。
+- 可用的 subagent 功能。
 
 ### 安裝 Skill
 
@@ -87,12 +87,12 @@ ln -s "$(pwd)/manim-algorithm-animation-maker" "${CODEX_HOME:-$HOME/.codex}/skil
 ```text
 請使用 $manim-algorithm-animation-maker，為 Binary Search 製作一支繁體中文 Manim 教學動畫。
 範例陣列為 [3, 8, 12, 17, 23, 31, 42]，搜尋目標為 23。
-請使用 1920×1080、60 fps，並先和我確認四幕設計。
+請使用 1920×1080、60 fps，並先和我確認五幕設計。
 ```
 
-Skill 會先詢問是否同意使用 subagent。只有明確同意後，才會開始需求確認與後續階段。
+Skill 會先確認需求與渲染設定；完成前三幕設計後，會請使用者核准複雜度範圍，並在五幕設計通過獨立審查後請使用者核准整體設計。
 
-完整流程會在動畫專案中建立需求、設計、腳本、旁白、Manim 原始碼、審查與驗證紀錄，以及四幕 Scene MP4 與最終合併影片。實際檔名與通過條件以 [Skill 主文件](manim-algorithm-animation-maker/SKILL.md) 為準。
+完整流程會在動畫專案中建立需求、設計、腳本、旁白、Manim 原始碼、審查與驗證紀錄，以及五幕 Scene MP4 與最終合併影片。實際檔名與通過條件以 [Skill 主文件](manim-algorithm-animation-maker/SKILL.md) 為準。
 
 ## 參與貢獻
 

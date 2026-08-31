@@ -25,7 +25,7 @@
 - `confirmed_requirements.md`
 - `animation_design.md`
 
-只有在忠實描述演算法流程所必需時，才查閱 code 或 pseudocode。它們只能協助確認流程，不能覆蓋已確認需求或已核准設計。
+只有在忠實描述演算法流程所必需時，才查閱 `confirmed_requirements.md` 內保存的使用者 code 或 pseudocode。它們只能協助確認流程，不能覆蓋已確認需求或已核准設計。
 
 ## 3. 建立整體教學主線
 
@@ -34,6 +34,7 @@
 - `Algorithm`：本次示範的演算法。
 - `Teaching goal`：觀眾看完後應理解的核心內容。
 - `Key semantics`：所有 Beat 都必須遵守的關鍵演算法語意與視覺含義。
+- `Complexity scope`：逐項列出 `animation_design.md` 的 `Complexity Scope` 中已核准的 time cases 與 space treatment；不得加入 scope 外的 case。
 
 接著依已核准的 Scene 順序與 sample input 的實際執行過程，列出演算法狀態如何逐步改變。不要先寫口語旁白；先確認教學事件的順序完整且沒有跳步。
 
@@ -52,6 +53,8 @@ Beat 不必等同一次 loop iteration，但必須能在單一 voiceover segment
 - 被移動的 candidate 在新位置上需要重新檢查。
 
 若解說必須連續使用多個「然後」才能跨過多次比較、交換或 pointer move，表示 Beat 太粗，應繼續拆分。只有在已核准教學目標明確要求摘要重複工作時，才可用一個 Beat 概括多次相同操作。
+
+Scene 4 的每個已核准 complexity case 都要用足夠數量的原子 Beat，依序建立：input variables、工作單位、一般化的重複／分層／phase 結構、expression，以及最終 case label。Beat 數量依推導需要決定，不固定壓成單一 Beat。只承接 `Complexity Scope` 已核准的 case。
 
 ## 5. 完整填寫每個 Beat
 
@@ -79,6 +82,7 @@ Beat 不必等同一次 loop iteration，但必須能在單一 voiceover segment
 - Algorithm:
 - Teaching goal:
 - Key semantics:
+- Complexity scope:
 
 ## Beats
 
@@ -108,8 +112,8 @@ Beat 不必等同一次 loop iteration，但必須能在單一 voiceover segment
 - 摘要與所有 Beat 都符合 `confirmed_requirements.md` 及已核准的 `animation_design.md`。
 - Beat 順序忠於 sample input 的演算法流程與已核准 Scene 順序。
 - 每個 Beat 只有一個主要教學事件，並完整填寫六個必要欄位。
+- Scene 4 的每個已核准 complexity case 都依序覆蓋 input variables、工作單位、一般化結構、expression 與 case label，且沒有未核准 case。
 - 觀眾注意力、狀態改變及 progress cue 能前後銜接成清楚的教學弧線。
 - 重要的 support structures、pointers、boundaries 與 temporary slots 已在需要時明確命名。
 - Voiceover writer 能直接把 `Voiceover intent` 口語化，不必發明新教學邏輯。
 - Scene writer 能判斷畫面焦點、必須保持可見的結構及進度何時出現，不必猜測隱藏子節拍。
-- 文件沒有自行解決本應回退至需求或設計階段的問題。

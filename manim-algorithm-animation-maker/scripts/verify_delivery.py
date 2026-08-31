@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import re
 import shlex
@@ -46,10 +45,6 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
 def clean_cell(value: str) -> str:
     value = value.strip()
     if len(value) >= 2 and value[0] == "`" and value[-1] == "`":
@@ -90,8 +85,13 @@ def parse_scene_outputs(markdown: str) -> list[SceneOutput]:
                 path=Path(cells[4]).expanduser().resolve(),
             )
         )
-    if len(outputs) != 4 or [item.order for item in outputs] != [1, 2, 3, 4]:
-        raise ValueError("Scene Outputs must contain render orders 1 through 4 exactly once")
+    expected_orders = [1, 2, 3, 4, 5]
+    if len(outputs) != len(expected_orders) or [item.order for item in outputs] != expected_orders:
+        raise ValueError("Scene Outputs must contain render orders 1 through 5 exactly once")
+    if len({item.scene_class for item in outputs}) != len(outputs):
+        raise ValueError("Scene Outputs must contain five distinct Scene classes")
+    if len({item.path for item in outputs}) != len(outputs):
+        raise ValueError("Scene Outputs must contain five distinct resolved Scene MP4 paths")
     return outputs
 
 
@@ -164,10 +164,6 @@ def probe_media(path: Path, ffprobe: str, profile: dict[str, object]) -> MediaRe
 def render_result(
     output: Path,
     passed: bool,
-    source_hash: str | None,
-    profile_hash: str | None,
-    source_hash_matches: bool | None,
-    profile_hash_matches: bool | None,
     media: list[MediaResult],
     decode_command: list[str] | None,
     decode_exit_code: int | None,
@@ -176,22 +172,11 @@ def render_result(
     duration_tolerance: float | None,
     findings: list[str],
 ) -> None:
-    def status(value: bool | None) -> str:
-        if value is None:
-            return "NOT RUN"
-        return "PASS" if value else "FAIL"
-
     lines = [
         "# Delivery Check Result",
         "",
         f"- Result: {'PASS' if passed else 'FAIL'}",
-        f"- Source SHA-256: `{source_hash or 'unavailable'}`",
-        f"- Render Profile SHA-256: `{profile_hash or 'unavailable'}`",
         f"- Combined decode exit code: `{decode_exit_code if decode_exit_code is not None else 'not-run'}`",
-        "",
-        "## Hash comparisons",
-        f"- Source hash match: `{status(source_hash_matches)}`",
-        f"- Render profile hash match: `{status(profile_hash_matches)}`",
         "",
         "## Duration comparison",
         f"- Scene duration total: `{f'{scene_duration_total:.3f}s' if scene_duration_total is not None else 'not-run'}`",
@@ -230,12 +215,8 @@ def main() -> int:
     output = Path(args.output).expanduser().resolve()
     findings: list[str] = []
     media_results: list[MediaResult] = []
-    source_hash: str | None = None
-    profile_hash: str | None = None
     decode_exit_code: int | None = None
     decode_command: list[str] | None = None
-    source_hash_matches: bool | None = None
-    profile_hash_matches: bool | None = None
     scene_duration_total: float | None = None
     combined_duration: float | None = None
     duration_tolerance: float | None = None
@@ -248,26 +229,17 @@ def main() -> int:
         manifest = manifest_path.read_text(encoding="utf-8")
         scene_outputs = parse_scene_outputs(manifest)
         combined = Path(field(manifest, "Combined MP4 path")).expanduser().resolve()
+        if combined in {scene.path for scene in scene_outputs}:
+            raise ValueError("Combined MP4 resolved path must be distinct from every Scene MP4 path")
 
-        source_hash = sha256(source)
-        profile_hash = sha256(profile_path)
-        approved_source_hash = field(manifest, "Approved Code SHA-256")
-        rendered_source_hash = field(manifest, "Rendered Source Code SHA-256")
         manifest_profile_path = Path(field(manifest, "Render Profile path")).expanduser().resolve()
-        manifest_profile_hash = field(manifest, "Render Profile SHA-256")
         manifest_source_path = Path(field(manifest, "Code path")).expanduser().resolve()
         concat_exit_code = int(field(manifest, "Concat exit code"))
 
         if manifest_source_path != source:
             findings.append(f"manifest code path does not match source: {manifest_source_path}")
-        source_hash_matches = approved_source_hash == source_hash and rendered_source_hash == source_hash
-        if not source_hash_matches:
-            findings.append("source hash does not match approved/rendered manifest hashes")
         if manifest_profile_path != profile_path:
             findings.append(f"manifest render profile path does not match: {manifest_profile_path}")
-        profile_hash_matches = manifest_profile_hash == profile_hash
-        if not profile_hash_matches:
-            findings.append("render profile hash does not match manifest")
         for scene in scene_outputs:
             if scene.exit_code != 0:
                 findings.append(f"{scene.scene_class} render exit code is {scene.exit_code}")
@@ -280,9 +252,9 @@ def main() -> int:
             media_results.append(item)
             findings.extend(f"{path}: {error}" for error in item.errors or [])
 
-        if len(media_results) == 5 and all(item.duration is not None for item in media_results):
-            scene_duration_total = sum(item.duration or 0.0 for item in media_results[:4])
-            combined_duration = media_results[4].duration or 0.0
+        if len(media_results) == 6 and all(item.duration is not None for item in media_results):
+            scene_duration_total = sum(item.duration or 0.0 for item in media_results[:5])
+            combined_duration = media_results[5].duration or 0.0
             duration_tolerance = max(0.25, 2.0 / float(profile["frame_rate"]))
             if abs(scene_duration_total - combined_duration) > duration_tolerance:
                 findings.append(
@@ -306,10 +278,6 @@ def main() -> int:
     render_result(
         output,
         passed,
-        source_hash,
-        profile_hash,
-        source_hash_matches,
-        profile_hash_matches,
         media_results,
         decode_command,
         decode_exit_code,

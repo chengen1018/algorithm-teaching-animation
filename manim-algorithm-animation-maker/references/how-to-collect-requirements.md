@@ -38,10 +38,12 @@
 
 - 動畫偏好、內容重點或呈現要求
 - 限制、禁止事項
-- code、pseudocode 或其他參考資料
+- code、pseudocode 或其他參考資料；使用者提供的 code 或 pseudocode 直接完整寫入 `confirmed_requirements.md`，不另存成派遣用的外部來源檔案
+- complexity 偏好，例如使用者主動指定 worst、average、expected、amortized、space analysis，或省略某個 case
 - 先前已做出的決定
 
 有就記錄，沒有就不要詢問。不得為了補齊額外需求而增加問題。
+使用者未主動指定 complexity 偏好時，不在本階段詢問；由 design agent 完成分析後提出建議範圍。
 
 ## `confirmed_requirements.md` 格式
 
@@ -63,11 +65,14 @@
 ## 畫面文字語言
 中文 | 英文
 
+## 使用者提供的演算法依據
+<完整 code／pseudocode，或 None>
+
 ## 額外需求
 ... | None
 ```
 
-只寫使用者已確認的需求。不得加入 agent 的建議、推論或預設值。
+只寫使用者已確認的需求。Code／pseudocode 以 fenced code block 保存原文；沒有時寫 `None`。不得加入 agent 的建議、推論或預設值。
 
 ## 完成條件
 
@@ -78,9 +83,7 @@
 - 使用者主動提出的額外需求都已記錄。
 - `confirmed_requirements.md` 不包含 agent 的建議、推論或動畫設計。
 
-完成後，由主要 Agent 讀取 `confirmed_requirements.md` 並進入 `DESIGN_DEVELOPMENT`，直接與使用者共同設計動畫。
-
-Coordinator 另依 `references/render-profile.md` 建立 `render_profile.json`。預設解析度、frame rate、renderer、Manim Python 與字型屬於執行設定，不寫進 `confirmed_requirements.md`；只有使用者主動指定的輸出要求才記錄為需求。
+Coordinator 另依 `references/how-to-select-and-verify-manim-render-settings.md` 建立 `render_profile.json`。預設解析度、frame rate、renderer、Manim Python 與字型屬於執行設定，不寫進 `confirmed_requirements.md`；只有使用者主動指定的輸出要求才記錄為需求。
 
 ## 不屬於 COLLECT_REQUIREMENTS
 

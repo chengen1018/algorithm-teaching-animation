@@ -4,9 +4,11 @@
 
 `DESIGN_DEVELOPMENT` 的工作是讓主要 Agent 與使用者共同決定演算法要如何被解釋與演示，並持續更新 `animation_design.md`。
 
-## 專用參考選擇
+## 參考路由與專用參考選擇
 
-開始前，主要 Agent 必須閱讀 `confirmed_requirements.md` 與本指南，然後依演算法類型判斷是否需要讀取下表中的參考：
+開始前，主要 Agent 必須閱讀 `confirmed_requirements.md`、本指南與 `references/how-to-design-complexity-analysis.md`。使用者提供的 algorithm variant、code 或 pseudocode 以 `confirmed_requirements.md` 內保存的內容為準。Complexity reference 定義每次設計都要執行的分析與核准 gate。
+
+此外，依演算法類型最多讀取下表中唯一一份適用的專用參考：
 
 | 演算法類型 | 必讀的專用參考 |
 | --- | --- |
@@ -15,14 +17,76 @@
 | 區間或候選區域收縮型 search | `references/how-to-design-narrowing-search-animation.md` |
 | 其他演算法類型 | 無；只使用本指南。 |
 
-## 四個 Scene 與文件格式
+## 五幕契約
 
-`animation_design.md` 必須依序設計四個獨立 Manim `Scene`：
+`animation_design.md` 必須依序設計五個獨立 Manim `Scene`：
 
-1. 問題與目標
-2. 演算法如何運作：決策規則與追蹤狀態
-3. 完整演示演算法
-4. 最終結果與簡短回顧
+1. Scene 1 問題與目標
+2. Scene 2 演算法如何運作：決策規則與追蹤狀態
+3. Scene 3 完整演示演算法，結尾直接顯示範例答案
+4. Scene 4 複雜度分析，完整涵蓋已核准 `Complexity Scope`
+5. Scene 5 最終總結，只整理答案、核心方法與已教 complexity
+
+## DESIGN_DEVELOPMENT 執行流程
+
+### 共同設計流程
+
+按教學順序逐步設計。每次只向使用者詢問一個決定，避免一次要求使用者評估整套場景規劃。
+
+只有當一個教學部分確實有多種不同且合理的呈現方式時才詢問。字體、間距、局部位置、精確秒數、一般淡出時間與其他例行實作細節由主要 Agent 自行決定。
+
+需要詢問時，提出三個完整方案。每個方案都要同時說明：
+
+- 畫面會出現什麼
+- 解說重點
+- 觀眾實際會看到的動畫動作順序
+- 這種方式如何幫助理解
+- 主要 Agent 是否推薦，以及推薦理由
+
+方案必須是具體動畫設計，不得只列抽象方向或把視覺、解說與動作拆成不同問題。
+使用者可以選擇其中一個方案、混合不同方案、要求修改，或提出自己的設計。只要使用者提出明確設計，就採用並整合。
+使用者做出決定後，直接更新 `animation_design.md` 並進入下一個設計決定。不要在對話中重述決定要求二次確認。
+
+### Complexity Scope Gate
+
+設計 Scene 4 前，依 `references/how-to-design-complexity-analysis.md` 完成下列步驟：
+
+1. 以 `confirmed_requirements.md` 內保存的 algorithm variant、code 或 pseudocode 建立 Analysis Basis，選擇代表性 cases，並依 reference 的固定格式提出 `Complexity Analysis Proposal`。完成條件：每個 proposal claim 都有可審查的 assumptions、counted operation、derivation 與 source locator。
+2. 取得使用者對 time cases 與 space treatment 的明確決定。完成條件：至少一個 primary time case 或使用者選定的 replacement time case 已獲明確核准；只有明確核准的項目進入 scope，optional case 不會自動加入。
+3. 將核准結果寫入 `animation_design.md` 中 Scene 3 與 Scene 4 之間的固定 `Complexity Scope` topology。Analysis basis 與 Analysis source 必須是不同欄位；contrast 為零時仍寫出 `None — zero approved contrast time cases`。所有六個欄位都必須有值。
+
+Persistence gate：使用者核准後，先寫入 complete fixed `Complexity Scope` block before any Scene 4/5 design。`Complexity Scope` 核准是局部 scope gate；核准前或完整 block 尚未持久化時保持在 `DESIGN_DEVELOPMENT`。Design reviewer `PASS` 之後，仍須把完整 `animation_design.md` 交給使用者取得整體設計核准，才完成本階段。
+
+## 全片設計原則
+
+### 教學設計原則
+
+若使用者未指定受眾程度，預設觀眾理解基本程式設計、陣列、索引、變數、迴圈、條件判斷與常見資料結構。
+
+選擇能展現演算法關鍵判斷與狀態變化的精簡範例。避免使用已經接近答案、只有單一路徑，或避開演算法代表性操作的輸入。
+
+先讓造成動作的資料、比較或規則可見，再呈現動作，最後呈現結果。保留足夠的前一狀態，讓觀眾能比較變化，不需要記住已消失的資訊。
+
+同一種顏色、位置、框線或動作在五個 Scene 中應維持相同含義。畫面與解說重點不得表達不同狀態或時序。
+
+只有當不同方式會實際改變觀眾如何理解教學內容時，才提出三個方案。不要把配色、字體、間距、局部位置或精確 timing 當成需要使用者決定的教學方案。
+
+### 視覺語言
+
+同一種顏色、框線、位置、標籤或動作在整部影片中只代表一個意思。必須讓觀眾能區分基本資料、目前焦點、候選項目、已完成進度、已排除區域與必要支援結構。
+
+每個動畫動作只保留一個主要焦點。先讓造成動作的資料或判斷可見，再演示動作，最後顯示結果。非目前焦點的內容可以降低存在感，但不要太早移除理解因果所需的脈絡。
+
+主要資料結構的位置應保持穩定。不要為了局部更新重排整個畫面，也不要讓文字或輔助面板與演算法動畫爭奪注意力。
+
+Queue、stack、搜尋範圍、temporary slot 或其他支援結構只有在它們能解釋演算法行為時才顯示。需要顯示時，讓它們保持可讀，但視覺層級低於目前演算法動作。
+
+- 畫面文字保持短而具體。
+- 不用畫面長句重複旁白內容。
+- 動作必須幫助說明比較、移動、排除、發現或完成等狀態變化。
+- 裝飾性動作不得改變或模糊演算法含義。
+
+## animation_design.md 固定格式
 
 每個 Scene 都要包含：
 
@@ -95,6 +159,7 @@
 ### Teaching Purpose
 - 讓觀眾跟著同一個代表性範例，看到演算法如何從初始輸入逐步得到結果。
 - 將 Scene 2 的概念性理解轉化成可觀察的實際執行過程。
+- 為 Scene 4 留下可沿用的 comparison、scan、level、phase、augmentation 或 table-update 操作語意。
 
 ### Explanation Focus
 - 使用 Scene 1 的完整代表性輸入，按照演算法的真實執行順序推進。
@@ -106,6 +171,7 @@
 - 顯示完整代表性輸入、目前焦點，以及 Scene 2 已介紹的主要追蹤狀態。
 - 清楚區分目前焦點、待處理、已處理與已排除的內容。
 - 保留理解目前決策所需的資料與前一狀態，直到動作及更新結果清楚可辨。
+- 讓 Scene 4 需要一般化的工作單位保持可辨認，但在本幕只服務 sample execution。
 
 ### Concrete Animation Sequence
 1. 重新呈現 Scene 1 的完整代表性輸入，並套用 Scene 2 已建立的狀態標記。
@@ -114,95 +180,74 @@
 4. 先呈現造成決策的資料或比較結果，再說明這次判斷在目前範例中的意義。
 5. 動畫化相應的資料動作或狀態更新，並保留更新前後的關聯。
 6. 重複「觀察或比較 → 判斷 → 動作或更新」，直到範例符合停止條件。
-7. 顯示停止時的完整資料與最終狀態，交由 Scene 4 驗證與回顧。
+7. 顯示停止時的完整資料與最終狀態，直接標出這個範例的答案。
 
 ### Completion Criteria
 - 範例已從初始輸入完整執行到停止狀態，且沒有省略任何會影響結果的步驟。
 - 每個重要動作都能回溯到造成它的觀察、比較或判斷；每次重要更新都有可見的更新前後關係。
 - Scene 2 建立的視覺含義保持一致，觀眾不需要猜測任何會影響結果的步驟。
+- 範例答案已清楚顯示，Scene 4 所需的一般化入口已有可見的操作語意。
 
 ### Boundary
 - 負責執行範例與呈現因果，不重新進行 Scene 2 的概念介紹。
 - 不介紹代表性範例沒有使用的其他分支，也不臨時加入新的追蹤狀態或決策機制。
-- 只呈現停止狀態；結果是否回答原始問題，留到 Scene 4。
+- 不進行漸近推導；sample 的工作單位與次數由 Scene 4 一般化到 input-size work count。
 
-## Scene 4: 最終結果與簡短回顧
+## Complexity Scope
+- Analysis basis: <algorithm variant, input variables, implementation or representation assumptions, counted operation, and derivation basis>
+- Analysis source: <source type and precise source locator for the algorithm variant and derivation evidence>
+- Approved primary time case: <case and complexity>
+- Approved contrast time cases: <None — zero approved contrast time cases, or every approved case and complexity>
+- Approved space treatment: <omit, one-line summary, or visual derivation>
+- Approval evidence: <the user's explicit decision>
+
+## Scene 4: 複雜度分析
 ### Teaching Purpose
-- 讓觀眾確認 Scene 3 得到的結果確實回答 Scene 1 提出的問題。
-- 簡短整理這個範例如何經由演算法得到結果。
+- 讓觀眾看見已核准 complexity claims 如何從演算法的工作結構形成。
 
 ### Explanation Focus
-- 明確指出最終答案，並將它連回 Scene 1 要尋找、改變或判定的對象。
-- 使用目前畫面中的證據確認答案回應原始問題。
-- 簡短回顧範例中反覆出現的核心處理方式，不重新逐步解說完整執行過程。
+- 完整涵蓋 `Complexity Scope` 中每個已核准 time case 與 space treatment。
+- 從 Scene 3 的 sample cues 出發，依 complexity reference 的 `Visual Derivation` 一般化到 input-size work count。
 
 ### On-Screen Content
-- 顯示 Scene 3 的最終資料與停止狀態，並明確標出最終答案。
-- 顯示 Scene 1 的問題或目標短句，讓答案與問題可以直接對照。
-- 視需要保留一至三個已出現過的過程標記，概括演算法如何從輸入走到結果。
+- 顯示 input variables、counted operation、重複結構或 aggregation、expression，以及完整 case label。
+- 空間內容依已核准的 omit、one-line summary 或 visual derivation 處理。
 
 ### Concrete Animation Sequence
-1. 從 Scene 3 的停止狀態開始，聚焦並標出最終答案。
-2. 重新顯示 Scene 1 的問題或目標，將最終答案與問題直接連結。
-3. 使用畫面中的資料或狀態，簡短確認這個結果確實回答原始問題。
-4. 以一至三個已經出現過的核心處理概念，概括演算法如何得到這個結果。
-5. 收束畫面，只留下最終答案與最重要的演算法概念。
+1. 沿用 Scene 3 已建立的工作單位語意。
+2. 定義 input size，顯示工作單位如何隨規模重複、分層、分 phase 或求和。
+3. 將次數與單次成本組成 expression，化簡後標示 case 與 complexity。
+4. 對每個已核准 case 完成同樣的可見鏈條，並完成已核准的 space treatment。
 
 ### Completion Criteria
-- 觀眾能清楚指出最終答案，並理解它如何回應 Scene 1 的問題。
-- 回顧只使用 Scene 2 與 Scene 3 已介紹或演示的內容。
+- `Complexity Scope` 的每個已核准 case 都有完整 `Visual Derivation`，且 assumptions、expression 與 case label 一致。
+- Scene 3 的 sample cues 已一般化到輸入規模，而非作為 complexity proof。
 
 ### Boundary
-- 只負責確認與收束，不重新播放完整範例。
-- 不加入新的規則、分支、資料結構、複雜度分析、預測問題、互動練習或延伸範例。
-- 若需要新的解釋才能確認結果，應回到前面的 Scene 補足設計，不得在本幕臨時教授。
+- 只教授使用者已核准的 scope；新增或改變 case 時回到 complexity proposal 與 approval gate。
+
+## Scene 5: 最終總結
+### Teaching Purpose
+- 收束答案、核心方法與前四幕已教過的 complexity。
+
+### Explanation Focus
+- 再次指出 Scene 3 的範例答案，概括核心方法，並整理 Scene 4 已教過的主要 time complexity。
+- 只有 Scene 4 已涵蓋或明確簡短標示的 space complexity 與 contrast cases 才進入總結。
+
+### On-Screen Content
+- 顯示最終答案、最重要的演算法概念，以及 Scene 4 已標示的 complexity labels。
+
+### Concrete Animation Sequence
+1. 重新聚焦 Scene 3 已得到的範例答案。
+2. 以已出現的視覺語意概括核心方法。
+3. 顯示 Scene 4 已教過的主要 time complexity，以及 scope 內適用的 contrast 或 space 結論。
+4. 收束畫面，只留下答案、核心方法與已教 complexity。
+
+### Completion Criteria
+- 觀眾能指出範例答案、核心方法與已教的 complexity，所有總結內容都能回溯到前四幕。
+
+### Boundary
+- 總結已建立的內容。答案驗證與正確性證明不屬於整部動畫的任何 Scene；新推導與新的 complexity cases 回到 `Complexity Scope Gate` 與 Scene 4 設計。
 ```
 
 - Scene 之間固定淡出至空白，再淡入下一幕。
-
-## 共同設計流程
-
-按教學順序逐步設計。每次只向使用者詢問一個決定，避免一次要求使用者評估整套場景規劃。
-
-只有當一個教學部分確實有多種不同且合理的呈現方式時才詢問。字體、間距、局部位置、精確秒數、一般淡出時間與其他例行實作細節由主要 Agent 自行決定。
-
-需要詢問時，提出三個完整方案。每個方案都要同時說明：
-
-- 畫面會出現什麼
-- 解說重點
-- 觀眾實際會看到的動畫動作順序
-- 這種方式如何幫助理解
-- 主要 Agent 是否推薦，以及推薦理由
-
-方案必須是具體動畫設計，不得只列抽象方向或把視覺、解說與動作拆成不同問題。
-
-使用者可以選擇其中一個方案、混合不同方案、要求修改，或提出自己的設計。只要使用者提出明確設計，就採用並整合。
-
-使用者做出決定後，直接更新 `animation_design.md` 並進入下一個設計決定。不要在對話中重述決定要求二次確認。
-
-若使用者未指定受眾程度，預設觀眾理解基本程式設計、陣列、索引、變數、迴圈、條件判斷與常見資料結構。Scene 2 只建立理解 Scene 3 代表性範例所需的核心行為、重要判斷方向與主要追蹤狀態，不完整列舉所有分支或精確執行細節。
-
-## 教學設計原則
-
-選擇能展現演算法關鍵判斷與狀態變化的精簡範例。避免使用已經接近答案、只有單一路徑，或避開演算法代表性操作的輸入。
-
-先讓造成動作的資料、比較或規則可見，再呈現動作，最後呈現結果。保留足夠的前一狀態，讓觀眾能比較變化，不需要記住已消失的資訊。
-
-同一種顏色、位置、框線或動作在四個 Scene 中應維持相同含義。畫面與解說重點不得表達不同狀態或時序。
-
-只有當不同方式會實際改變觀眾如何理解教學內容時，才提出三個方案。不要把配色、字體、間距、局部位置或精確 timing 當成需要使用者決定的教學方案。
-
-## 視覺語言
-
-同一種顏色、框線、位置、標籤或動作在整部影片中只代表一個意思。必須讓觀眾能區分基本資料、目前焦點、候選項目、已完成進度、已排除區域與必要支援結構。
-
-每個動畫動作只保留一個主要焦點。先讓造成動作的資料或判斷可見，再演示動作，最後顯示結果。非目前焦點的內容可以降低存在感，但不要太早移除理解因果所需的脈絡。
-
-主要資料結構的位置應保持穩定。不要為了局部更新重排整個畫面，也不要讓文字或輔助面板與演算法動畫爭奪注意力。
-
-Queue、stack、搜尋範圍、temporary slot 或其他支援結構只有在它們能解釋演算法行為時才顯示。需要顯示時，讓它們保持可讀，但視覺層級低於目前演算法動作。
-
-- 畫面文字保持短而具體。
-- 不用畫面長句重複旁白內容。
-- 動作必須幫助說明比較、移動、排除、發現或完成等狀態變化。
-- 裝飾性動作不得改變或模糊演算法含義。
