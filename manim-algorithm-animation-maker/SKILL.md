@@ -106,12 +106,16 @@ Scene 1–3 完成後，先決定動畫要講哪些複雜度內容。主要 Agen
 
 只有原本的 `scene_writer` 回報 `DONE`，且兩個 Writer Expected outputs `generated_algo_scene.py` 與 `scene_layout_audit.py` 都存在時，`CODE_PREPARATION` gate 才能通過。若回報 `BLOCKED` 或輸出不完整，留在 `CODE_PREPARATION`，使用 `followup_task` 將具體缺口交回原本的 `scene_writer`。
 
+Writer 必須依 `references/layout-audit.md` 建立 checkpoint adapter、明確註冊真正的 graph wrapper，且不得忽略、隱藏或降級泛用掃描產生的 warning。
+
 ### 子階段 2：LAYOUT_VERIFICATION
 CODE_PREPARATION gate 通過後，依同一協定的 `scene_layout_validator` Dispatch Profile 呼叫 `spawn_agent`，初次派遣 validator。
 
 若原本的 `scene_layout_validator` 回報 `BLOCKED` 或 `layout_audit_result.md` 缺失，留在 `LAYOUT_VERIFICATION`，依 blocking evidence 處理，並使用 `followup_task` 交回原本的 `scene_layout_validator`。
 
 只有原本的 `scene_layout_validator` 回報 `DONE`，且 `layout_audit_result.md` 存在並為 `PASS`、完整涵蓋五個核准 Scene、所有必要命令均 exit `0` 時，layout gate 才能通過。若原本的 `scene_layout_validator` 回報 `DONE` 且 `layout_audit_result.md` 存在，但結果為 `FAIL`、未完整涵蓋五個核准 Scene 或任一必要命令非 exit `0`，留在 Stage 4，使用 `followup_task` 將 `layout_audit_result.md` 的絕對路徑交回原本的 `scene_writer`。
+
+泛用可見物件掃描是權威 gate：同一個已註冊 graph 內的排版 finding 保留為不阻塞的 `INFO`，其他 warning 不得省略、忽略或降級，且 `unresolved warning count > 0` 必須 `FAIL`。只有使用者需求或已核准設計明確要求時，才能依 `references/layout-audit.md` 接受精確且綁定目前 source 的單一 warning；原 finding 仍須保留。
 
 ### 子階段 3：CONTRACT_REVIEW
 目前 layout gate 通過後，依同一協定的 `scene_reviewer` Dispatch Profile 呼叫 `spawn_agent`，初次派遣 reviewer。
@@ -129,6 +133,8 @@ Stage 4 只建立並接受：
 - `generated_algo_scene.py`
 - `scene_layout_audit.py`
 - `layout_audit_result.md`
+- 五個完整 `layout_audit_report.<SceneClass>.json`
+- 每幕專用的 layout exception JSON（只有核准來源明確要求 warning disposition 時）
 - `scene_review_result.md`
 
 五個 Scene MP4、合併 MP4 與 `render_manifest.md` 都屬於 Stage 5，不得用來補足或取代 Stage 4 gate。
@@ -137,7 +143,10 @@ Stage 4 只建立並接受：
 只有以下條件全部成立才能進入 `FINAL_RENDER_AND_DELIVERY_CHECK`：
 
 - `layout_audit_result.md = PASS`，五個核准 Scene 的必要命令都 exit `0`。
-- `scene_review_result.md = PASS`。
+- 五個完整 machine-readable visible reports 都存在並保留 graph 內的 `INFO`，且每幕 unresolved warnings 與 errors 都是 `0`；accepted warnings 皆有有效精確例外。
+- `scene_review_result.md = PASS`，且由未參與程式碼撰寫的獨立 reviewer 產出。
+- 目前 `generated_algo_scene.py` SHA-256、layout result 的 `Audited Code SHA-256`、review result 的 `Reviewed Code SHA-256` 與 `Layout-audited Code SHA-256` 全部一致。
+- layout result 記錄的 `Render Profile SHA-256` 等於目前 `render_profile.json` 的 SHA-256。
 - PASS 後程式碼、Stage 4 Required inputs、runner 或 `render_profile.json` 都沒有改變。
 
 本機自行檢查、dry-run 可執行、非正式 review 或提早產生的 MP4 都不能取代上述 gate。

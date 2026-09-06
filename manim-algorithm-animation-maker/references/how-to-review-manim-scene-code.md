@@ -23,6 +23,8 @@
 
 審查時必須讀取派遣訊息中的每個 `Required inputs`，並以角色定義的輸入標籤指稱它們。Preflight 要求所有 `Required inputs` 都存在且可讀，且 `Layout audit result` 為 `PASS` 並完整涵蓋五個交付 Scene；否則回報 `BLOCKED`。Reviewer 直接審查目前的 `Scene source`。
 
+`Layout audit result` 的 `Audited Code SHA-256` 必須與 reviewer 實際讀取的 `Scene source` 一致。它也必須逐幕引用完整 machine-readable report path/hash，保留 graph 內的 `INFO`，顯示 unresolved warnings 與 errors 為零，並把 accepted warnings 與精確 exception path/hash 分開記錄。
+
 ## 程式碼審查問題
 
 ### Source Fidelity
@@ -57,8 +59,9 @@
 
 - `generated_algo_scene.py` 忠實實作已確認需求、已核准設計與已審查 script
 - 程式碼中的演算法狀態、物件生命週期、ownership 與 Scene cleanup 可稽核
-- `layout_audit_result.md = PASS` 且涵蓋所有五個 Scene
-- `scene_review_result.md` 由獨立 reviewer 撰寫，而非 scene-writer
+- `layout_audit_result.md = PASS`、涵蓋所有五個 Scene，且 `Audited Code SHA-256` 與 reviewed code hash 一致
+- 五個完整 reports 的 hash、infos 與其他 counts 都已保留，沒有被截斷或摘要取代；任何 accepted warning 皆綁定目前 source hash 與可追溯核准來源
+- `scene_review_result.md` 由獨立 reviewer 撰寫，而非 scene-writer，並記錄實際審查的 `Reviewed Code SHA-256` 與 `Layout-audited Code SHA-256`
 
 ## 常見失敗
 
@@ -66,6 +69,7 @@
 - 因程式通過語法或靜態檢查就通過，即使它發明了語意或遺漏 script beat。
 - 因為沒有影片，就跳過演算法 state、生命週期、ownership 或 cleanup 的程式碼推理。
 - scene-reviewer 重做 geometry、bounding-box、碰撞、遮擋或 safe-frame 判定，而不是使用 `layout_audit_result.md` 的 evidence。
-- 把不可追溯或新增教學內容的問題誤標成 styling。
+- 接受只有人工說明、沒有 exact machine-readable disposition 的 warning，或接受已因 source/profile/hash 改變而失效的 layout evidence。
+- 把 assumptions 過度延伸、不可追溯或新增教學內容的問題誤標成 styling。
 - 回傳 `FAIL` 卻沒有指向相關程式碼或說明修復方向。
 - 用過去的 MP4、截圖或畫面外觀作為渲染前程式碼審查的證據。
