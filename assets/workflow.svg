@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="700" viewBox="0 0 1600 700" role="img" aria-labelledby="title description">
+  <title id="title">從演算法需求到完整 Manim 教學影片</title>
+  <desc id="description">流程依序包含教學內容與畫面規劃、教學腳本、旁白製作、Manim 動畫製作，以及渲染與交付檢查。未通過檢查的內容會回到相應階段修正。</desc>
+  <style>
+    .heading { fill: #0f172a; font: 600 32px -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
+    .input-label { fill: #1d4ed8; font: 600 20px -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
+    .card { fill: #ffffff; stroke: #cbd5e1; stroke-width: 2; }
+    .step-number { fill: #2563eb; }
+    .step-number-text { fill: #ffffff; font: 600 20px -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .card-title { fill: #0f172a; font: 600 24px -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
+    .card-title-compact { fill: #0f172a; font: 600 21px -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
+    .card-copy { fill: #475569; font: 400 18px -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
+    .check-pill { fill: #eff6ff; }
+    .check-text { fill: #1d4ed8; font: 600 16px -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
+    .connector { fill: none; stroke: #94a3b8; stroke-width: 3; stroke-linecap: round; }
+    .output { fill: #f0fdf4; stroke: #86efac; stroke-width: 2; }
+    .output-text { fill: #166534; font: 600 24px -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
+    .repair { fill: #f8fafc; stroke: #cbd5e1; stroke-width: 2; }
+    .repair-text { fill: #475569; font: 500 18px -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
+    @media (prefers-color-scheme: dark) {
+      .heading, .card-title, .card-title-compact { fill: #f8fafc; }
+      .input-label, .check-text { fill: #93c5fd; }
+      .card { fill: #111827; stroke: #475569; }
+      .card-copy, .repair-text { fill: #cbd5e1; }
+      .check-pill { fill: #172554; }
+      .connector { stroke: #64748b; }
+      .output { fill: #052e16; stroke: #22c55e; }
+      .output-text { fill: #86efac; }
+      .repair { fill: #0f172a; stroke: #475569; }
+    }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8" />
+    </marker>
+  </defs>
+
+  <text class="heading" x="800" y="52" text-anchor="middle">從演算法需求到完整 Manim 教學影片</text>
+
+  <rect class="check-pill" x="64" y="86" width="226" height="48" rx="24" />
+  <text class="input-label" x="177" y="117" text-anchor="middle">你的演算法需求</text>
+  <path class="connector" d="M177 134 V166" marker-end="url(#arrow)" />
+
+  <rect class="card" x="50" y="176" width="260" height="250" rx="18" />
+  <circle class="step-number" cx="86" cy="216" r="22" />
+  <text class="step-number-text" x="86" y="223" text-anchor="middle">1</text>
+  <text class="card-title-compact" x="118" y="224">教學內容與畫面規劃</text>
+  <text class="card-copy" x="78" y="277">
+    <tspan x="78" dy="0">確認教學目標、範例</tspan>
+    <tspan x="78" dy="29">與各段落的呈現方式</tspan>
+  </text>
+  <rect class="check-pill" x="78" y="354" width="132" height="38" rx="19" />
+  <text class="check-text" x="144" y="379" text-anchor="middle">使用者確認</text>
+
+  <path class="connector" d="M310 301 H338" marker-end="url(#arrow)" />
+
+  <rect class="card" x="350" y="176" width="260" height="250" rx="18" />
+  <circle class="step-number" cx="386" cy="216" r="22" />
+  <text class="step-number-text" x="386" y="223" text-anchor="middle">2</text>
+  <text class="card-title" x="418" y="224">教學腳本</text>
+  <text class="card-copy" x="378" y="277">
+    <tspan x="378" dy="0">安排內容與</tspan>
+    <tspan x="378" dy="29">講解順序</tspan>
+  </text>
+  <rect class="check-pill" x="378" y="354" width="132" height="38" rx="19" />
+  <text class="check-text" x="444" y="379" text-anchor="middle">獨立審查</text>
+
+  <path class="connector" d="M610 301 H638" marker-end="url(#arrow)" />
+
+  <rect class="card" x="650" y="176" width="260" height="250" rx="18" />
+  <circle class="step-number" cx="686" cy="216" r="22" />
+  <text class="step-number-text" x="686" y="223" text-anchor="middle">3</text>
+  <text class="card-title" x="718" y="224">旁白製作</text>
+  <text class="card-copy" x="678" y="277">
+    <tspan x="678" dy="0">產生並檢查</tspan>
+    <tspan x="678" dy="29">旁白音訊</tspan>
+  </text>
+  <rect class="check-pill" x="678" y="354" width="132" height="38" rx="19" />
+  <text class="check-text" x="744" y="379" text-anchor="middle">音訊檢查</text>
+
+  <path class="connector" d="M910 301 H938" marker-end="url(#arrow)" />
+
+  <rect class="card" x="950" y="176" width="260" height="250" rx="18" />
+  <circle class="step-number" cx="986" cy="216" r="22" />
+  <text class="step-number-text" x="986" y="223" text-anchor="middle">4</text>
+  <text class="card-title" x="1018" y="224">Manim 動畫製作</text>
+  <text class="card-copy" x="978" y="277">
+    <tspan x="978" dy="0">製作畫面並檢查</tspan>
+    <tspan x="978" dy="29">內容與版面</tspan>
+  </text>
+  <rect class="check-pill" x="978" y="354" width="176" height="38" rx="19" />
+  <text class="check-text" x="1066" y="379" text-anchor="middle">畫面與內容檢查</text>
+
+  <path class="connector" d="M1210 301 H1238" marker-end="url(#arrow)" />
+
+  <rect class="card" x="1250" y="176" width="300" height="250" rx="18" />
+  <circle class="step-number" cx="1286" cy="216" r="22" />
+  <text class="step-number-text" x="1286" y="223" text-anchor="middle">5</text>
+  <text class="card-title" x="1318" y="224">渲染與交付檢查</text>
+  <text class="card-copy" x="1278" y="277">
+    <tspan x="1278" dy="0">合併影片並確認</tspan>
+    <tspan x="1278" dy="29">可以正常播放</tspan>
+  </text>
+  <rect class="check-pill" x="1278" y="354" width="164" height="38" rx="19" />
+  <text class="check-text" x="1360" y="379" text-anchor="middle">影片完整性檢查</text>
+
+  <path class="connector" d="M1400 426 V468" marker-end="url(#arrow)" />
+  <rect class="output" x="1196" y="480" width="354" height="66" rx="18" />
+  <text class="output-text" x="1373" y="521" text-anchor="middle">完成的 Manim 教學影片</text>
+
+  <rect class="repair" x="388" y="590" width="824" height="58" rx="29" />
+  <path class="connector" d="M420 619 H468" marker-end="url(#arrow)" />
+  <text class="repair-text" x="800" y="626" text-anchor="middle">檢查未通過時，回到負責該內容的階段修正</text>
+</svg>
