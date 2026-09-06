@@ -150,11 +150,13 @@ subagent 回報 `DONE`，上述三類產物都已建立，manifest 涵蓋所有 
 
 - 角色規格：`references/subagent-scene-writer.md` 的絕對路徑
 - project inputs：`confirmed_requirements.md`、`animation_design.md`、`animation_design_review.md`、`teaching_script.md`、`script_review_result.md`、`voiceover.md`、`narration_manifest.json`、`audio/voiceover/`、`render_profile.json` 的絕對路徑
-- skill references：`references/how-to-implement-and-verify-manim-scenes.md`、`references/how-to-hand-off-scene-code-for-review.md` 的絕對路徑
+- skill references：`references/how-to-implement-and-verify-manim-scenes.md`、`references/how-to-hand-off-scene-code-for-review.md`、`references/layout-audit.md` 的絕對路徑
 - layout helper：`scripts/scene_layout_audit.py` 的絕對路徑；複製到 project root，並由每個 Scene 建立 scene-specific adapter
-- 預期產物：`generated_algo_scene.py`、`scene_code_review_handoff.md` 的絕對路徑
+- 預期產物：`generated_algo_scene.py`、`scene_code_review_handoff.md` 的絕對路徑；只有核准來源明確要求時才可增加該 Scene 專用的 layout exception JSON
 
 Writer 把已通過 gate 的上游產物視為可執行契約，以最小、保守方式處理可合理解讀的細節，並在 handoff 記錄 `Render Assumptions`、四個 Scene class 的核准順序、`Code SHA-256`、`Render Profile SHA-256` 與 `Manim render performed: NO`。
+
+Writer 必須依 `references/layout-audit.md` 準備權威泛用掃描：只有 graph 的穩定 structural wrapper 能以 `register_graph_root()` 明確註冊；同一明確 root 內的 graph/graph 排版 finding 採 `INFO` best-effort，跨 root、graph 對非 graph 與所有其他 pair 維持嚴格。Adapter 仍須涵蓋 initial、重要 beat 與 final，但只能補充 assertion，不能取代泛用 warning。
 
 Writer 必須完成完整重讀與靜態 self-audit。此子階段不得執行 Manim render、preview、低畫質 render 或合併影片，也不得先建立本版本的送審 MP4。
 
@@ -176,11 +178,13 @@ Validator 對 handoff 所列的四個 Scene class 依核准順序各執行一次
 <render-profile-python> <absolute-runner-path> <absolute-project-root>/generated_algo_scene.py <SceneClass> --render-profile <absolute-project-root>/render_profile.json --audit-visible --require-adapter --visible-report-level warning
 ```
 
-這是建立真實 Manim mobject geometry、但不寫 frame 或 MP4 的 dry-run。泛用掃描只把超出 frame 視為失敗；overlap 訊息只用來協助除錯。具名物件之間的 fit、collision 與 spacing 由 scene-specific adapter 判定。
+這是建立真實 Manim mobject geometry、但不寫 frame 或 MP4 的 dry-run。泛用可見物件掃描是權威 blocking gate：`unresolved warning count > 0 => FAIL`。它會階層式檢查 cross-container 與 internal-container leaf pairs；同一明確 graph root 內的排版 finding 保留為 `INFO` best-effort，不阻塞；best-effort route 之外的 unexpected containment、文字 drawing-order 遮擋及任何 frame overflow 仍會阻塞。Scene-specific adapter 只補充具名 fit、collision、spacing 與 checkpoint assertion，不得壓掉泛用 finding，也不得重新升級同 graph 的 best-effort 排版。
 
-`layout_audit_result.md` 必須記錄 `Audited Code SHA-256`、`Runner SHA-256`、`Render Profile path`、`Render Profile SHA-256`、profile 內的 Python／Manim／frame／renderer／font 欄位，以及四個完整命令、輸出、adapter checkpoint 摘要和 exit code。四個命令全部 exit `0`、每幕都執行 initial、至少一個 beat 與 final checkpoint，且 hash 完整一致時才能 `PASS`。
+`layout_audit_result.md` 必須記錄 `Audited Code SHA-256`、`Runner SHA-256`、`Render Profile path`、`Render Profile SHA-256`、profile 內的 Python／Manim／frame／renderer／font欄位，以及四個完整命令、輸出、adapter checkpoint 摘要、完整 JSON report path/hash 和 exit code。Evidence 必須逐幕列出 total findings、infos、accepted warnings、unresolved warnings、errors、exception file/hash 與 final gate result。四個命令全部 exit `0`、每幕 unresolved warnings 為零、每幕都執行 initial、至少一個 beat 與 final checkpoint，且 hash 完整一致時才能 `PASS`。Best-effort INFO 不需 exception，但不得從完整 report 刪除。
 
-若 adapter 缺少必要 checkpoint、具名檢查失敗、畫面越界、漏檢任一 Scene 或 hash／profile 不一致，留在 Stage 4，先修正 `CODE_PREPARATION`，再重跑全部四幕 layout audit。任何程式碼變更都要建立新 handoff 與新 hash。
+不得省略、截斷、摘要改寫、手動忽略或降級 visible warning。優先修復 layout；只有使用者需求或已核准設計明確要求時，才能依 `references/layout-audit.md` 使用精確、machine-readable、source-hash-bound 例外。例外保留原 finding 並標記 accepted；不可豁免 frame overflow、tool/coverage failure、ambiguous graph membership 或 unclassified finding。
+
+若有 unresolved warning、adapter 缺少必要 checkpoint、具名檢查失敗、畫面越界、漏檢任一 Scene、無效例外或 hash／profile 不一致，留在 Stage 4，先修正 `CODE_PREPARATION`，再重跑全部四幕 layout audit。任何程式碼變更都要建立新 handoff、新 hash 與新完整 report，並使既有例外失效。
 
 ### 子階段 3：CONTRACT_REVIEW
 只有 `scene_layout_validator` 回報 `DONE`、`layout_audit_result.md = PASS`、完整涵蓋四幕且 audited hash 與目前程式碼及 handoff 相同後，才能依委派協定派遣 task name `scene_reviewer` 的獨立 subagent：
@@ -200,6 +204,8 @@ Stage 4 只建立並接受：
 - `generated_algo_scene.py`
 - `scene_code_review_handoff.md`
 - `layout_audit_result.md`
+- 四個完整 `layout_audit_report.<SceneClass>.json`
+- 每幕專用的 layout exception JSON（只有核准來源明確要求 warning disposition 時）
 - 由獨立 scene reviewer 產出的 `scene_review_result.md`
 
 四個 Scene MP4、合併 MP4 與 `render_manifest.md` 都屬於 Stage 5，不得用來補足或取代 Stage 4 gate。
@@ -208,6 +214,7 @@ Stage 4 只建立並接受：
 只有以下條件全部成立才能進入 `FINAL_RENDER_AND_DELIVERY_CHECK`：
 
 - `layout_audit_result.md = PASS`，四個核准 Scene 的必要命令都 exit `0`。
+- 四個完整 machine-readable visible reports 都存在並保留 best-effort infos，且每幕 unresolved warnings 與 errors 都是 `0`；accepted warnings 皆有有效精確例外。
 - `scene_review_result.md = PASS`，且由未參與程式碼撰寫的獨立 reviewer 產出。
 - 目前 `generated_algo_scene.py` SHA-256、handoff 的 `Code SHA-256`、layout result 的 `Audited Code SHA-256`、review result 的 `Reviewed Code SHA-256` 與 `Layout-audited Code SHA-256` 全部一致。
 - handoff 與 layout result 記錄的 `Render Profile SHA-256` 都等於目前 `render_profile.json` 的 SHA-256。

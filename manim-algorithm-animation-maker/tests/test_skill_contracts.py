@@ -64,6 +64,36 @@ class SkillContractTests(unittest.TestCase):
         for path in active_files:
             self.assertIn("--require-adapter", path.read_text(encoding="utf-8"), str(path))
 
+    def test_visible_warnings_are_authoritative_across_active_contracts(self) -> None:
+        active_files = (
+            "SKILL.md",
+            "references/layout-audit.md",
+            "references/subagent-scene-layout-validator.md",
+        )
+        for relative_path in active_files:
+            content = read(relative_path)
+            self.assertIn("unresolved warning", content, relative_path)
+            self.assertIn("FAIL", content, relative_path)
+
+    def test_graph_best_effort_and_complete_reports_are_narrowly_documented(self) -> None:
+        layout = read("references/layout-audit.md")
+        self.assertIn("register_graph_root", layout)
+        self.assertIn("best-effort", layout)
+        self.assertIn("同一個 registered graph root", layout)
+        self.assertIn("不同 graph roots：嚴格規則", layout)
+        self.assertIn("graph 對 non-graph：嚴格規則", layout)
+        self.assertIn("line-like", layout)
+        self.assertIn("完整 JSON", layout)
+        self.assertIn("infos", layout)
+        self.assertIn("source_sha256", layout)
+
+        for relative_path in (
+            "SKILL.md",
+            "references/subagent-scene-layout-validator.md",
+            "references/subagent-scene-writer.md",
+        ):
+            self.assertIn("best-effort", read(relative_path), relative_path)
+
     def test_specialized_design_headings_use_plain_language(self) -> None:
         specialized = "\n".join(
             read(path)

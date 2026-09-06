@@ -33,7 +33,7 @@
 - `scene_code_review_handoff.md`
 - `layout_audit_result.md`
 
-`scene_code_review_handoff.md` 的 Reviewed Source 用來識別受審程式碼版本；其 Code SHA-256 必須與 reviewer 實際讀取的 `generated_algo_scene.py` 一致。`layout_audit_result.md` 必須為 `PASS`、完整涵蓋四個交付 Scene，且其 `Audited Code SHA-256` 必須與上述 hash 相同。Static Verification 必須明確記錄 `Manim render performed: NO`；如果本次程式碼已被先行渲染，將流程順序違反列為 blocking finding。審查 `Render Assumptions` 時，每一項非平凡解讀都必須最小、保守、可追溯至其負責的來源範圍，且不得新增演算法步驟或教學目標。
+`scene_code_review_handoff.md` 的 Reviewed Source 用來識別受審程式碼版本；其 Code SHA-256 必須與 reviewer 實際讀取的 `generated_algo_scene.py` 一致。`layout_audit_result.md` 必須為 `PASS`、完整涵蓋四個交付 Scene，且其 `Audited Code SHA-256` 必須與上述 hash 相同。它也必須逐幕引用完整 machine-readable report path/hash，列出 best-effort infos，並顯示 unresolved warnings 與 errors 為零；accepted warnings 必須與 exact exception path/hash 分開記錄。Static Verification 必須明確記錄 `Manim render performed: NO`；如果本次程式碼已被先行渲染，將流程順序違反列為 blocking finding。審查 `Render Assumptions` 時，每一項非平凡解讀都必須最小、保守、可追溯至其負責的來源範圍，且不得新增演算法步驟或教學目標。
 
 ## 程式碼審查問題
 
@@ -70,6 +70,7 @@
 - 程式碼中的演算法狀態、物件生命週期、ownership 與 Scene cleanup 可稽核
 - `scene_code_review_handoff.md` 已存在，其 Code SHA-256 與實際受審程式碼一致，且確認尚未執行 Manim render
 - `layout_audit_result.md = PASS`、涵蓋所有四個 Scene，且 `Audited Code SHA-256` 與 reviewed code hash 一致
+- 四個完整 reports 的 hash、infos 與其他 counts 都已保留，沒有被截斷或摘要取代；任何 accepted warning 皆綁定目前 source hash 與可追溯核准來源
 - 每個非平凡 Render Assumption 都最小、保守且可追溯
 - `scene_review_result.md` 由獨立 reviewer 撰寫，而非 scene-writer，並記錄實際審查的 `Reviewed Code SHA-256` 與 `Layout-audited Code SHA-256`
 
@@ -79,6 +80,7 @@
 - 因程式通過語法或靜態檢查就通過，即使它發明了語意或遺漏 script beat。
 - 因為沒有影片，就跳過演算法 state、生命週期、ownership 或 cleanup 的程式碼推理。
 - scene-reviewer 重做 geometry、bounding-box、碰撞、遮擋或 safe-frame 判定，而不是使用 `layout_audit_result.md` 的 evidence。
+- 接受只有人工說明、沒有 exact machine-readable disposition 的 warning，或接受已因 source/profile/hash 改變而失效的 layout evidence。
 - 把 assumptions 過度延伸、不可追溯或新增教學內容的問題誤標成 styling。
 - 回傳 `FAIL` 卻沒有指向相關程式碼或說明修復方向。
 - 用過去的 MP4、截圖或畫面外觀作為渲染前程式碼審查的證據。

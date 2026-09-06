@@ -23,7 +23,7 @@
 - 所有必要輸入都存在且可讀。
 - 本 reviewer 未曾撰寫或修改受審程式碼。
 - handoff 沒有把本次程式碼的 MP4 當成前置審查證據。
-- `layout_audit_result.md` 為 `PASS`、涵蓋全部四個交付 Scene，且其 `Audited Code SHA-256` 與實際受審程式碼及 handoff 的 `Code SHA-256` 一致。
+- `layout_audit_result.md` 為 `PASS`、涵蓋全部四個交付 Scene，且其 `Audited Code SHA-256` 與實際受審程式碼及 handoff 的 `Code SHA-256` 一致。四個完整 report path/hash 都存在，best-effort infos 已列出，unresolved warnings/errors 都為零；accepted warnings 另列 exact exception evidence。
 
 缺檔或 reviewer 不獨立時，回報 `BLOCKED`。如果 handoff 顯示已提前渲染，依審查指南把流程順序違反列為 finding；如果 layout audit 不存在、不為 PASS、未涵蓋四幕或 hash 不一致，回報 `BLOCKED`。
 

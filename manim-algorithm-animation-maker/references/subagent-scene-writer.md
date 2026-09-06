@@ -18,10 +18,11 @@
 8. `<project-root>/audio/voiceover/`
 9. `<project-root>/render_profile.json`
 
-另外閱讀以下兩份實作 reference：
+另外閱讀以下實作 reference：
 
 - 協調者提供的 `how-to-implement-and-verify-manim-scenes.md` 絕對路徑
 - 協調者提供的 `how-to-hand-off-scene-code-for-review.md` 絕對路徑
+- 協調者提供的 `layout-audit.md` 絕對路徑
 - 協調者提供的 `scene_layout_audit.py` 絕對路徑
 
 上述檔案是必須閱讀的權威輸入，不另建立 upstream preflight。若實際讀取時發現必要檔案無法存取，回報 `BLOCKED`。
@@ -30,17 +31,17 @@
 
 1. 把已通過 gate 的上游文件視為可執行契約。
 2. 使用 `render_profile.json` 的 frame geometry 與 font，依實作指南規劃每個 Scene 的 peak state、groups、候選內容、pointer state 與 phase ownership。
-3. 把 `scene_layout_audit.py` 複製到 project root，為每個 Scene 建立具名 adapter，並在 initial、每個必要 beat 與 final 穩定狀態執行。
+3. 把 `scene_layout_audit.py` 複製到 project root，為每個 Scene 建立具名 adapter，並在 initial、每個必要 beat 與 final 穩定狀態執行。對 graph 只註冊穩定且真實的 graph wrapper；同 root graph/graph 排版 finding 採 INFO best-effort，不同 root、graph 對非 graph 與其他 pair 保持嚴格。Adapter 不得重新把同 graph 排版升級成 blocking assertion。
 4. 建立四個獨立 Scene；每幕結尾淡出至空白，下一幕從空白淡入。
 5. 完整重讀程式碼，執行靜態 self-audit，確認語意、演算法狀態、物件生命週期、cleanup 與 assumptions 可稽核。
-6. 修正程式碼層級可確認的過期 helper、錯誤 state reference、遺漏 cleanup 與不一致 assumptions。
-7. 建立包含 Approved Scene Order、Render Profile、Static Verification 與 Render Assumptions 的 pre-render handoff。
+6. 修正程式碼層級可確認的過期 helper、錯誤 state reference、遺漏 cleanup、不一致 assumptions、internal container spill 與文字 drawing-order 風險。對同 graph best-effort INFO，在不破壞教學設計且修改風險低時改善；泛用 visible warning 仍不得忽略、降級或交給 adapter 壓掉。
+7. 建立包含 Approved Scene Order、Render Profile、Layout Audit Setup、Static Verification 與 Render Assumptions 的 pre-render handoff。若核准來源明確要求不可修復的 warning，才另外為受影響 Scene 建立精確且 source-hash-bound 的專用 exception JSON。
 
 在此模式禁止執行任何 Manim render、preview、低畫質渲染或合併影片。
 
 ## Completion criteria
 
-只產出 `generated_algo_scene.py` 與 `scene_code_review_handoff.md`；完成完整重讀與靜態 self-audit，且 handoff 明確記錄 `Manim render performed: NO`。
+必要產出只有 `generated_algo_scene.py` 與 `scene_code_review_handoff.md`；只有核准來源明確要求時才增加每幕專用 exception JSON。完成完整重讀與靜態 self-audit，且 handoff 明確記錄 `Manim render performed: NO`。例外交由 validator 依 `layout-audit.md` 精確驗證；優先修復 layout。
 
 ## Final response
 
