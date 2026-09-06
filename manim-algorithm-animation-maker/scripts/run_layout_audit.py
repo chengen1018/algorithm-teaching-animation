@@ -17,6 +17,10 @@ ACTIVE_VISIBLE_AUDITOR = None
 VISIBLE_LEVEL_ORDER = {"error": 3, "warning": 2, "info": 1}
 
 
+def sha256(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Run a scene far enough to execute layout audits without rendering video.",
@@ -118,10 +122,6 @@ def gate_failures(
     return failures
 
 
-def sha256(path: Path) -> str:
-    return hashlib.sha256(path.read_bytes()).hexdigest()
-
-
 def apply_render_profile(profile_path: Path) -> dict[str, object]:
     from manim import config, __version__ as manim_version
     import manimpango
@@ -159,7 +159,6 @@ def apply_render_profile(profile_path: Path) -> dict[str, object]:
     config.frame_width = float(profile["frame_width"])
     config.frame_height = float(profile["frame_height"])
     print(f"[layout-profile] path={profile_path}")
-    print(f"[layout-profile] SHA-256={sha256(profile_path)}")
     print(
         "[layout-profile] "
         f"python={current_python} manim={manim_version} renderer={config.renderer} "

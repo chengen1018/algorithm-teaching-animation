@@ -2,6 +2,18 @@
 
 在 Stage 4 `LAYOUT_VERIFICATION` 使用本文件。Audit 會建立真實 Manim mobjects 並把動畫直接推到穩定狀態，但不寫 frame 或 MP4。
 
+## 執行輸入與 Preflight
+
+執行前，確認派遣訊息中的所有 `Required inputs` 均存在且可讀，並確認 `Scene classes and approved order` 依核准順序列出五個互不重複、且存在於目前 `Scene source` 的 Scene class。
+
+Preflight 失敗時，建立 `layout_audit_result.md` 並寫入 `Result: FAIL` 與失敗證據；只有連結果檔都無法建立時才是 `BLOCKED`。
+
+## 適用範圍
+
+- Scene Writer 只使用 project-side adapter/checkpoint contract。
+- Scene Writer 不執行 Layout Validator Preflight、必要命令或建立 `layout_audit_result.md`。
+- Layout Validator 使用 execution input/Preflight、必要命令、gate/result。
+
 ## 目錄
 
 - [權威 gate](#權威-gate)
@@ -139,6 +151,12 @@ Best-effort 不等於刪除：writer 應在不破壞教學設計且修改風險�
 
 每幕至少呼叫 initial、至少一個 `beat:<id>` 與 final adapter checkpoint。重要文字、pointer、panel 或 object 組合每次改變後，都要在穩定狀態呼叫 adapter。
 
+Scene 4 必須在每個必要 derivation phase 的 resolved state 建立 `beat:<id>` checkpoint，並把當下可見的公式、case label、多變數圖或 auxiliary-space diagram 納入具名 adapter；不能只檢查公式最後完整出現的畫面。
+
+## 必要命令
+
+對派遣訊息提供的五個 Scene class 依核准順序分別執行：
+
 ```bash
 <render-profile-python> <absolute-runner-path> \
   <absolute-project-root>/generated_algo_scene.py <SceneClass> \
@@ -148,7 +166,14 @@ Best-effort 不等於刪除：writer 應在不破壞教學設計且修改風險�
   --visible-report-level warning
 ```
 
-Runner 預設寫出 `<project>/layout_audit_report.<SceneClass>.json`。若需要明確路徑，使用 `--visible-report <absolute-json-path>`。四幕依 handoff 核准順序各執行一次。
+Runner 預設寫出 `<project>/layout_audit_report.<SceneClass>.json`。若需要明確路徑，使用 `--visible-report <absolute-json-path>`。五幕依派遣訊息中的核准順序各執行一次。
+
+Runner 會：
+
+1. 驗證目前 Python、Manim 版本、字型與 `render_profile.json` 一致。
+2. 套用 profile 記錄的 frame geometry、解析度、frame rate 與 renderer；未經使用者覆寫時即為 1920×1080、60 fps、Cairo。
+3. 執行 Scene adapter 與泛用可見物件掃描。
+4. 在 stdout 記錄 profile 設定與 adapter checkpoint 名稱。
 
 ## 精確例外
 
@@ -182,6 +207,27 @@ Runner 預設寫出 `<project>/layout_audit_report.<SceneClass>.json`。若需�
 - missing audit coverage/checkpoint
 - ambiguous graph-root membership
 - unclassified finding
+
+## `layout_audit_result.md`
+
+結果檔必須記錄：
+
+- `Result: PASS` 或 `Result: FAIL`
+- Render profile 及執行環境欄位
+- 五個 Scene 的核准順序
+- 每個實際 command、stdout、stderr 與 exit code
+- 每個 Scene 的 adapter checkpoint summary
+- 所有 blocking findings
+
+只有 Preflight 通過、五個核准 Scene 全部受檢、每個 Scene 的 initial／beat／final checkpoint 完整，且五個必要 command 全部 exit `0` 時，才能寫入 `Result: PASS`。其餘情況寫入 `Result: FAIL`。
+
+## Adapter 可用檢查
+
+- `check_inside_frame(name, mob, margin=0.1)`：物件是否留在 safe frame。
+- `check_fits(inner_name, inner, outer_name, outer, padding=0.15)`：文字或內容是否放得進 panel。
+- `check_no_overlap(a_name, a, b_name, b, min_gap=0.05)`：兩個具名物件是否重疊或距離不足。
+- `check_no_internal_overlaps(items, min_gap=0.05)`：同一組 labels 或 repeated items 是否互撞。
+- `check_no_overlaps_between(group_a, group_b, min_gap=0.05)`：兩組具名物件是否互撞。
 
 ## Gate 與完整 evidence
 

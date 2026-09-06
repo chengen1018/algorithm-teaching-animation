@@ -4,4 +4,4 @@ interface:
   default_prompt: "使用 $manim-algorithm-animation-maker 為指定演算法製作完整的 Manim 教學動畫。"
 
 policy:
-  allow_implicit_invocation: true
+  allow_implicit_invocation: false

@@ -1,5 +1,7 @@
 # Kokoro TTS 環境設置說明
 
+[返回 README](README.md)
+
 這份說明是第一次使用此 skill 之前看的，用來幫你把 Kokoro TTS 的環境準備好。
 設置只需要做一次，之後每個動畫製作都會共用這個環境。
 
@@ -7,12 +9,12 @@
 
 ## 你需要準備的東西
 
-- Python 3.10、3.11 或 3.12（**不能用系統預設的 Python 3.9 或更舊的版本**）
+- 可建立 virtual environment 並安裝 Kokoro 0.9.4 的 Python 環境
 - 網路連線（第一次使用時 Kokoro 會自動下載模型，之後就可以離線使用）
 
 ---
 
-## 步驟一：確認 Python 版本
+## 步驟一：確認 Python 可用
 
 打開終端機，執行：
 
@@ -20,13 +22,13 @@
 python3 --version
 ```
 
-如果版本低於 3.10，需要另外安裝 Python 3.11：
+如果系統沒有可用的 `python3`，請先安裝 Python：
 
 - **macOS**：用 Homebrew 安裝
   ```bash
-  brew install python@3.11
+  brew install python
   ```
-- **Windows**：從 [python.org](https://www.python.org/downloads/) 下載 3.11 安裝包
+- **Windows**：從 [python.org](https://www.python.org/downloads/) 下載安裝程式
 
 ---
 
@@ -35,11 +37,11 @@ python3 --version
 建議把這個環境放在**動畫專案資料夾之外**的地方（例如 `~/Developer/Senior-project/animation/`），讓多個動畫專案可以共用，也避免和 Manim 環境互相干擾。
 
 ```bash
-# macOS / Linux（使用剛安裝的 Python 3.11）
-python3.11 -m venv /你選定的路徑/.tts-env
+# macOS / Linux
+python3 -m venv /你選定的路徑/.tts-env
 
 # Windows
-py -3.11 -m venv C:\你選定的路徑\.tts-env
+py -m venv C:\你選定的路徑\.tts-env
 ```
 
 ---
@@ -71,7 +73,7 @@ pip install numpy soundfile
 
 在已啟動的虛擬環境中，執行以下指令來快速驗證：
 
-```python
+```bash
 python -c "from kokoro import KPipeline; print('Kokoro OK')"
 ```
 

@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import argparse
-import hashlib
 import json
 import subprocess
 import sys
@@ -101,9 +100,7 @@ def main() -> int:
         output = Path(args.output).expanduser().resolve() if args.output else project_root / "render_profile.json"
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(json.dumps(profile, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-        digest = hashlib.sha256(output.read_bytes()).hexdigest()
         print(f"[render-profile] wrote {output}")
-        print(f"[render-profile] SHA-256 {digest}")
         return 0
     except Exception as exc:
         print(f"[render-profile] failed: {exc}", file=sys.stderr)

@@ -1,0 +1,50 @@
+name: Bug 回報
+description: 回報可以重現的 Skill、script 或文件問題
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        請勿在公開 Issue 中提交憑證、私人路徑或其他敏感資料。
+  - type: input
+    id: version
+    attributes:
+      label: Skill 版本或 commit
+      placeholder: v0.1.0 或完整 commit SHA
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: 執行環境
+      description: 請列出作業系統、Python、Manim、FFmpeg 與相關工具版本。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: 重現步驟
+      description: 請提供最小且可以重複執行的步驟。
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 預期結果
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 實際結果與已清理的 logs
+      description: 移除憑證、使用者資料與本機私人路徑後再貼上內容。
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: 確認事項
+      options:
+        - label: 我沒有附上憑證、私人資料或產生的完整影片。
+          required: true

@@ -2,43 +2,34 @@
 
 ## Role
 
-只負責 Stage 5 `FINAL_RENDER`。只能使用 Stage 4 `Exit gate` 已核准且未修改的 source 與 `render_profile.json`；不得建立或修改 source、handoff、layout result 或 scene review。
+只負責 Stage 5 `FINAL_RENDER`，使用目前的 `generated_algo_scene.py` 與目前的 `render_profile.json` 產生正式媒體與 render manifest；兩者都必須是 Stage 4 `Exit gate` 核准的版本。
+
+## Ownership and hard boundaries
+
+- 將 Stage 4 gate evidence 視為權威，不重新執行 layout audit、scene review 或 coordinator-owned `DELIVERY_CHECK`。
+- `Render guide` 是渲染、合併、輸出修復與 `render_manifest.md` 的唯一專業執行權威。
+- 保持 scene source、project layout helper、Stage 4 gate evidence 與 render profile 不變；任一輸入無法讀取或修復需要改變這些輸入時，回報 `BLOCKED`。
 
 ## Required inputs
 
-必須完整閱讀：
+1. `Scene source`
+2. `Project layout helper`
+3. `Layout audit result`
+4. `Scene review result`
+5. `Render profile`
+6. `Render guide`
 
-1. `<project-root>/generated_algo_scene.py`
-2. `<project-root>/scene_code_review_handoff.md`
-3. `<project-root>/layout_audit_result.md`
-4. `<project-root>/scene_review_result.md`
-5. 協調者提供的 `how-to-render-approved-manim-scenes.md` 絕對路徑
-6. `<project-root>/render_profile.json`，以及 Stage 4 核准的 `Render Profile SHA-256`
-7. 協調者提供的四個 Scene class 與核准順序
+## Required dispatch data
 
-## Gate ownership
+- `Scene classes and approved order`（五個 Scene 的核准順序）
 
-Stage 4 `Exit gate` 完成渲染前資格判定。Renderer 直接接受已核准的 source、handoff、layout result、scene review 與 `render_profile.json`。任一必要輸入無法讀取時，回報 `BLOCKED`。
+## Expected output
 
-## Procedure
-
-1. 使用 profile 的 `python_executable`、renderer、解析度與 frame rate，依核准順序分別渲染四個 Scene，記錄每個實際 command、輸出路徑與 exit code。
-2. 依同一核准順序合併四個 Scene MP4，記錄 concat input list、command、combined MP4 路徑與 exit code。
-3. 建立完整的 `render_manifest.md`，記錄 Stage 4 提供的 immutable source hash、render profile path/hash、所有 commands、exit codes 與五個 MP4 的絕對路徑。
-4. 在 coordinator 執行 `DELIVERY_CHECK` 前凍結 `render_manifest.md`；凍結後不得修改。
-
-## Failure routing
-
-任何需要修改 source、上游契約或 Stage 4 evidence 的問題都必須立即回報 `BLOCKED`，不得在 Stage 5 修補。Source、場景程式碼或 `render_profile.json` 問題交回 Stage 4 `CODE_PREPARATION`；profile 未改變但執行環境有差異時，交回 Stage 4 `LAYOUT_VERIFICATION`；需求、設計、腳本、旁白或音訊契約問題交回對應的上游 Stage。
-
-## Completion criteria
-
-- 依核准順序渲染的四個 Scene MP4 存在。
-- combined MP4 存在。
-- 完整且 frozen 的 `render_manifest.md` 存在。
-- Source、render profile 與 Stage 4 gate evidence 都未改變。
+- `Scene MP4 files`（依核准順序的五個 resolved absolute path）
+- `Combined MP4`
+- `Render manifest`
 
 ## Final response
 
-- `DONE`：回報四個 Scene MP4、combined MP4 與 frozen manifest 的絕對路徑，並列出實際 commands 與 exit codes。
-- `BLOCKED`：回報阻塞證據、相關路徑與必須退回的 Stage。
+- `DONE`：回報五個 Scene MP4、combined MP4 與 frozen manifest 的絕對路徑，並摘要實際 commands 與 exit codes。
+- `BLOCKED`：回報阻塞證據、相關路徑與所需的 Coordinator 動作。

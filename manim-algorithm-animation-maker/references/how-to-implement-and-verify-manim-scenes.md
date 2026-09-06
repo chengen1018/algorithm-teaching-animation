@@ -1,12 +1,14 @@
 # Manim 實作與首次靜態驗證指南
 
-本指南定義 `generated_algo_scene.py` 的實作方法與首次送檢前的靜態推理。它以 construction patterns 降低第一版 layout 失誤機率；`scene_code_review_handoff.md` 記錄受審程式碼、四個 Scene 順序、render profile、靜態驗證與實作解讀，獨立 scene reviewer 則在任何渲染之前負責檢查程式碼。
+本指南定義 `generated_algo_scene.py` 的實作方法與首次送檢前的靜態推理。它以 construction patterns 降低第一版 layout 失誤機率；獨立 layout validator 先檢查目前 source，獨立 scene reviewer 再在任何渲染之前檢查同一線性流程中的目前程式碼。
 
 ## 實作責任與不可改變事項
 
-依 `animation_design.md` 與 handoff 的核准順序實作四個獨立 Manim `Scene` 類別，不以 `Section` 代替，也不在實作階段重新定義每幕的教學責任。每個 Scene 獨立建立及清理畫面，結尾淡出至空白，下一幕再從空白淡入；程式碼通過獨立審查後，才將四幕分別渲染並依核准順序合併。
+依 `animation_design.md` 的 Scene 1–5 核准順序實作五個獨立 Manim `Scene` 類別，不以 `Section` 代替，也不在實作階段重新定義每幕的教學責任。每個 Scene 獨立建立及清理畫面，結尾淡出至空白，下一幕再從空白淡入；程式碼通過獨立審查後，才將五幕分別渲染並依核准順序合併。
 
-Scene layer 負責 layout execution、styling、timing、beat staging，以及 audio/overlay synchronization。實作必須忠於 `confirmed_requirements.md`、`animation_design.md`、`teaching_script.md`、需要維持執行忠實性時使用的 algorithm code/pseudocode、`voiceover.md`、`narration_manifest.json` 與音訊資產；不得新增演算法步驟、教學目標、support-structure 語意，或改變 movement semantics、pointer meaning、visited timing、beat 順序與已核准的 active support structure。
+Scene 4 必須逐 beat 實作已核准的 Visual Derivation，並沿用 Scene 3 已核准的工作單位與視覺語意；不得在 complexity derivation 中改換計數單位、資料狀態或可見操作的意義。
+
+Scene layer 負責 layout execution、styling、timing、beat staging，以及 audio/overlay synchronization。實作必須忠於 `confirmed_requirements.md`、`animation_design.md`、`teaching_script.md`、`voiceover.md`、`narration_manifest.json` 與音訊資產；使用者提供的 algorithm code／pseudocode 只使用 `confirmed_requirements.md` 內保存的內容。不得新增演算法步驟、教學目標、support-structure 語意，或改變 movement semantics、pointer meaning、visited timing、beat 順序與已核准的 active support structure。
 
 所有 Scene 必須使用 `render_profile.json` 指定的 frame geometry 與字型。不得用另一個 Python、Manim profile 或 fallback font 進行 layout 規劃。
 
@@ -20,7 +22,7 @@ Scene layer 負責 layout execution、styling、timing、beat staging，以及 a
 - **persistent regions**：標題、狀態 panel、公式或核准的 overlay 等持續區域。
 - **transient regions**：比較卡片、pointer labels、臨時公式與說明。
 - **safe frame**：所有必要內容都必須落入的內縮邊界。
-- **peak state**：同時物件最多、文字最長、pointer 最密集或最容易越界的穩定 beat。
+- **peak state**：同時物件最多、文字最長、pointer 最密集或最容易越界的穩定 beat；Scene 4 必須預留長 expression、case label、多變數圖演算法與 auxiliary-space diagram 的 peak-state 空間。
 - **collision policy**：空間不足時要採縮放、換區、上下分流、合併標籤或合法分階段顯示中的哪一種策略。
 
 layout plan 不要求額外文件，但必須反映在 layout constants、zones、builders、groups 與 helper interfaces，使程式本身可稽核。建立順序採用下方 **Peak-first scene skeleton** 與 **Stable-zone composition**。
@@ -177,6 +179,8 @@ title、status、primary、transient regions 在相鄰 beats 維持穩定意思�
 
 引入新焦點前先移除或淡化舊焦點。Loop-oriented code 可以接受，但可見動作仍須讀成 teaching beats，且不以 animation polish 犧牲焦點清晰度。
 
+Scene 4 的每個必要 derivation phase 都要在 resolved state 呼叫具名 layout checkpoint，涵蓋該 phase 當下可見的公式、case label、圖或 auxiliary-space diagram；不能只檢查完整公式最後出現的畫面。
+
 ## Voiceover 與 Overlay 的實作約束
 
 每個核准 beat 對應一個 voiceover segment；narration 開始前先建立 visual focus，segment 期間維持一致，結束前呈現或停留在 resolved state。旁白較長時以 pacing、staging 或有意義的 hold 配合，不用無意義空白，也不改變核准語意。
@@ -224,14 +228,15 @@ Overlays 關閉時不預留只供 overlay 使用的空間；啟用時放在 layo
 11. 每個 card/container 的內部 siblings 是否都在自己的可見 panel/box boundary 內？
 12. 重疊文字是否依 z-index 與 drawing order 位於可能遮擋物件上方？
 13. Graph roots 是否只註冊真正的 graph wrapper，且沒有 leaf 同時屬於多個 roots？
+14. Scene 4 的每個必要 derivation phase 是否各有 resolved checkpoint，並維持 Scene 3 的工作單位與視覺語意？
 
 若高風險定位無法由最終 bounding box、zone 容量及生命週期證明安全，先修改 layout，再重新閱讀受影響 Scene；不能把已知疑點留給後續流程首次發現。泛用 visible warning 是 blocking，不得由 writer 忽略或降級；精確例外只在使用者需求或已核准設計明確要求時依 `layout-audit.md` 建立，且應先嘗試修復 layout。
 
-## 送交獨立程式碼審查前的完成條件
+## CODE_PREPARATION 完成條件
 
-只有在下列條件都完成後，才能建立 `scene_code_review_handoff.md` 並送交獨立程式碼審查；此時不執行 Manim render：
+只有在下列條件都完成後，`generated_algo_scene.py` 才能送交 layout audit 與獨立程式碼審查；此時不執行 Manim render：
 
-- 四個 Scenes 均符合核准結構、獨立建立/清理並可分別渲染。
+- 五個 Scenes 均符合核准結構、獨立建立/清理並可分別渲染。
 - 每個 Scene、每個穩定 beat 與所有 peak states 已靜態複查。
 - 最長文字、panel 容量、公式與 overlay 已按最終 bounding box 複查。
 - 所有 pointer destinations、共享 anchors/indexes 與共址策略已複查。

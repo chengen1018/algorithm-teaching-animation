@@ -1,2 +1,31 @@
-docs/
+# Internal planning files
+docs/superpowers/
+
+# Generated documentation
 HTML/
+
+# Python caches and environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local configuration and credentials
+.tts-config
+.env
+.env.*
+
+# Operating-system and temporary files
+.DS_Store
+.tmp/
+
+# Generated Manim and voiceover output
+media/
+audio/
+video/
+*.mp4
+*.wav
+*.mp3
